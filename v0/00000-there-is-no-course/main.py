@@ -32,8 +32,14 @@ def speak(message):
             time.sleep(para_pause)
 
 
-speak(
-    """\
+if __name__ == "__main__":
+    from pyscript import document
+
+    loading = document.querySelector("#loading")
+    loading.style.display = "none"
+
+    speak(
+        """\
 To be, or not to be,⏸ that is the question:
 Whether 'tis nobler in the mind to suffer
 The slings and arrows of outrageous fortune,
@@ -48,8 +54,5 @@ For in that sleep of death what dreams may come,
 When we have shuffled off this mortal coil,
 Must give us pause — there's the respect
 That makes calamity of so long life.\
-"""
-)
-
-
-print(__name__)
+    """
+    )
