@@ -23,7 +23,10 @@
                 <hr/>
                 <h1>There is no course</h1>
                 <hr/>
-                <script type="py" src="./main.py" terminal worker></script>
+                <p id="loading">Loading...</p>
+                <script type="py" src="./main.py" target="terminal" terminal worker></script>
+                <hr/>
+                <div id="terminal" style="padding: 1em; background-color: rgb(25, 26, 25); border-radius: 1em; border: solid .5em #555"></div>
             </div>
         </div>
     </div>
