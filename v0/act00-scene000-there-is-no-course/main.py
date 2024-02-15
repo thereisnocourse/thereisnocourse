@@ -62,11 +62,11 @@ Bye bye darling.⏸⏸
 
 ...The slings and arrows of outrageous fortune,
 Or to take arms against a sea of troubles⏸
-And by opposing⏸ end them... 
+And by opposing⏸ end them...⏸⏸⏸⏸⏸
 
 Look, I'm telling you, there is no course!
 No lessons, no tutorials, no exercises.
-Nothing.⏸
+Nothing.⏸⏸
 
 Oh, and whatever you do, DO NOT push the big red button.
 Bad things will happen.
