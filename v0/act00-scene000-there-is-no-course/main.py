@@ -49,7 +49,7 @@ I was just rehearsing my lines.
 Not for the course, for an audition.
 Anyway, it's nice to see you darling!
 
-Erm,⏸ I do have a confession to make...
+Erm,⏸ I do have a confession to make:
 There is no course.
 
 I have no idea how to train someone to become an Awesome Python Programmer.
@@ -58,7 +58,11 @@ Sorry.⏸
 
 Thanks for stopping by.
 I'm going to get back to rehearsing my lines, if that's OK.
-Bye bye darling.⏸⏸⏸⏸
+Bye bye darling.⏸⏸
+
+...The slings and arrows of outrageous fortune,
+Or to take arms against a sea of troubles⏸
+And by opposing⏸ end them... 
 
 Look, I'm telling you, there is no course!
 No lessons, no tutorials, no exercises.
@@ -66,7 +70,8 @@ Nothing.⏸
 
 Oh, and whatever you do, DO NOT push the red button.
 Bad things will happen.
-Don't say I didn't warn you..."""
+Don't say I didn't warn you darling.
+"""
     )
 
     success = document.querySelector("#success")
