@@ -13,8 +13,12 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
+    <!-- Custom CSS-->
+    <link rel="stylesheet" href="./style.css"/>
+
     <!-- This script tag bootstraps PyScript -->
     <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+
 </head>
 <body>
     <div class="container" style="max-width: 960px">
@@ -23,13 +27,25 @@
                 <hr/>
                 <h1>There is no course</h1>
                 <hr/>
-                <div id="terminal" style="padding: 1em; background-color: rgb(25, 26, 25); border-radius: 1em; border: solid .5em #555">
-                    <span id="loading" style="position: fixed; color: white; z-index: 10">Loading...</span>
+                <div id="screen">
+                    <div id="loading">HamletOS v37.154
+(c) 1981 YorickSoft Inc.
+All rights reserved.
+Booting...  
+                    </div>
                 </div>
+            </div>
+        </div>
+        <div class="row" id="success">
+            <div class="col text-center">
+                <p>🐍🐍🐍🐍🐍🐍</p>
+                <p>
+                    <a href="v0/act00-scene001-the-big-red-button/" class="btn btn-danger btn-lg" role="button">Do not push</a>
+                </p>
             </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <script type="py" src="./main.py" target="terminal" terminal worker></script>
+    <script type="py" src="./main.py" target="screen" terminal worker></script>
 </body>
 </html>
