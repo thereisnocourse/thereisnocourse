@@ -17,14 +17,6 @@ body {
 /*	text-align: center;*/
 }
 
-.example {
-	background: white;
-	margin: 0 auto;
-	max-width: 1100px;
-	padding: 2ch;
-	width: 100%;
-}
-
 .btn {
 	background: #7C7C7C;
 	border-bottom: 6px inset rgba(0,0,0,.5);
@@ -37,10 +29,8 @@ body {
 	display: inline-block;
 	font-size: 1rem;
 	margin: 0rem;
-	/* min-width: 200px; */
 	padding: .5rem;
-	text-transform: uppercase;
-	width: auto;
+	/* text-transform: uppercase; */
 	text-decoration: none;
 	
 	&:focus,
