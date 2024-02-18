@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Pre-course assessment - There is no course: Act 0, Scene 0</title>
+
+    <!-- Recommended meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <!-- PyScript CSS -->
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <!-- Custom CSS-->
+    <link rel="stylesheet" href="./style.css"/>
+
+    <!-- This script tag bootstraps PyScript -->
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+
+</head>
+<body>
+    <div class="container" style="max-width: 960px">
+        <div class="row" id="section-title">
+            <div class="col">
+                <p>🏠 <a href="/">There is no course</a></p>
+                <hr/>
+                <h1>Pre-course assessment</h1>
+                <hr/>
+            </div>
+        </div>
+        <div class="row" id="section-loading">
+            <div class="col">
+                <p>Loading...</p>
+            </div>
+        </div>
+        <div class="row" id="section-introduction">
+            <div class="col">
+                <p>Step forward, brave knight!</p>
+                <p>
+                    Before embarking on your quest for knowledge, please take a moment
+                    to answer a few questions.
+                </p>
+                <p>
+                    These questions will help you to measure your progress and take a 
+                    scientific approach to your mental transformation.
+                </p>
+                <p>
+                    <button type="button" class="btn btn-primary">Let's do this!</button>
+                </p>
+            </div>
+        </div>
+        <div class="row" id="section-question-0">
+            <div class="col">
+                <h2>Question 0</h2>
+                <p>Who invented the Python programming language?</p>
+                <p>Tries: <span id="question-0-tries">0</span>/10</p>
+                <form class="form-inline">
+                    <p>
+                        <label for="question-0-input"><code>&gt;&gt;&gt;</code></label>
+                        <input type="text" id="question-0-input" class="form-control"></input>
+                    </p>
+                    <p>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </p>
+                    <div id="question-0-hints">
+                        <p>Sorry, try again.</p>
+                        <p>Still not right. Another try maybe?</p>
+                        <p>Nope, still not right.</p>
+                        <p>You're just guessing!</p>
+                        <p>I'll give you a clue. It rhymes with 'Speedo Man Possum'.</p>
+                        <p>Is 'Guido' really that hard to spell?</p>
+                        <p>I'm not helping any more.</p>
+                        <p>2 more tries left.</p>
+                        <p>Last try...</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row" id="section-question-1">
+            <div class="col">
+                <h2>Question 1</h2>
+                <p>What famous British comedy TV show is the Python programming language named after?</p>
+                <p>Tries: <span id="question-1-tries">0</span>/10</p>
+                <form class="form-inline">
+                    <p>
+                        <label for="question-1-input"><code>&gt;&gt;&gt;</code></label>
+                        <input type="text" id="question-1-input" class="form-control"></input>
+                    </p>
+                    <p>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </p>
+                    <div id="question-1-hints">
+                        <p>Incorrect.</p>
+                        <p>Also incorrect.</p>
+                        <p>Spam spam spam spam...</p>
+                        <p>This is an ex-Parrot!</p>
+                        <p>I'm a lumberjack and I'm OK...</p>
+                        <p>...I sleep all night and I work all day...</p>
+                        <p>...I cut down trees, I eat my lunch, I go to the lavatory...</p>
+                        <p>...On Wednesdays I go shopping, and have buttered scones for tea!</p>
+                        <p>Last try...</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row" id="section-question-2">
+            <div class="col">
+                <h2>Question 2</h2>
+                <p>What is the air-speed velocity of an unladen swallow?</p>
+                <p>Tries: <span id="question-2-tries">0</span>/10</p>
+                <form class="form-inline">
+                    <p>
+                        <label for="question-2-input"><code>&gt;&gt;&gt;</code></label>
+                        <input type="text" id="question-2-input" class="form-control"></input>
+                    </p>
+                    <p>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </p>
+                    <div id="question-2-hints">
+                        <p>Did you watch the video?</p>
+                        <p>It's funny, isn't it.</p>
+                        <p>Especially the bit at the end.</p>
+                        <p>When King Arthur is answering the questions.</p>
+                        <p>His answer to the third question is very clever.</p>
+                        <p>Don't you think?</p>
+                        <p>The bridgekeeper didn't see that coming!</p>
+                        <p>Worth watching again, I'd say.</p>
+                        <p>Oh well, I gave you lots of chances...</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row" id="section-question-3">
+            <div class="col">
+                <h2>Question 3</h2>
+                <p>
+                    What website would you go to if you wanted to download 
+                    and install Python on your computer?
+                </p>
+                <p>Tries: <span id="question-3-tries">0</span>/10</p>
+                <form class="form-inline">
+                    <p>
+                        <label for="question-3-input"><code>&gt;&gt;&gt;</code></label>
+                        <input type="text" id="question-3-input" class="form-control"></input>
+                    </p>
+                    <p>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </p>
+                    <div id="question-3-hints">
+                        <p>Nope.</p>
+                        <p>Really?</p>
+                        <p>I despair.</p>
+                        <p>I don't why I bother.</p>
+                        <p>I mean, I go to all this trouble...</p>
+                        <p>Guido will not be happy with you.</p>
+                        <p>Three...</p>
+                        <p>Two...</p>
+                        <p>One...</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row" id="section-conclusion">
+            <div class="col">
+                <h2>Congratulations!</h2>
+                <p>
+                    Your score: <span id="n-questions-correct">0</span>/3 questions correct.                    
+                </p>
+                <div id="score-3-comment">
+                    <p>
+                        Woah! You are already an Awesome Python Programmer! You
+                        definitely don't need this training course, we should be
+                        hiring you!
+                    </p>
+                </div>
+                <div id="score-2-comment">
+                    <p>
+                        Excellent! You already have an amazing knowledge
+                        of the Python ecosystem. You could safely skip this course,
+                        there's not much more to learn.
+                    </p>
+                </div>
+                <div id="score-1-comment">
+                    <p>
+                        Great! You've clearly done your homework. A programme of
+                        self-directed learning is probably a better fit for you. 
+                    </p>
+                </div>
+                <div id="resit">
+                    <p>
+                        <button type="button" class="btn btn-danger">
+                            ↺ Repeat the assessment
+                        </button>
+                    </p>
+                </div>
+                <div id="score-0-comment">
+                    <p>
+                        Fantastic! You are exactly the person we are looking for!
+                    </p>
+                    <p>🐍🐍🐍🐍🐍🐍</p>
+                    <p>
+                        <button type="button" class="btn btn-success">
+                            Begin the course &gt;&gt;&gt;
+                        </button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script type="py" src="./main.py" target="screen" worker></script>
+</body>
+</html>
