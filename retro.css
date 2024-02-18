@@ -36,11 +36,12 @@ body {
 	cursor: pointer;
 	display: inline-block;
 	font-size: 1rem;
-	margin: 1rem;
-	min-width: 200px;
+	margin: 0rem;
+	/* min-width: 200px; */
 	padding: .5rem;
 	text-transform: uppercase;
 	width: auto;
+	text-decoration: none;
 	
 	&:focus,
 	&:hover {
