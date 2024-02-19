@@ -41,38 +41,53 @@ if __name__ == "__main__":
     speak(
         """\
 To be, or not to be,⏸ that is the question:
-Whether 'tis nobler in the mind to suffer...
+Whether 'tis nobler in the mind to suffer
+The slings and arrows of outrageous fortune,
+Or to take arms against a sea of troubles...
 
 Oh, hello.
 Are you here for the course?
 I was just rehearsing my lines.
-Not for the course, for an audition.
+Not for the course, for an audition.⏸⏸
 Anyway, it's nice to see you darling!
 
-Erm,⏸ I do have a confession to make:
-There is no course.
+Erm,⏸ I do have a confession to make:⏸⏸⏸⏸
+There is no course.⏸⏸⏸⏸
 
-I have no idea how to train someone to become an Awesome Python Programmer.
-I'm not sure anyone does.
+I have no idea how to teach programming.⏸⏸
+I'm not sure anyone does.⏸⏸
 Sorry.⏸
 
 Thanks for stopping by.
 I'm going to get back to rehearsing my lines, if that's OK.
 Bye bye darling.⏸⏸
+Now, where was I? Oh yes:
 
-...The slings and arrows of outrageous fortune,
-Or to take arms against a sea of troubles⏸
-And by opposing⏸ end them...⏸⏸⏸⏸⏸
+...And by opposing end them. To die — to sleep,
+No more; and by a sleep to say we end
+The heart-ache and the thousand natural shocks
+That flesh is heir to: 'tis a consummation
+Devoutly to be wish'd. To die, to sleep;
+To sleep, perchance to dream — ay, there's the rub:
+For in that sleep of death what dreams may come,
+When we have shuffled off this mortal coil,
+Must give us pause — there's the respect
+That makes calamity of so long life.⏸⏸⏸⏸⏸
 
-Look, I'm telling you, there is no course!
+What do you think darling? 
+I'm working on my dramatic pauses.
+The audition is for the Bromley Players.
+They're very good. For amateurs, I mean.
+
+Anyway, look, I'm telling you, there is no course!
 No lessons, no tutorials, no exercises.
-Nothing.⏸⏸
+Nothing.⏸⏸⏸⏸
 
-Oh, and whatever you do, DO NOT push the big red button.
+Oh, by the way, DO NOT push the red button.
 Bad things will happen.
 Don't say I didn't warn you darling.
 """
     )
 
-    success = document.querySelector("#success")
+    success = document.getElementById("success")
     success.style.visibility = "visible"
