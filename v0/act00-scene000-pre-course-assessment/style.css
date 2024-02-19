@@ -11,7 +11,36 @@
     max-width: 700px; 
 }
 
+#question0-form {
+    display: none;
+}
+
+#question0-next {
+    display: none;
+}
+
+#question0-hints p {
+    display: none;
+}
+
 #question1 {
+    display: none;
+}
+
+#question1-input {
+    width: 100%;
+    max-width: 700px; 
+}
+
+#question1-form {
+    display: none;
+}
+
+#question1-next {
+    display: none;
+}
+
+#question1-hints p {
     display: none;
 }
 
@@ -19,11 +48,45 @@
     display: none;
 }
 
+#question2-input {
+    width: 100%;
+    max-width: 700px; 
+}
+
+#question2-form {
+    display: none;
+}
+
+#question2-next {
+    display: none;
+}
+
+#question2-hints p {
+    display: none;
+}
+
 #question3 {
     display: none;
 }
 
-#conclusion {
+#question3-input {
+    width: 100%;
+    max-width: 700px; 
+}
+
+#question3-form {
+    display: none;
+}
+
+#question3-next {
+    display: none;
+}
+
+#question3-hints p {
+    display: none;
+}
+
+#results {
     display: none;
 }
 
@@ -43,6 +106,10 @@
     display: none;
 }
 
-#restart {
+#notfound {
+    display: none;
+}
+
+#lumberjack {
     display: none;
 }

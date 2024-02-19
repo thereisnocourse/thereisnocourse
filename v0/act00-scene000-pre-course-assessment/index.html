@@ -22,16 +22,20 @@
 </head>
 <body>
     <div>
+
         <div id="title">
             <p>🏠 <a href="/">There is no course</a></p>
             <hr/>
             <h1>Pre-course assessment</h1>
             <hr/>
         </div>
+
         <div id="loading">
             <p>Loading...</p>
         </div>
+
         <div id="introduction">
+            <h2>Introduction</h2>
             <p>Step forward, brave traveller!</p>
             <p>
                 Before embarking on your quest for knowledge, please take a moment
@@ -45,14 +49,15 @@
                 <button id="begin-button" class="btn btn-primary">Let's do this! &gt;&gt;&gt;</button>
             </p>
         </div>
+
         <div id="question0">
             <h2>Question 0</h2>
             <p>Who invented the Python programming language?</p>
-            <p>Tries: <span id="question0-tries">0</span>/10</p>
-            <form id="question0-form" class="form-inline" onsubmit="event.preventDefault();">
+            <p>Tries: <span id="question0-tries">?</span>/10</p>
+            <form id="question0-form" onsubmit="event.preventDefault();">
                 <p>
                     <label for="question0-input"><code>&gt;&gt;&gt;</code></label>
-                    <input type="text" id="question0-input" class="form-control"></input>
+                    <input type="text" id="question0-input" class="form-control" autocomplete="off"></input>
                 </p>
                 <p>
                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -62,22 +67,31 @@
                     <p>Still not right. Another try maybe?</p>
                     <p>Nope, still not right.</p>
                     <p>You're just guessing!</p>
-                    <p>I'll give you a clue. It rhymes with 'Speedo Man Possum'.</p>
+                    <p>It rhymes with 'Speedo Man Possum'.</p>
                     <p>Is 'Guido' really that hard to spell?</p>
                     <p>I'm not helping any more.</p>
                     <p>2 more tries left.</p>
                     <p>Last try...</p>
                 </div>
             </form>
+            <div id="question0-next">
+                <p>&gt;&gt;&gt; <span id="question0-answer"></span></p>
+                <p>Never mind, let's move on.</p>
+                <p>Correct!</p>
+                <p>
+                    <button id="question0-next-button" class="btn btn-primary">Next question &gt;&gt;&gt;</button>
+                </p>
+            </div>
         </div>
+
         <div id="question1">
             <h2>Question 1</h2>
             <p>What famous British comedy TV show is the Python programming language named after?</p>
-            <p>Tries: <span id="question1-tries">0</span>/10</p>
-            <form class="form-inline">
+            <p>Tries: <span id="question1-tries">?</span>/10</p>
+            <form id="question1-form" onsubmit="event.preventDefault();">
                 <p>
                     <label for="question1-input"><code>&gt;&gt;&gt;</code></label>
-                    <input type="text" id="question1-input" class="form-control"></input>
+                    <input type="text" id="question1-input" class="form-control" autocomplete="off"></input>
                 </p>
                 <p>
                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -94,15 +108,39 @@
                     <p>Last try...</p>
                 </div>
             </form>
+            <div id="question1-next">
+                <p>&gt;&gt;&gt; <span id="question1-answer"></span></p>
+                <p>Keep going...</p>
+                <p>Correct!</p>
+                <p>
+                    <button id="question1-next-button" class="btn btn-primary">Next question &gt;&gt;&gt;</button>
+                </p>
+            </div>
         </div>
+
         <div id="question2">
-            <h2>Question 2</h2>
-            <p>What is the air-speed velocity of an unladen swallow?</p>
-            <p>Tries: <span id="question2-tries">0</span>/10</p>
-            <form class="form-inline">
+            <!-- Easter egg, only accessible by hacking URL query parameters. -->
+            <h2>The Bridge of Death 🥚</h2>
+            <p>
+                Stop! 
+                Who would cross the <a href="https://youtu.be/0D7hFHfLEyk?si=w-KJZWITnYUY5CTA">Bridge of Death</a> must answer me these questions
+                three, ere the other side they see.
+            </p>
+            <p>
+                If you get them all right, you will be allowed to pass.
+            </p>
+            <p>
+                If you get them wrong, you will be cast into the Gorge of Eternal 
+                Peril.
+            </p>
+            <p>
+                What is the air-speed velocity of an unladen swallow?
+            </p>
+            <p>Tries: <span id="question2-tries">?</span>/10</p>
+            <form id="question2-form" onsubmit="event.preventDefault();">
                 <p>
                     <label for="question2-input"><code>&gt;&gt;&gt;</code></label>
-                    <input type="text" id="question2-input" class="form-control"></input>
+                    <input type="text" id="question2-input" class="form-control" autocomplete="off"></input>
                 </p>
                 <p>
                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -119,18 +157,29 @@
                     <p>Oh well, I gave you lots of chances...</p>
                 </div>
             </form>
+            <div id="question2-next">
+                <p>&gt;&gt;&gt; <span id="question2-answer"></span></p>
+                <p>You have been cast into the Gorge of Eternal Peril.</p>
+                <p>
+                    Huh? I-- I don't know that.<br/>
+                    **Auuuuuuuugh!**<br/><br/>
+                    Well done! You have cast the bridgekeeper into the Gorge of Eternal Peril.
+                </p>        
+        </p>
+            </div>
         </div>
+
         <div id="question3">
             <h2>Question 3</h2>
             <p>
                 What website would you go to if you wanted to download 
                 and install Python on your computer?
             </p>
-            <p>Tries: <span id="question3-tries">0</span>/10</p>
-            <form class="form-inline">
+            <p>Tries: <span id="question3-tries">?</span>/10</p>
+            <form id="question3-form" onsubmit="event.preventDefault();">
                 <p>
                     <label for="question3-input"><code>&gt;&gt;&gt;</code></label>
-                    <input type="text" id="question3-input" class="form-control"></input>
+                    <input type="text" id="question3-input" class="form-control" autocomplete="off"></input>
                 </p>
                 <p>
                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -147,59 +196,93 @@
                     <p>One...</p>
                 </div>
             </form>
+            <div id="question3-next">
+                <p>&gt;&gt;&gt; <span id="question3-answer"></span></p>
+                <p>Good effort, let's see how you did...</p>
+                <p>Correct!</p>
+                <p>
+                    <button id="question3-next-button" class="btn btn-primary">Results &gt;&gt;&gt;</button>
+                </p>
+            </div>
         </div>
-        <div id="conclusion">
-            <h2>Congratulations!</h2>
-            <p>
-                Your score: <span id="n-questions-correct">0</span>/3 questions correct.                    
-            </p>
-            <div id="score-3-comment">
-                <p>
-                    Woah! You are already an Awesome Python Programmer! You
-                    definitely don't need this training course, we should be
-                    hiring you!
-                </p>
+
+        <div id="results">
+            <h2>Results</h2>
+
+            <div id="assessment-incomplete">
+                <p>Somehow you've got to the end without answering all the questions.</p>
+                <p>That shouldn't be possible, but then <a href="https://youtu.be/Cj8n4MfhjUc?si=yhAHItJuaa6SQI7r">nobody expected the Spanish Inquisition</a>, and look what happened there!</p>
+                <p>Anyway, you might like to...</p>
             </div>
-            <div id="score-2-comment">
+
+            <div id="assessment-complete">
                 <p>
-                    Excellent! You already have an amazing knowledge
-                    of the Python ecosystem. You could safely skip this course,
-                    there's not much more to learn.
+                    Your score: <span id="n-questions-failed">0</span>/3 questions incorrect.                    
                 </p>
-            </div>
-            <div id="score-1-comment">
-                <p>
-                    Great! You've clearly done your homework. A programme of
-                    self-directed learning is probably a better fit for you. 
-                </p>
+                <div id="score-0-comment">
+                    <p>
+                        Woah! You are already an Awesome Python Programmer!
+                    </p> 
+                    <p>
+                        You definitely don't need this training course, we should be hiring you!
+                    </p>
+                </div>
+                <div id="score-1-comment">
+                    <p>
+                        Excellent! You already have an amazing knowledge of Python programming. 
+                    </p>
+                    <p>
+                        You could safely skip this course, there's not much more to learn.
+                    </p>
+                </div>
+                <div id="score-2-comment">
+                    <p>
+                        You've clearly done your homework! 
+                    </p>
+                    <p>
+                        A programme of self-directed learning is probably a better fit for you. 
+                    </p>
+                </div>
+                <div id="score-3-comment">
+                    <p>
+                        You are exactly the person we are looking for!
+                    </p>
+                    <p>🐍🐍🐍🐍🐍🐍</p>
+                    <p>
+                        <a href="../act00-scene001-there-is-no-course/" class="btn btn-success" role="button">Begin the course &gt;&gt;&gt;</a>
+                    </p>
+                </div>    
             </div>
             <div id="restart">
                 <p>
-                    <button type="button" class="btn btn-danger">
-                        &lt&lt&lt Restart the assessment
-                    </button>
-                </p>
-            </div>
-            <div id="score-0-comment">
-                <p>
-                    Fantastic! You are exactly the person we are looking for!
-                </p>
-                <p>🐍🐍🐍🐍🐍🐍</p>
-                <p>
-                    <button type="button" class="btn btn-success">
-                        Begin the course &gt;&gt;&gt;
+                    <button id="restart-button" type="button" class="btn btn-danger">
+                        &lt;&lt;&lt; Repeat the assessment
                     </button>
                 </p>
             </div>
         </div>
-        <div>
+
+        <div id="notfound">
+            <h2>Not found</h2>
+            <p>Darling, are you hacking around with my URL query parameters?</p>
+            <p>I don't know what you're hoping to find.</p>
+        </div>
+
+        <div id="lumberjack">
+            <!-- Easter egg, only accessible by hacking URL query parameters. -->
+            <h2>Lumberjack 🥚</h2>
+            <p>TODO</p>
+        </div>
+
+        <!-- <div id="debug">
             <h2>Debug</h2>
             <script type="py" terminal worker>
                 import code
                 code.interact()
             </script>
-        </div>
+        </div> -->
+
     </div>
-    <script type="py" src="./main.py" worker></script>
+    <script type="py" src="./main.py"></script>
 </body>
 </html>
