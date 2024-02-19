@@ -22,16 +22,16 @@
 </head>
 <body>
     <div>
-        <div id="section-title">
+        <div id="title">
             <p>🏠 <a href="/">There is no course</a></p>
             <hr/>
             <h1>Pre-course assessment</h1>
             <hr/>
         </div>
-        <div id="section-loading">
+        <div id="loading">
             <p>Loading...</p>
         </div>
-        <div id="section-introduction">
+        <div id="introduction">
             <p>Step forward, brave traveller!</p>
             <p>
                 Before embarking on your quest for knowledge, please take a moment
@@ -42,22 +42,22 @@
                 scientific approach to your mental transformation.
             </p>
             <p>
-                <button class="btn btn-primary">Let's do this! &gt;&gt;&gt;</button>
+                <button id="begin-button" class="btn btn-primary">Let's do this! &gt;&gt;&gt;</button>
             </p>
         </div>
-        <div id="section-question-0">
+        <div id="question0">
             <h2>Question 0</h2>
             <p>Who invented the Python programming language?</p>
-            <p>Tries: <span id="question-0-tries">0</span>/10</p>
-            <form class="form-inline">
+            <p>Tries: <span id="question0-tries">0</span>/10</p>
+            <form id="question-form" class="form-inline" onsubmit="return false;">
                 <p>
-                    <label for="question-0-input"><code>&gt;&gt;&gt;</code></label>
-                    <input type="text" id="question-0-input" class="form-control"></input>
+                    <label for="question0-input"><code>&gt;&gt;&gt;</code></label>
+                    <input type="text" id="question0-input" class="form-control"></input>
                 </p>
                 <p>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </p>
-                <div id="question-0-hints">
+                <div id="question0-hints">
                     <p>Sorry, try again.</p>
                     <p>Still not right. Another try maybe?</p>
                     <p>Nope, still not right.</p>
@@ -70,19 +70,19 @@
                 </div>
             </form>
         </div>
-        <div id="section-question-1">
+        <div id="question1">
             <h2>Question 1</h2>
             <p>What famous British comedy TV show is the Python programming language named after?</p>
-            <p>Tries: <span id="question-1-tries">0</span>/10</p>
+            <p>Tries: <span id="question1-tries">0</span>/10</p>
             <form class="form-inline">
                 <p>
-                    <label for="question-1-input"><code>&gt;&gt;&gt;</code></label>
-                    <input type="text" id="question-1-input" class="form-control"></input>
+                    <label for="question1-input"><code>&gt;&gt;&gt;</code></label>
+                    <input type="text" id="question1-input" class="form-control"></input>
                 </p>
                 <p>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </p>
-                <div id="question-1-hints">
+                <div id="question1-hints">
                     <p>Incorrect.</p>
                     <p>Also incorrect.</p>
                     <p>Spam spam spam spam...</p>
@@ -95,19 +95,19 @@
                 </div>
             </form>
         </div>
-        <div id="section-question-2">
+        <div id="question2">
             <h2>Question 2</h2>
             <p>What is the air-speed velocity of an unladen swallow?</p>
-            <p>Tries: <span id="question-2-tries">0</span>/10</p>
+            <p>Tries: <span id="question2-tries">0</span>/10</p>
             <form class="form-inline">
                 <p>
-                    <label for="question-2-input"><code>&gt;&gt;&gt;</code></label>
-                    <input type="text" id="question-2-input" class="form-control"></input>
+                    <label for="question2-input"><code>&gt;&gt;&gt;</code></label>
+                    <input type="text" id="question2-input" class="form-control"></input>
                 </p>
                 <p>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </p>
-                <div id="question-2-hints">
+                <div id="question2-hints">
                     <p>Did you watch the video?</p>
                     <p>It's funny, isn't it.</p>
                     <p>Especially the bit at the end.</p>
@@ -120,22 +120,22 @@
                 </div>
             </form>
         </div>
-        <div id="section-question-3">
+        <div id="question3">
             <h2>Question 3</h2>
             <p>
                 What website would you go to if you wanted to download 
                 and install Python on your computer?
             </p>
-            <p>Tries: <span id="question-3-tries">0</span>/10</p>
+            <p>Tries: <span id="question3-tries">0</span>/10</p>
             <form class="form-inline">
                 <p>
-                    <label for="question-3-input"><code>&gt;&gt;&gt;</code></label>
-                    <input type="text" id="question-3-input" class="form-control"></input>
+                    <label for="question3-input"><code>&gt;&gt;&gt;</code></label>
+                    <input type="text" id="question3-input" class="form-control"></input>
                 </p>
                 <p>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </p>
-                <div id="question-3-hints">
+                <div id="question3-hints">
                     <p>Nope.</p>
                     <p>Really?</p>
                     <p>I despair.</p>
@@ -148,7 +148,7 @@
                 </div>
             </form>
         </div>
-        <div id="section-conclusion">
+        <div id="conclusion">
             <h2>Congratulations!</h2>
             <p>
                 Your score: <span id="n-questions-correct">0</span>/3 questions correct.                    
@@ -192,7 +192,14 @@
                 </p>
             </div>
         </div>
+        <div>
+            <h2>Debug</h2>
+            <script type="py" terminal worker>
+                import code
+                code.interact()
+            </script>
+        </div>
     </div>
-    <script type="py" src="./main.py" target="screen" worker></script>
+    <script type="py" src="./main.py" worker></script>
 </body>
 </html>

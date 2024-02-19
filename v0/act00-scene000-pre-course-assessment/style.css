@@ -1,24 +1,29 @@
-#section-introduction {
+#introduction {
     display: none;
 }
 
-#section-question-0 {
+#question0 {
     display: none;
 }
 
-#section-question-1 {
+#question0-input {
+    width: 100%;
+    max-width: 700px; 
+}
+
+#question1 {
     display: none;
 }
 
-#section-question-2 {
+#question2 {
     display: none;
 }
 
-#section-question-3 {
+#question3 {
     display: none;
 }
 
-#section-conclusion {
+#conclusion {
     display: none;
 }
 
