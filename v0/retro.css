@@ -41,7 +41,7 @@ button, pre, code, input {
 	}
 }
 
-.btn-danger {
+.btn_danger {
 	background: #881400;
 	
 	&:focus,
@@ -50,7 +50,7 @@ button, pre, code, input {
 	}
 }
 
-.btn-success {
+.btn_success {
 	background: #005800;
 	
 	&:focus,
@@ -59,7 +59,7 @@ button, pre, code, input {
 	}
 }
 
-.btn-primary {
+.btn_primary {
 	background: #0000BC;
 	
 	&:focus,

@@ -3,9 +3,8 @@ import js
 from pyodide.ffi import create_proxy
 
 
-session = dict(
-    question="introduction",
-)
+# This variable stores the overall state of the UI in the current session (tab).
+session = dict()
 
 
 def debug(message):
@@ -20,29 +19,108 @@ def get_element_by_id(x):
 
 
 def show(element, display="block"):
-    assert element is not None
-    assert element.style is not None, element
     element.style.display = display
 
 
 def hide(element):
-    assert element.style is not None, element
     element.style.display = "none"
 
 
-class Question:
+def get_question_url_param():
+    query_params = dict(js.URLSearchParams.new(window.location.search))
+    question = query_params.get("question", "prologue")
+    return question
+
+
+def init_session():
+    # Initialise the session state.
+    question = get_question_url_param()
+    session["question"] = question
+    for i in range(4):
+        session.setdefault(
+            f"question_{i}",
+            dict(
+                tries=0,
+                answer="",
+                failed=None,
+            ),
+        )
+
+
+class MainView:
+    def __init__(self):
+        # Access main UI elements.
+        self.loading_node = get_element_by_id("loading")
+        self.prologue_node = get_element_by_id("prologue")
+        self.question_0_node = get_element_by_id("question_0")
+        self.question_1_node = get_element_by_id("question_1")
+        self.question_2_node = get_element_by_id("question_2")
+        self.question_3_node = get_element_by_id("question_3")
+        self.epilogue_node = get_element_by_id("epilogue")
+        self.notfound_node = get_element_by_id("notfound")
+
+    def render(self):
+        # Ensure state is initialised.
+        init_session()
+
+        # Hide everything to start with.
+        hide(self.loading_node)
+        hide(self.prologue_node)
+        hide(self.question_0_node)
+        hide(self.question_1_node)
+        hide(self.question_2_node)
+        hide(self.question_3_node)
+        hide(self.epilogue_node)
+        hide(self.notfound_node)
+
+        # Access state variable that determines which sub-view is visible.
+        question = session["question"]
+
+        # Render and show sub-view.
+        if question == "prologue":
+            show(self.prologue_node)
+
+        elif question == "0":
+            question_0_view.render()
+            show(self.question_0_node)
+
+        elif question == "1":
+            question_1_view.render()
+            show(self.question_1_node)
+
+        elif question == "2":
+            question_2_view.render()
+            show(self.question_2_node)
+
+        elif question == "3":
+            question_3_view.render()
+            show(self.question_3_node)
+
+        elif question == "epilogue":
+            epilogue_view.render()
+            show(self.epilogue_node)
+
+        else:
+            show(self.notfound_node)
+
+
+main_view = MainView()
+
+
+class QuestionView:
     def __init__(self, n):
         self.n = n
 
         # Access UI elements.
-        self.tries_node = get_element_by_id(f"question{n}-tries")
-        self.form_node = get_element_by_id(f"question{n}-form")
-        self.input_node = get_element_by_id(f"question{n}-input")
-        self.hints_node = get_element_by_id(f"question{n}-hints")
-        self.hints_nodes = document.querySelectorAll(f"#question{n}-hints > p")
-        self.next_node = get_element_by_id(f"question{n}-next")
-        self.next_answer_node = get_element_by_id(f"question{n}-answer")
-        self.next_message_nodes = document.querySelectorAll(f"#question{n}-next > p")
+        self.node = get_element_by_id(f"question_{n}")
+        self.tries_node = get_element_by_id(f"question_{n}_tries")
+        self.form_node = get_element_by_id(f"question_{n}_form")
+        self.input_node = get_element_by_id(f"question_{n}_input")
+        self.hints_node = get_element_by_id(f"question_{n}_hints")
+        self.hints_nodes = document.querySelectorAll(f"#question_{n}_hints > p")
+        self.next_node = get_element_by_id(f"question_{n}_next")
+        self.next_answer_node = get_element_by_id(f"question_{n}_answer")
+        self.next_message_nodes = document.querySelectorAll(f"#question_{n}_next > p")
         assert self.tries_node is not None
         assert self.form_node is not None
         assert self.input_node is not None
@@ -53,7 +131,7 @@ class Question:
 
     def render(self):
         # Access component state.
-        state = session[f"question{self.n}"]
+        state = session[f"question_{self.n}"]
         tries = state["tries"]
         failed = state["failed"]
         answer = state["answer"]
@@ -94,154 +172,82 @@ class Question:
                 show(self.next_message_nodes[2])
 
 
-# Access main view nodes.
-loading_node = get_element_by_id("loading")
-introduction_node = get_element_by_id("introduction")
-question0_node = get_element_by_id("question0")
-question1_node = get_element_by_id("question1")
-question2_node = get_element_by_id("question2")
-question3_node = get_element_by_id("question3")
-results_node = get_element_by_id("results")
-notfound_node = get_element_by_id("notfound")
-lumberjack_node = get_element_by_id("lumberjack")
+# Question views.
+question_0_view = QuestionView(0)
+question_1_view = QuestionView(1)
+question_2_view = QuestionView(2)
+question_3_view = QuestionView(3)
 
-# results nodes.
-failed_node = get_element_by_id("n-questions-failed")
-complete_node = get_element_by_id("assessment-complete")
-incomplete_node = get_element_by_id("assessment-incomplete")
-score0_comment_node = get_element_by_id("score-0-comment")
-score1_comment_node = get_element_by_id("score-1-comment")
-score2_comment_node = get_element_by_id("score-2-comment")
-score3_comment_node = get_element_by_id("score-3-comment")
-restart_node = get_element_by_id("restart")
 
-# Question components.
-question0 = Question(0)
-question1 = Question(1)
-question2 = Question(2)
-question3 = Question(3)
+class EpilogueView:
+    def __init__(self):
+        # Access UI elements.
+        self.failed_node = get_element_by_id("n_questions_failed")
+        self.complete_node = get_element_by_id("assessment_complete")
+        self.incomplete_node = get_element_by_id("assessment_incomplete")
+        self.score_0_comment_node = get_element_by_id("score_0_comment")
+        self.score_1_comment_node = get_element_by_id("score_1_comment")
+        self.score_2_comment_node = get_element_by_id("score_2_comment")
+        self.score_3_comment_node = get_element_by_id("score_3_comment")
+        self.restart_node = get_element_by_id("restart")
+
+    def render(self):
+        n_failed = 0
+        n_answered = 0
+        for i in [0, 1, 3]:
+            failed = session[f"question_{i}"]["failed"]
+            if failed is True:
+                n_failed += 1
+                n_answered += 1
+            elif failed is False:
+                n_answered += 1
+        self.failed_node.innerHTML = n_failed
+
+        hide(self.complete_node)
+        hide(self.incomplete_node)
+        hide(self.score_0_comment_node)
+        hide(self.score_1_comment_node)
+        hide(self.score_2_comment_node)
+        hide(self.score_3_comment_node)
+        if n_answered < 3:
+            show(self.incomplete_node)
+        else:
+            if n_failed == 0:
+                show(self.restart_node)
+                show(self.score_0_comment_node)
+            elif n_failed == 1:
+                show(self.restart_node)
+                show(self.score_1_comment_node)
+            elif n_failed == 2:
+                show(self.restart_node)
+                show(self.score_2_comment_node)
+            elif n_failed == 3:
+                hide(self.restart_node)
+                show(self.score_3_comment_node)
+            show(self.complete_node)
+
+
+epilogue_view = EpilogueView()
 
 
 def on_popstate(event):
     # Handle a browser navigation event within our single page app.
-    question = get_question()
+    question = get_question_url_param()
     session["question"] = question
-    render()
+    main_view.render()
 
 
-def render():
-    init_session()
-
-    # Hide everything to start with.
-    hide(loading_node)
-    hide(introduction_node)
-    hide(question0_node)
-    hide(question1_node)
-    hide(question2_node)
-    hide(question3_node)
-    hide(results_node)
-    hide(notfound_node)
-    hide(lumberjack_node)
-
-    question = session["question"]
-
-    if question == "introduction":
-        show(introduction_node)
-
-    elif question == "0":
-        question0.render()
-        show(question0_node)
-
-    elif question == "1":
-        question1.render()
-        show(question1_node)
-
-    elif question == "2":
-        question2.render()
-        show(question2_node)
-
-    elif question == "3":
-        question3.render()
-        show(question3_node)
-
-    elif question == "results":
-        render_results()
-        show(results_node)
-
-    elif question == "lumberjack":
-        show(lumberjack_node)
-
-    else:
-        show(notfound_node)
-
-
-def get_question():
-    query_params = dict(js.URLSearchParams.new(window.location.search))
-    question = query_params.get("question", "introduction")
-    return question
-
-
-def init_session():
-    question = get_question()
-    session["question"] = question
-    for i in range(4):
-        session.setdefault(
-            f"question{i}",
-            dict(
-                tries=0,
-                answer="",
-                failed=None,
-            ),
-        )
-
-
-def render_results():
-    n_failed = 0
-    n_answered = 0
-    for i in [0, 1, 3]:
-        failed = session[f"question{i}"]["failed"]
-        if failed is True:
-            n_failed += 1
-            n_answered += 1
-        elif failed is False:
-            n_answered += 1
-    failed_node.innerHTML = n_failed
-
-    hide(complete_node)
-    hide(incomplete_node)
-    hide(score0_comment_node)
-    hide(score1_comment_node)
-    hide(score2_comment_node)
-    hide(score3_comment_node)
-    if n_answered < 3:
-        show(incomplete_node)
-    else:
-        if n_failed == 0:
-            show(restart_node)
-            show(score0_comment_node)
-        elif n_failed == 1:
-            show(restart_node)
-            show(score1_comment_node)
-        elif n_failed == 2:
-            show(restart_node)
-            show(score2_comment_node)
-        elif n_failed == 3:
-            hide(restart_node)
-            show(score3_comment_node)
-        show(complete_node)
-
-
-@when("submit", "#question0-form")
-def question0_on_submit(event):
+@when("submit", "#question_0_form")
+def question_0_on_submit(event):
     # Access state for this component.
-    state = session["question0"]
+    state = session["question_0"]
 
     # Increment the number of tries.
     tries = state["tries"] + 1
     state["tries"] = tries
 
     # Access the answer.
-    input_node = get_element_by_id("question0-input")
+    input_node = get_element_by_id("question_0_input")
     answer = input_node.value
     answer = answer.strip()
     state["answer"] = answer
@@ -256,20 +262,20 @@ def question0_on_submit(event):
     state["failed"] = failed
 
     # Rerender the component.
-    question0.render()
+    question_0_view.render()
 
 
-@when("submit", "#question1-form")
-def question1_on_submit(event):
+@when("submit", "#question_1_form")
+def question_1_on_submit(event):
     # Access state for this component.
-    state = session["question1"]
+    state = session["question_1"]
 
     # Increment the number of tries.
     tries = state["tries"] + 1
     state["tries"] = tries
 
     # Access the answer.
-    input_node = get_element_by_id("question1-input")
+    input_node = get_element_by_id("question_1_input")
     answer = input_node.value
     answer = answer.strip()
     state["answer"] = answer
@@ -290,20 +296,20 @@ def question1_on_submit(event):
     state["failed"] = failed
 
     # Rerender the component.
-    question1.render()
+    question_1_view.render()
 
 
-@when("submit", "#question2-form")
-def question2_on_submit(event):
+@when("submit", "#question_2_form")
+def question_2_on_submit(event):
     # Access state for this component.
-    state = session["question2"]
+    state = session["question_2"]
 
     # Increment the number of tries.
     tries = state["tries"] + 1
     state["tries"] = tries
 
     # Access the answer.
-    input_node = get_element_by_id("question2-input")
+    input_node = get_element_by_id("question_2_input")
     answer = input_node.value
     answer = answer.strip()
     state["answer"] = answer
@@ -318,20 +324,24 @@ def question2_on_submit(event):
     state["failed"] = failed
 
     # Rerender the component.
-    question2.render()
+    question_2_view.render()
 
 
-@when("submit", "#question3-form")
-def question3_on_submit(event):
+class SmartyPantsError(Exception):
+    pass
+
+
+@when("submit", "#question_3_form")
+def question_3_on_submit(event):
     # Access state for this component.
-    state = session["question3"]
+    state = session["question_3"]
 
     # Increment the number of tries.
     tries = state["tries"] + 1
     state["tries"] = tries
 
     # Access the answer.
-    input_node = get_element_by_id("question3-input")
+    input_node = get_element_by_id("question_3_input")
     answer = input_node.value
     answer = answer.strip()
     state["answer"] = answer
@@ -379,63 +389,83 @@ def question3_on_submit(event):
     }
     correct = answer.lower() in acceptable_answers
     smart = answer.lower() in smart_answers
+
+    # Update state.
     failed = state["failed"]
     if correct:
         failed = False
     elif smart:
-        failed = "smart"
+        # Small joke here, try to catch people out trying to be smart :)
+        raise SmartyPantsError()
     elif tries >= 10:
         failed = True
     state["failed"] = failed
 
     # Rerender the component.
-    question3.render()
+    question_3_view.render()
 
 
-@when("click", "#question0-next-button")
-def question0_next_button_on_click(event):
+@when("click", "#question_0_next_button")
+def question_0_next_button_on_click(event):
+    # Update session state.
     next = "1"
     session["question"] = next
+
+    # Simulate navigation to a new page.
     window.history.pushState(None, None, f"?question={next}")
-    render()
+    main_view.render()
 
 
-@when("click", "#question1-next-button")
-def question1_next_button_on_click(event):
+@when("click", "#question_1_next_button")
+def question_1_next_button_on_click(event):
     # N.B., we skip past question 2, that is an Easter egg.
+
+    # Update session state.
     next = "3"
     session["question"] = next
+
+    # Simulate navigation to a new page.
     window.history.pushState(None, None, f"?question={next}")
-    render()
+    main_view.render()
 
 
-@when("click", "#question3-next-button")
-def question3_next_button_on_click(event):
-    next = "results"
+@when("click", "#question_3_next_button")
+def question_3_next_button_on_click(event):
+    # Update session state.
+    next = "epilogue"
     session["question"] = next
+
+    # Simulate navigation to a new page.
     window.history.pushState(None, None, f"?question={next}")
-    render()
+    main_view.render()
 
 
-@when("click", "#begin-button")
+@when("click", "#begin_button")
 def begin_button_on_click(event):
     # Reset the session state, just to be sure.
     global session
     session = dict()
+
+    # Simulate navigation to a new page.
     window.history.pushState(None, None, "?question=0")
-    render()
+    main_view.render()
 
 
-@when("click", "#restart-button")
+@when("click", "#restart_button")
 def restart_button_on_click(event):
     # Reset the session state.
     global session
     session = dict()
+
+    # Simulate navigation to a new page.
     window.history.pushState(None, None, "?question=0")
-    render()
+    main_view.render()
 
 
 if __name__ == "__main__":
+    # Register a handler for back and forward navigation events.
+    # https://jeff.glass/post/pyscript-why-create-proxy/
     window.addEventListener("popstate", create_proxy(on_popstate))
-    init_session()
-    render()
+
+    # Render the main view.
+    main_view.render()

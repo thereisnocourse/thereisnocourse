@@ -34,8 +34,7 @@
             <p>Loading...</p>
         </div>
 
-        <div id="introduction">
-            <h2>Introduction</h2>
+        <div id="prologue">
             <p>Step forward, brave traveller!</p>
             <p>
                 Before embarking on your quest for knowledge, please take a moment
@@ -46,23 +45,23 @@
                 scientific approach to your mental transformation.
             </p>
             <p>
-                <button id="begin-button" class="btn btn-primary">Let's do this! &gt;&gt;&gt;</button>
+                <button id="begin_button" class="btn btn_primary">Let's do this! &gt;&gt;&gt;</button>
             </p>
         </div>
 
-        <div id="question0">
+        <div id="question_0">
             <h2>Question 0</h2>
             <p>Who invented the Python programming language?</p>
-            <p>Tries: <span id="question0-tries">?</span>/10</p>
-            <form id="question0-form" onsubmit="event.preventDefault();">
+            <p>Tries: <span id="question_0_tries">?</span>/10</p>
+            <form id="question_0_form" onsubmit="event.preventDefault();">
                 <p>
-                    <label for="question0-input"><code>&gt;&gt;&gt;</code></label>
-                    <input type="text" id="question0-input" class="form-control" autocomplete="off"></input>
+                    <label for="question_0_input"><code>&gt;&gt;&gt;</code></label>
+                    <input type="text" id="question_0_input" autocomplete="off"></input>
                 </p>
                 <p>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn_primary">Submit</button>
                 </p>
-                <div id="question0-hints">
+                <div id="question_0_hints">
                     <p>Sorry, try again.</p>
                     <p>Still not right. Another try maybe?</p>
                     <p>Nope, still not right.</p>
@@ -74,29 +73,29 @@
                     <p>Last try...</p>
                 </div>
             </form>
-            <div id="question0-next">
-                <p>&gt;&gt;&gt; <span id="question0-answer"></span></p>
+            <div id="question_0_next">
+                <p>&gt;&gt;&gt; <span id="question_0_answer"></span></p>
                 <p>Never mind, let's move on.</p>
                 <p>Correct!</p>
                 <p>
-                    <button id="question0-next-button" class="btn btn-primary">Next question &gt;&gt;&gt;</button>
+                    <button id="question_0_next_button" class="btn btn_primary">Next question &gt;&gt;&gt;</button>
                 </p>
             </div>
         </div>
 
-        <div id="question1">
+        <div id="question_1">
             <h2>Question 1</h2>
             <p>What famous British comedy TV show is the Python programming language named after?</p>
-            <p>Tries: <span id="question1-tries">?</span>/10</p>
-            <form id="question1-form" onsubmit="event.preventDefault();">
+            <p>Tries: <span id="question_1_tries">?</span>/10</p>
+            <form id="question_1_form" onsubmit="event.preventDefault();">
                 <p>
-                    <label for="question1-input"><code>&gt;&gt;&gt;</code></label>
-                    <input type="text" id="question1-input" class="form-control" autocomplete="off"></input>
+                    <label for="question_1_input"><code>&gt;&gt;&gt;</code></label>
+                    <input type="text" id="question_1_input" autocomplete="off"></input>
                 </p>
                 <p>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn_primary">Submit</button>
                 </p>
-                <div id="question1-hints">
+                <div id="question_1_hints">
                     <p>Incorrect.</p>
                     <p>Also incorrect.</p>
                     <p>Spam spam spam spam...</p>
@@ -108,22 +107,22 @@
                     <p>Last try...</p>
                 </div>
             </form>
-            <div id="question1-next">
-                <p>&gt;&gt;&gt; <span id="question1-answer"></span></p>
+            <div id="question_1_next">
+                <p>&gt;&gt;&gt; <span id="question_1_answer"></span></p>
                 <p>Keep going...</p>
                 <p>Correct!</p>
                 <p>
-                    <button id="question1-next-button" class="btn btn-primary">Next question &gt;&gt;&gt;</button>
+                    <button id="question_1_next_button" class="btn btn_primary">Next question &gt;&gt;&gt;</button>
                 </p>
             </div>
         </div>
 
-        <div id="question2">
+        <div id="question_2">
             <!-- Easter egg, only accessible by hacking URL query parameters. -->
             <h2>The Bridge of Death 🥚</h2>
             <p>
                 Stop! 
-                Who would cross the <a href="https://youtu.be/0D7hFHfLEyk?si=w-KJZWITnYUY5CTA">Bridge of Death</a> must answer me these questions
+                Who would cross the <a href="https://youtu.be/0D7hFHfLEyk">Bridge of Death</a> must answer me these questions
                 three, ere the other side they see.
             </p>
             <p>
@@ -136,16 +135,16 @@
             <p>
                 What is the air-speed velocity of an unladen swallow?
             </p>
-            <p>Tries: <span id="question2-tries">?</span>/10</p>
-            <form id="question2-form" onsubmit="event.preventDefault();">
+            <p>Tries: <span id="question_2_tries">?</span>/10</p>
+            <form id="question_2_form" onsubmit="event.preventDefault();">
                 <p>
-                    <label for="question2-input"><code>&gt;&gt;&gt;</code></label>
-                    <input type="text" id="question2-input" class="form-control" autocomplete="off"></input>
+                    <label for="question_2_input"><code>&gt;&gt;&gt;</code></label>
+                    <input type="text" id="question_2_input" autocomplete="off"></input>
                 </p>
                 <p>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn_primary">Submit</button>
                 </p>
-                <div id="question2-hints">
+                <div id="question_2_hints">
                     <p>Did you watch the video?</p>
                     <p>It's funny, isn't it.</p>
                     <p>Especially the bit at the end.</p>
@@ -157,8 +156,8 @@
                     <p>Oh well, I gave you lots of chances...</p>
                 </div>
             </form>
-            <div id="question2-next">
-                <p>&gt;&gt;&gt; <span id="question2-answer"></span></p>
+            <div id="question_2_next">
+                <p>&gt;&gt;&gt; <span id="question_2_answer"></span></p>
                 <p>You have been cast into the Gorge of Eternal Peril.</p>
                 <p>
                     Huh? I-- I don't know that.<br/>
@@ -169,22 +168,22 @@
             </div>
         </div>
 
-        <div id="question3">
+        <div id="question_3">
             <h2>Question 3</h2>
             <p>
                 What website would you go to if you wanted to download 
                 and install Python on your computer?
             </p>
-            <p>Tries: <span id="question3-tries">?</span>/10</p>
-            <form id="question3-form" onsubmit="event.preventDefault();">
+            <p>Tries: <span id="question_3_tries">?</span>/10</p>
+            <form id="question_3_form" onsubmit="event.preventDefault();">
                 <p>
-                    <label for="question3-input"><code>&gt;&gt;&gt;</code></label>
-                    <input type="text" id="question3-input" class="form-control" autocomplete="off"></input>
+                    <label for="question_3_input"><code>&gt;&gt;&gt;</code></label>
+                    <input type="text" id="question_3_input" autocomplete="off"></input>
                 </p>
                 <p>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn_primary">Submit</button>
                 </p>
-                <div id="question3-hints">
+                <div id="question_3_hints">
                     <p>Nope.</p>
                     <p>Really?</p>
                     <p>I despair.</p>
@@ -196,30 +195,30 @@
                     <p>One...</p>
                 </div>
             </form>
-            <div id="question3-next">
-                <p>&gt;&gt;&gt; <span id="question3-answer"></span></p>
+            <div id="question_3_next">
+                <p>&gt;&gt;&gt; <span id="question_3_answer"></span></p>
                 <p>Good effort, let's see how you did...</p>
                 <p>Correct!</p>
                 <p>
-                    <button id="question3-next-button" class="btn btn-primary">Results &gt;&gt;&gt;</button>
+                    <button id="question_3_next_button" class="btn btn_primary">Results &gt;&gt;&gt;</button>
                 </p>
             </div>
         </div>
 
-        <div id="results">
+        <div id="epilogue">
             <h2>Results</h2>
 
-            <div id="assessment-incomplete">
+            <div id="assessment_incomplete">
                 <p>Somehow you've got to the end without answering all the questions.</p>
                 <p>That shouldn't be possible, but then <a href="https://youtu.be/Cj8n4MfhjUc?si=yhAHItJuaa6SQI7r">nobody expected the Spanish Inquisition</a>, and look what happened there!</p>
                 <p>Anyway, you might like to...</p>
             </div>
 
-            <div id="assessment-complete">
+            <div id="assessment_complete">
                 <p>
-                    Your score: <span id="n-questions-failed">0</span>/3 questions incorrect.                    
+                    Your score: <span id="n_questions_failed">0</span>/3 questions incorrect.                    
                 </p>
-                <div id="score-0-comment">
+                <div id="score_0_comment">
                     <p>
                         Woah! You are already an Awesome Python Programmer!
                     </p> 
@@ -227,7 +226,7 @@
                         You definitely don't need this training course, we should be hiring you!
                     </p>
                 </div>
-                <div id="score-1-comment">
+                <div id="score_1_comment">
                     <p>
                         Excellent! You already have an amazing knowledge of Python programming. 
                     </p>
@@ -235,7 +234,7 @@
                         You could safely skip this course, there's not much more to learn.
                     </p>
                 </div>
-                <div id="score-2-comment">
+                <div id="score_2_comment">
                     <p>
                         You've clearly done your homework! 
                     </p>
@@ -243,19 +242,19 @@
                         A programme of self-directed learning is probably a better fit for you. 
                     </p>
                 </div>
-                <div id="score-3-comment">
+                <div id="score_3_comment">
                     <p>
                         You are exactly the person we are looking for!
                     </p>
                     <p>🐍🐍🐍🐍🐍🐍</p>
                     <p>
-                        <a href="../act00-scene001-there-is-no-course/" class="btn btn-success" role="button">Begin the course &gt;&gt;&gt;</a>
+                        <a href="../act00-scene001-there-is-no-course/" class="btn btn_success" role="button">Begin the course &gt;&gt;&gt;</a>
                     </p>
                 </div>    
             </div>
             <div id="restart">
                 <p>
-                    <button id="restart-button" type="button" class="btn btn-danger">
+                    <button id="restart_button" type="button" class="btn btn_danger">
                         &lt;&lt;&lt; Repeat the assessment
                     </button>
                 </p>
@@ -266,12 +265,6 @@
             <h2>Not found</h2>
             <p>Darling, are you hacking around with my URL query parameters?</p>
             <p>I don't know what you're hoping to find.</p>
-        </div>
-
-        <div id="lumberjack">
-            <!-- Easter egg, only accessible by hacking URL query parameters. -->
-            <h2>Lumberjack 🥚</h2>
-            <p>TODO</p>
         </div>
 
         <!-- <div id="debug">

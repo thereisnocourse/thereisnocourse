@@ -1,115 +1,111 @@
-#introduction {
+#prologue {
     display: none;
 }
 
-#question0 {
+#question_0 {
     display: none;
 }
 
-#question0-input {
+#question_0_input {
     width: 100%;
     max-width: 700px; 
 }
 
-#question0-form {
+#question_0_form {
     display: none;
 }
 
-#question0-next {
+#question_0_next {
     display: none;
 }
 
-#question0-hints p {
+#question_0_hints p {
     display: none;
 }
 
-#question1 {
+#question_1 {
     display: none;
 }
 
-#question1-input {
+#question_1_input {
     width: 100%;
     max-width: 700px; 
 }
 
-#question1-form {
+#question_1_form {
     display: none;
 }
 
-#question1-next {
+#question_1_next {
     display: none;
 }
 
-#question1-hints p {
+#question_1_hints p {
     display: none;
 }
 
-#question2 {
+#question_2 {
     display: none;
 }
 
-#question2-input {
+#question_2_input {
     width: 100%;
     max-width: 700px; 
 }
 
-#question2-form {
+#question_2_form {
     display: none;
 }
 
-#question2-next {
+#question_2_next {
     display: none;
 }
 
-#question2-hints p {
+#question_2_hints p {
     display: none;
 }
 
-#question3 {
+#question_3 {
     display: none;
 }
 
-#question3-input {
+#question_3_input {
     width: 100%;
     max-width: 700px; 
 }
 
-#question3-form {
+#question_3_form {
     display: none;
 }
 
-#question3-next {
+#question_3_next {
     display: none;
 }
 
-#question3-hints p {
+#question_3_hints p {
     display: none;
 }
 
-#results {
+#epilogue {
     display: none;
 }
 
-#score-0-comment {
+#score_0_comment {
     display: none;
 }
 
-#score-1-comment {
+#score_1_comment {
     display: none;
 }
 
-#score-2-comment {
+#score_2_comment {
     display: none;
 }
 
-#score-3-comment {
+#score_3_comment {
     display: none;
 }
 
 #notfound {
-    display: none;
-}
-
-#lumberjack {
     display: none;
 }
