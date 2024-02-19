@@ -29,6 +29,7 @@ def on_question0_submit(event):
     global session
     js.console.log("on_question0_submit called")
     event.preventDefault()
+    return False
 
 
 def on_popstate(event):
