@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title>Hard reset - There is no course: Act 0, Scene 2</title>
+    <title>Perchance to dream - There is no course: Act 0, Scene 2</title>
 
     <!-- Recommended meta tags -->
     <meta charset="UTF-8">
@@ -11,40 +12,38 @@
     <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
 
     <!-- Retro CSS -->
-    <link href="../retro.css" rel="stylesheet"/>
+    <link href="../retro.css" rel="stylesheet" />
 
     <!-- Custom CSS-->
-    <link rel="stylesheet" href="./style.css"/>
+    <link rel="stylesheet" href="./style.css" />
 
     <!-- This script tag bootstraps PyScript -->
     <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
 
 </head>
+
 <body>
     <div>
 
         <div id="title">
             <p>🏠 <a href="/">There is no course</a></p>
-            <hr/>
-            <h1>Hard reset</h1>
-            <hr/>
+            <hr />
+            <h1>Perchance to dream</h1>
+            <hr />
         </div>
 
         <div id="screen">
             <div id="terminal">
-                <div id="loading">
+                <pre id="loading">
 Backstage Input Output System (BIOS)
 Copyright (C) 1981, YorickSoft Inc.
-
-8088 CPU at 4.77 MHz
-Memory Test : 16K OK
-
-Starting WS-DOS...
-                </div>
+Loading...
+                </pre>
             </div>
         </div>
 
     </div>
     <script type="py" src="./main.py" target="terminal" terminal worker></script>
 </body>
+
 </html>
