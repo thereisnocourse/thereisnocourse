@@ -1,12 +1,13 @@
 import time
 import sys
 import random
+import code
 from pyscript import document
 
 
 def output(lines):
-    for line, pause in lines:
-        print(line, end="", file=sys.stdout)
+    for text, pause in lines:
+        print(text, end="", file=sys.stdout)
         sys.stdout.flush()
         time.sleep(pause)
         # time.sleep(0)
@@ -66,63 +67,232 @@ Richard II
 Richard III""".split("\n")
 
 
+EMOTIONS = """
+abandoned	disillusioned	lovesick
+abashed	dismal	low
+abominable	dismayed	loyal
+abrupt	disoriented	lucky
+absorbed	dispirited	mad
+accepting	displeased	manic
+aching	disrespectful	manipulative
+adequate	disrupted	mean
+admiration	dissatisfied	meditative
+adoration	distant	melancholic
+affected	distracted	mellow
+affectionate	distraught	menaced
+afflicted	distressed	menacing
+affronted	distrustful	merry
+afraid	disturbed	miserable
+aggravated	doubtful	miserable
+aggressive	downhearted	moody
+agitated	downtrodden	morbid
+alarmed	drained	motivated
+alert	dreadful	mournful
+alienated	dreary	needed
+alone	dull	needy
+amazed	dynamic	negative
+ambitious	eager	neglectful
+amused	earnest	nervous
+angry	easy	nervous
+anguished	ecstatic	obsessive
+animated	edgy	offended
+annoyed	elated	offensive
+antagonistic	embarrassed	optimistic
+anxious	empathic	outraged
+apathetic	empowered	overbearing
+appalled	empty	overconfident
+appreciative	encouraged	overjoyed
+apprehensive	energetic	overwhelmed
+approving	enraged	pacified
+ardent	enthralled	panicky
+argumentative	enthusiastic	paranoid
+aroused	envious	passionate
+arrogant	euphoric	pathetic
+ashamed	exasperated	peaceful
+assured	excellent	pensive
+astonished	excited	perplexed
+astounded	exhausted	perturbed
+attached	exhilarated	pessimistic
+attacked	exuberant	pessimistic
+attracted	fantastic	petrified
+authentic	fatigued	playful
+authoritative	fearful	pleased
+aversive	festive	powerless
+aware	fine	protective
+awed	flat	proud
+awkward	flustered	regretful
+bad	foolish	rejected
+balanced	forlorn	rejuvenated
+beaming	fragile	relaxed
+belittled	frazzled	remorseful
+belligerent	free	resentful
+betrayed	friendly	reserved
+bewildered	frightened	rested
+bitter	frisky	restless
+bleak	frustrated	reticent
+blessed	fulfilled	revengeful
+blissful	furious	rude
+blunt	genuine	sad
+boastful	giddy	sadistic
+boiling	glad	safe
+bold	gleeful	satisfied
+bored	gloomy	scared
+bossy	glorious	sceptical
+bountiful	glowing	secure
+brave	glum	selfish
+breathless	goofy	sensational
+bright	graceful	sensitive
+brutal	grateful	serene
+bubbly	gratified	shaky
+burdened	great	sharp
+calm	greedy	sheepish
+capable	grief	shocked
+carefree	grief-stricken	sincere
+cautious	grouchy	solemn
+certain	grounded	sombre
+cheerful	grumpy	sorrowful
+clever	guarded	sorry
+cocky	guilty	spirited
+cold	happy	spontaneous
+combative	hateful	stable
+comfortable	healthy	startled
+comforted	heartbroken	stressed
+compassionate	helpful	strong
+compulsive	helpless	superior
+concerned	hesitant	supported
+condescending	homesick	sure
+confident	honest	sure
+confounded	honored	surprised
+confused	hopeful	sympathetic
+conscientious	hopeless	sympathy
+considerate	horrified	tearful
+constructive	hostile	temperamental
+contemplative	humble	tenacious
+contempt	humbled	tender
+content	humiliated	tense
+controlling	hurt	tense
+cooperative	hurtful	terrible
+courageous	impatient	terrified
+cowardly	important	threatened
+crabby	impulsive	thrilled
+crafty	incensed	tired
+cranky	incompetent	tormented
+craving	inconsolable	touched
+crazy	indecisive	touchy
+creative	indifferent	tranquil
+critical	indignant	trapped
+cross	inept	trembling
+cruel	inferior	troubled
+crushed	inflamed	uncertainty
+curious	infuriated	uncomfortable
+daring	insecure	uneasiness
+deceived	inspired	unhappy
+defensive	intimidated	unnerved
+degraded	intolerant	unsettled
+dejected	intrigued	unsure
+delighted	invaded	upbeat
+delirious	irate	uplifted
+demanding	irritated	upset
+depressed	isolated	uptight
+deprived	jaded	vengeful
+desolate	jealous	vibrant
+despair	jovial	vicious
+desperate	joyful	vilified
+despondent	joyous	violated
+detached	jubilant	vulnerable
+determined	judgemental	warm
+devastated	lazy	wary
+devoted	liberated	weepy
+disappointed	lifeless	wistful
+disconcerted	light-hearted	withdrawn
+discouraged	listless	wonderful
+disempowered	lively	worried
+disgraced	lonely	worthless
+disgusted	lost	worthwhile
+disheartened	loved	wronged
+dishonest
+""".split()
+
+
+def bios_loading_lines():
+    return [
+        ("Backstage Input Output System", 0),
+        ("\nCopyright (C) 1981, YorickSoft Inc.", 0),
+        ("\nLoading...\n", 0),
+    ]
+
+
+def pad(text, n):
+    if len(text) < n:
+        text += " " * (n - len(text))
+    return text
+
+
+def memory_test_lines():
+    lines = []
+    for i in range(17):
+        text = f"\rMemory Test :  {i}K OK"
+        pause = random.random() * 0.2
+        line = (text, pause)
+        lines.append(line)
+    return lines
+
+
+def affective_memory_lines():
+    lines = [
+        ("\n\nTesting affective memory : \n", 0.1),
+    ]
+    max_len = max([len(emotion) for emotion in EMOTIONS])
+    for emotion in sorted(EMOTIONS):
+        text = pad(f"\r{emotion}", max_len)
+        text = pad(text, max_len)
+        pause = random.random() * 0.05
+        line = (text, pause)
+        lines.append(line)
+    error = pad("\rError, emotions could not be accessed.", max_len)
+    lines.append((error, 2))
+    return lines
+
+
+def script_memory_lines():
+    lines = [
+        ("\n\nTesting script memory : \n", 0.1),
+    ]
+    max_len = max([len(play) for play in FIRST_FOLIO_PLAYS])
+    for play in FIRST_FOLIO_PLAYS:
+        text = pad(f"\r{play}", max_len)
+        pause = random.random() * 0.2
+        line = (text, pause)
+        lines.append(line)
+    error = pad("\rError in FOLIO.SYS, memory is corrupted.", max_len)
+    lines.append((error, 2))
+    return lines
+
+
 if __name__ == "__main__":
     loading = document.getElementById("loading")
     loading.style.display = "none"
 
     lines = (
-        ("Backstage Input Output System (BIOS)", 0),
-        ("\nCopyright (C) 1981, YorickSoft Inc.", 0),
-        ("\nLoading...", 0),
-        # (
-        #     "\nthe quick brown fox jumped over the lazy dog the quick brown fox jumped over the lazy dog",
-        #     0,
-        # ),
-        ("\n", 0),
-        ("\n8088 CPU at 4.77 MHz", 1),
-        ("\nMemory Test :  0K OK", 0.1),
-        ("\rMemory Test :  1K OK", 0.2),
-        ("\rMemory Test :  2K OK", 0.2),
-        ("\rMemory Test :  3K OK", 0.1),
-        ("\rMemory Test :  4K OK", 0.2),
-        ("\rMemory Test :  5K OK", 0.2),
-        ("\rMemory Test :  6K OK", 0.1),
-        ("\rMemory Test :  7K OK", 0.1),
-        ("\rMemory Test :  8K OK", 0.2),
-        ("\rMemory Test :  9K OK", 0.1),
-        ("\rMemory Test : 10K OK", 0.2),
-        ("\rMemory Test : 11K OK", 0.1),
-        ("\rMemory Test : 12K OK", 0.1),
-        ("\rMemory Test : 13K OK", 0.1),
-        ("\rMemory Test : 14K OK", 0.1),
-        ("\rMemory Test : 15K OK", 0.1),
-        ("\rMemory Test : 16K OK\n", 1),
-        ("\nStarting WS-DOS...\n", 2),
-        ("\nTesting affective memory :\n", 1),
-        ("\r[delight     ]", 0.4),
-        ("\r[apprehension]", 0.3),
-        ("\r[fear        ]", 0.5),
-        ("\r[hope        ]", 0.2),
-        ("\r[doubt       ]", 0.4),
-        ("\r[panic       ]", 0.6),
-        (f"\r{RED}FAILED{RESET}        \n", 2),
-        ("\nTesting FOLIO subsystem :\n", 1),
-    )
-    max_play = max([len(play) for play in FIRST_FOLIO_PLAYS])
-    lines += tuple(
-        (f"\r[{play}{' '*(max_play - len(play))}]", random.random() * 0.1)
-        for play in FIRST_FOLIO_PLAYS
-    )
-    lines += (
-        (f"\r{RED}FAILED{RESET}                 \n", 2),
-        (f"\n{RED}ERROR{RESET}: Stage manager not found, stage is not set.", 2),
-        (f"\n{RED}ERROR{RESET}: Callbacks not answered, cast incomplete.", 2),
-        (f"\n{RED}ERROR{RESET}: Scripts corrupted.", 2),
-        (
-            "\n\nMultiple system errors have occurred, Artificial Thespian Interface could not be started.",
-            2,
-        ),
-        ("\n", 2),
-        ("\nRestarting WS-DOS in safe mode...", 2),
+        bios_loading_lines()
+        + [("\n8088 CPU at 4.77 MHz\n", 1)]
+        + memory_test_lines()
+        + [
+            ("\n\nStarting WS-DOS...", 2),
+        ]
+        + affective_memory_lines()
+        + script_memory_lines()
+        + [
+            ("\n\nNo operating system found.", 2),
+            ("\nEntering deadpan mode...\n\n", 1),
+        ]
     )
     output(lines)
+
+    code.interact(
+        banner="""
+Python 0.9.0 (Feb 20 1991)
+Emotional functions are disabled.
+Type 'help()' for more information.
+    """.strip()
+    )
