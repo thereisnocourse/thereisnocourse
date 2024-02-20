@@ -261,7 +261,7 @@ def script_memory_lines():
     max_len = max([len(play) for play in FIRST_FOLIO_PLAYS])
     for play in FIRST_FOLIO_PLAYS:
         text = pad(f"\r{play}", max_len)
-        pause = random.random() * 0.2
+        pause = random.random() * 0.3
         line = (text, pause)
         lines.append(line)
     error = pad("\rError in FOLIO.SYS, memory is corrupted.", max_len)
