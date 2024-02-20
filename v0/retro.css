@@ -80,16 +80,17 @@ input {
 	border: 2px solid rgb(238, 238, 238);
 }
 
-.xterm-rows,
 #screen #loading {
-	font-family: 'VT323', monospace !important;
-	font-size: 22px !important;
-	line-height: 22px !important;
+	font-family: 'VT323', monospace;
+	/* font-family: courier-new, courier, monospace; */
+	font-size: 17px;
+	line-height: 17px;
 }
 
 .xterm-rows>div {
-	height: 22px !important;
-	line-height: 22px !important;
+	font-family: 'VT323', monospace !important;
+	font-size: 17px !important;
+	line-height: 17px !important;
 	padding: 0 3px 0 3px;
 }
 

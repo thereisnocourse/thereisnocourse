@@ -71,6 +71,10 @@ if __name__ == "__main__":
     loading.style.display = "none"
 
     lines = (
+        (
+            "Testing a long line asdoij asdoij dasoijd saoijdas oiadsj dasoij dasoij dasoij dsaoij adsoij asd\n",
+            0,
+        ),
         ("Backstage Input Output System (BIOS)", 0),
         ("\nCopyright (C) 1981, YorickSoft Inc.", 0),
         ("\nLoading...", 0),
@@ -111,10 +115,11 @@ if __name__ == "__main__":
     )
     lines += (
         (f"\r{RED}FAILED{RESET}                 \n", 2),
-        (f"\n[{RED}ERROR{RESET}] Stage manager not found, stage is not set.", 2),
-        (f"\n[{RED}ERROR{RESET}] Callbacks not answered, cast incomplete.", 2),
-        (f"\n[{RED}ERROR{RESET}] Scripts corrupted.", 2),
+        ("\nERROR: Stage manager not found, stage is not set.", 2),
+        ("\nERROR: Callbacks not answered, cast incomplete.", 2),
+        ("\nERROR: Scripts corrupted.", 2),
         ("\n\nMultiple system errors have occurred.", 2),
-        ("\nStarting WS-DOS in safe mode...", 2),
+        ("\nArtificial Thespian Interface disabled.", 2),
+        ("\nRestarting WS-DOS in safe mode...", 2),
     )
     output(lines)
