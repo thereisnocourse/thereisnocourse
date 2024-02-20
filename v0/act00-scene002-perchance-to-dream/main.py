@@ -67,17 +67,17 @@ Richard III""".split("\n")
 
 
 if __name__ == "__main__":
-    # loading = document.getElementById("loading")
-    # loading.style.display = "none"
+    loading = document.getElementById("loading")
+    loading.style.display = "none"
 
     lines = (
         ("Backstage Input Output System (BIOS)", 0),
         ("\nCopyright (C) 1981, YorickSoft Inc.", 0),
         ("\nLoading...", 0),
-        (
-            "\nthe quick brown fox jumped over the lazy dog the quick brown fox jumped over the lazy dog",
-            0,
-        ),
+        # (
+        #     "\nthe quick brown fox jumped over the lazy dog the quick brown fox jumped over the lazy dog",
+        #     0,
+        # ),
         ("\n", 0),
         ("\n8088 CPU at 4.77 MHz", 1),
         ("\nMemory Test :  0K OK", 0.1),
