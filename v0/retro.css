@@ -81,16 +81,19 @@ input {
 }
 
 #screen #loading {
-	font-family: 'VT323', monospace;
-	/* font-family: courier-new, courier, monospace; */
-	font-size: 17px;
+	/* font-family: 'VT323', monospace; */
+	/* font-size: 17px;
+	line-height: 17px; */
+	font-size: 15px;
 	line-height: 17px;
+	font-family: courier-new, courier, monospace;
+	padding: 0 3px 0 3px;
 }
 
 .xterm-rows>div {
-	font-family: 'VT323', monospace !important;
+	/* font-family: 'VT323', monospace !important;
 	font-size: 17px !important;
-	line-height: 17px !important;
+	line-height: 17px !important; */
 	padding: 0 3px 0 3px;
 }
 
@@ -102,7 +105,6 @@ input {
 	text-align: left;
 	color: #F5F2E7;
 	white-space: pre;
-	padding: 0 3px 0 3px;
 	margin: 0;
 	margin-block: 0;
 	width: 100%;

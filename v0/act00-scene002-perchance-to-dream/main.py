@@ -8,8 +8,8 @@ def output(lines):
     for line, pause in lines:
         print(line, end="", file=sys.stdout)
         sys.stdout.flush()
-        # time.sleep(pause)
-        time.sleep(0)
+        time.sleep(pause)
+        # time.sleep(0)
 
 
 # ANSI colors
@@ -67,17 +67,17 @@ Richard III""".split("\n")
 
 
 if __name__ == "__main__":
-    loading = document.getElementById("loading")
-    loading.style.display = "none"
+    # loading = document.getElementById("loading")
+    # loading.style.display = "none"
 
     lines = (
-        (
-            "Testing a long line asdoij asdoij dasoijd saoijdas oiadsj dasoij dasoij dasoij dsaoij adsoij asd\n",
-            0,
-        ),
         ("Backstage Input Output System (BIOS)", 0),
         ("\nCopyright (C) 1981, YorickSoft Inc.", 0),
         ("\nLoading...", 0),
+        (
+            "\nthe quick brown fox jumped over the lazy dog the quick brown fox jumped over the lazy dog",
+            0,
+        ),
         ("\n", 0),
         ("\n8088 CPU at 4.77 MHz", 1),
         ("\nMemory Test :  0K OK", 0.1),
@@ -115,11 +115,14 @@ if __name__ == "__main__":
     )
     lines += (
         (f"\r{RED}FAILED{RESET}                 \n", 2),
-        ("\nERROR: Stage manager not found, stage is not set.", 2),
-        ("\nERROR: Callbacks not answered, cast incomplete.", 2),
-        ("\nERROR: Scripts corrupted.", 2),
-        ("\n\nMultiple system errors have occurred.", 2),
-        ("\nArtificial Thespian Interface disabled.", 2),
+        (f"\n{RED}ERROR{RESET}: Stage manager not found, stage is not set.", 2),
+        (f"\n{RED}ERROR{RESET}: Callbacks not answered, cast incomplete.", 2),
+        (f"\n{RED}ERROR{RESET}: Scripts corrupted.", 2),
+        (
+            "\n\nMultiple system errors have occurred, Artificial Thespian Interface could not be started.",
+            2,
+        ),
+        ("\n", 2),
         ("\nRestarting WS-DOS in safe mode...", 2),
     )
     output(lines)
