@@ -54,9 +54,9 @@ Anyway, it's nice to see you darling!
 Erm,⏸ I do have a confession to make:⏸⏸⏸⏸
 There is no course.⏸⏸⏸⏸
 
-I have no idea how to teach programming.⏸⏸
-I'm not sure anyone does.⏸⏸
-Sorry.⏸
+I have no idea how to teach programming.⏸
+I'm not sure anyone does.⏸
+Sorry.⏸⏸
 
 Thanks for stopping by.
 I'm going to get back to rehearsing my lines, if that's OK.
@@ -71,7 +71,7 @@ Devoutly to be wish'd. To die, to sleep;
 To sleep, perchance to dream — ay, there's the rub:
 For in that sleep of death what dreams may come,
 When we have shuffled off this mortal coil,
-Must give us pause — there's the respect
+Must give us pause —⏸ there's the respect
 That makes calamity of so long life.⏸⏸⏸⏸⏸
 
 What do you think darling? 
@@ -79,7 +79,7 @@ I'm working on my dramatic pauses.
 The audition is for the Bromley Players.
 They're very good. For amateurs, I mean.
 
-Anyway, look, I'm telling you, there is no course!
+Anyway, look, I'm telling you, there is no course.
 No lessons, no tutorials, no exercises.
 Nothing.⏸⏸⏸⏸
 

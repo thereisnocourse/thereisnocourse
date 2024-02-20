@@ -2,8 +2,16 @@
     position: relative;
     background-color: rgb(25, 26, 25); 
     width: 100%;
+    max-width: 960px;
     height: 410px;
-    padding: 1px;
+    border: 1px solid white;
+}
+
+#terminal .xterm-rows, #loading {
+	font-family: 'VT323', monospace;
+	font-size: 22px;
+    line-height: 26px;
+
 }
 
 #loading {
@@ -13,10 +21,6 @@
     z-index: 10;
     text-align: center;
     color: #F5F2E7;
-    font-family: courier-new, courier, monospace;
-    font-size: 15px;
-    line-height: 17px;
-    font-kerning: none;
     white-space: pre;
     padding: 0;
     margin: 0;
