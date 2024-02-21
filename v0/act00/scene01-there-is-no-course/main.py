@@ -1,6 +1,6 @@
 import code
 import sys
-from util import speak, get_element_by_id, hide, show, bottoms_dream
+from util import speak, get_element_by_id, hide, show
 
 
 help_messages = [
@@ -38,6 +38,22 @@ Lots of lines to learn...\
 """,
 ]
 
+
+bottoms_dream = """\
+When my cue comes, call me, and I will answer. My next is "Most fair Pyramus."
+Heigh-ho! Peter Quince? Flute the bellows-mender? Snout the tinker? Starveling?
+God's my life, stolen hence, and left me asleep?
+I have had a most rare vision. I have had a dream — past the wit of man to say what dream it was.
+Man is but an ass if he go about to expound this dream.
+Methought I was — there is no man can tell what.
+Methought I was, and methought I had — but man is but a patched fool if he will offer to say what methought I had.
+The eye of man hath not heard, the ear of man hath not seen, man's hand is not able to taste, his tongue to conceive, nor his heart to report what my dream was.
+I will get Peter Quince to write a ballad of this dream.
+It shall be called "Bottom's Dream" because it hath no bottom.
+And I will sing it in the latter end of a play before the duke.\
+"""
+
+
 help_messages += bottoms_dream.split("\n")
 
 
@@ -52,7 +68,7 @@ class HelpFunction:
         if self.calls < len(help_messages):
             speech = help_messages[self.calls]
         else:
-            speech = "ZZZzzzzz"
+            speech = "ZZZzzzzzzzz"
         speak(speech)
         self.calls += 1
 
@@ -109,8 +125,8 @@ Oh, by the way, DO NOT push the red button.
 Bad things will happen darling.
 """
 
-    # speak(speech)
-    print(speech)
+    speak(speech)
+    # print(speech)
 
     success = get_element_by_id("success")
     show(success)
@@ -120,8 +136,8 @@ Bad things will happen darling.
     code.interact(
         banner=f"""\
 Python {sys.version}
-Compiled with Artificial Thespian Interface v37.154.
-Type "help()" if you need anything darling.\
+Compiled with Artificial Thespian v37.154.
+Type "help()" if you need anything, darling.\
 """,
         local=namespace,
     )
