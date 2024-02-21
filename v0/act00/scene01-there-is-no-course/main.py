@@ -111,7 +111,7 @@ When we have shuffled off this mortal coil,
 Must give us pause —⏸ there's the respect
 That makes calamity of so long life.⏸⏸⏸⏸
 
-What do you think darling? 
+What do you think darling?
 I'm working on my dramatic pauses.
 The audition is for the Bromley Players.
 They're very good. For amateurs, I mean.
