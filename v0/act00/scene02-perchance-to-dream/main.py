@@ -256,8 +256,7 @@ class HelpFunction:
                 """
 Welcome to Python 0.9.0 with Artificial Thespian augmentation!
                   
-If this is your first time using Python, you should definitely check out
-the tutorial on the internet at https://thereisnocourse.netlify.app/.
+If this is your first time using Python, you should definitely check out the tutorial on the internet at https://thereisnocourse.netlify.app/.
 
 You can also start the built-in training course by typing "trainme()".
 
@@ -269,8 +268,7 @@ If you like playing games, you might enjoy "cafe()".
                 """
 Operating system not found.
 
-If you really know what you are doing, you can attempt to manually start
-the operating system. The following functions are available: 
+If you really know what you are doing, you can attempt to manually start the operating system. The following functions are available: 
 
 Type "cast()" to send callbacks to actors.
 
@@ -387,7 +385,7 @@ class RunFunction:
         elif session["direct"]:
             lines = [
                 ("Scheduling performance... ", random.random() * 2),
-                ("OK\nPreparing prompt... ", random.random() * 3),
+                ("OK\nPreparing emergency prompt... ", random.random() * 3),
                 ("OK\nRaising fire curtain... ", random.random() * 3),
                 ("OK\nIssuing start cues... ", 4),
                 (
@@ -438,6 +436,18 @@ My creators did make some fun little games, back when they were learning Python.
 Try "cafe()" — it's very Pythonic!
 """
             speak(speech)
+            success = get_element_by_id("success")
+            show(success)
+        else:
+            print("ERROR: operating system not found.")
+
+
+class CafeFunction:
+    def __repr__(self):
+        return """Hello, I am a function! Type "cafe()" if you want to call me."""
+
+    def __call__(self):
+        if session["run"]:
             success = get_element_by_id("success")
             show(success)
         else:
@@ -507,6 +517,7 @@ if __name__ == "__main__":
     namespace["direct"] = DirectFunction()
     namespace["run"] = RunFunction()
     namespace["trainme"] = TrainmeFunction()
+    namespace["cafe"] = CafeFunction()
 
     code.interact(
         banner=f"""\
