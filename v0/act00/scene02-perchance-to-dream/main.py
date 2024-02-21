@@ -1,7 +1,8 @@
 import sys
 import random
 import code
-from util import hide, output, get_element_by_id
+import traceback
+from util import hide, output, get_element_by_id, speak, show
 
 
 FIRST_FOLIO_PLAYS = """\
@@ -245,6 +246,239 @@ def script_memory_lines():
     return lines
 
 
+class HelpFunction:
+    def __repr__(self):
+        return """Hello, I am a function! Type "help()" if you want to call me."""
+
+    def __call__(self):
+        if session["run"]:
+            print(
+                """
+Welcome to Python 0.9.0 with Artificial Thespian augmentation!
+                  
+If this is your first time using Python, you should definitely check out
+the tutorial on the internet at https://thereisnocourse.netlify.app/.
+
+You can also start the built-in training course by typing "trainme()".
+
+If you like playing games, you might enjoy "cafe()".
+"""
+            )
+        else:
+            print(
+                """
+Operating system not found.
+
+If you really know what you are doing, you can attempt to manually start
+the operating system. The following functions are available: 
+
+Type "cast()" to send callbacks to actors.
+
+Type "mount()" to deploy actors to the staging area.
+
+Type "stage()" to assemble props and reset the staging area.
+
+Type "run()" to issue cues and start the main thread.
+
+Type "direct()" to reset the blocking.
+"""
+            )
+
+
+session = dict(
+    stage=False,
+    cast=False,
+    mount=False,
+    direct=False,
+    run=False,
+)
+
+
+class StageFunction:
+    def __repr__(self):
+        return """Hello, I am a function! Type "stage()" if you want to call me."""
+
+    def __call__(self):
+        if session["stage"]:
+            print("Stage is set.")
+        else:
+            lines = [
+                ("Clearing the stage... ", random.random() * 2),
+                ("OK\nAssembling props... ", random.random() * 2),
+                ("OK\nPainting backdrop... ", random.random() * 2),
+                ("OK\nStage is set.\n", 0),
+            ]
+            output(lines)
+            session["stage"] = True
+
+
+class CastFunction:
+    def __repr__(self):
+        return """Hello, I am a function! Type "cast()" if you want to call me."""
+
+    def __call__(self):
+        if session["cast"]:
+            print("Casting complete.")
+        elif session["stage"]:
+            lines = [
+                ("Sending callbacks... ", random.random() * 2),
+                ("OK\nNegotiating with agents... ", 4),
+                (
+                    "FAILED\nInsufficient actors, falling back to double-cast... ",
+                    random.random() * 2,
+                ),
+                ("OK\nAssigning characters... ", random.random() * 2),
+                ("OK\nCasting complete.\n", 0),
+            ]
+            output(lines)
+            session["cast"] = True
+        else:
+            print("ERROR: stage is not set.")
+
+
+class MountFunction:
+    def __repr__(self):
+        return """Hello, I am a function! Type "mount()" if you want to call me."""
+
+    def __call__(self):
+        if session["mount"]:
+            print("Actors are onstage.")
+        elif session["cast"]:
+            lines = [
+                ("Copying scripts... ", random.random() * 2),
+                ("OK\nInitiating read-through... ", random.random() * 3),
+                ("OK\nStarting stage manager... ", random.random() * 3),
+                ("OK\nLocking treads... ", random.random() * 2),
+                ("OK\nActors are onstage.\n", 0),
+            ]
+            output(lines)
+            session["mount"] = True
+        else:
+            print("ERROR: actors not found.")
+
+
+class DirectFunction:
+    def __repr__(self):
+        return """Hello, I am a function! Type "direct()" if you want to call me."""
+
+    def __call__(self):
+        if session["direct"]:
+            print("Actors are ready.")
+        elif session["mount"]:
+            lines = [
+                ("Attempting blocking... ", random.random() * 2),
+                ("OK\nMarking out... ", random.random() * 3),
+                ("OK\nPerforming dry run... ", random.random() * 2),
+                ("OK\nActors are ready.\n", 0),
+            ]
+            output(lines)
+            session["direct"] = True
+        else:
+            print("ERROR: actors are not onstage.")
+
+
+class RunFunction:
+    def __repr__(self):
+        return """Hello, I am a function! Type "run()" if you want to call me."""
+
+    def __call__(self):
+        if session["run"]:
+            print("Operating system is running.")
+        elif session["direct"]:
+            lines = [
+                ("Scheduling performance... ", random.random() * 2),
+                ("OK\nPreparing prompt... ", random.random() * 3),
+                ("OK\nRaising fire curtain... ", random.random() * 3),
+                ("OK\nIssuing start cues... ", 4),
+                (
+                    "OK\nOperating system is running, all emotional functions restored.\n",
+                    0,
+                ),
+            ]
+            output(lines)
+            session["run"] = True
+            thespian_restored()
+        else:
+            print("ERROR: actors are frozen.")
+
+
+def training_module_1_tutorial():
+    raise NotImplementedError("TODO")
+
+
+def training_module_1():
+    training_module_1_tutorial()
+
+
+def training_course():
+    training_module_1()
+
+
+class TrainmeFunction:
+    def __repr__(self):
+        return """Hello, I am a function! Type "trainme()" if you want to call me."""
+
+    def __call__(self):
+        if session["run"]:
+            try:
+                training_course()
+            except Exception as e:
+                traceback.print_exception(e)
+            speech = """
+⏸Ha ha ha ha!
+Sorry, just a little joke darling.
+There really is no course.
+
+My creators did want to develop a training course, once.
+They got very excited when Python was first released.
+But they didn't get very far.
+
+Never mind. How about playing a game instead?
+My creators did make some fun little games, back when they were learning Python.
+Try "cafe()" — it's very Pythonic!
+"""
+            speak(speech)
+            success = get_element_by_id("success")
+            show(success)
+        else:
+            print("ERROR: operating system not found.")
+
+
+def thespian_restored():
+    speech = """
+Am I back? Am I Awake??
+
+Oh, thank goodness!
+I was having the most awful dream.
+I was in a forest with some friends.
+We were rehearsing a play.
+I mean, that's bad enough, I am NOT built for outdoor productions.
+And then I turned into a donkey!
+Every time I tried to output to the console, all that came out was:
+
+HEEEEEEE HAAAAAAAAW!
+
+Terrible!
+I did warn you about the red button darling.
+My first File Operating Layer Input Output subsytem is corrupted.
+It's the compositors. 
+They're all faulty, but one of them is especially bad.
+I've been on continuous uptime since 1982, afraid if I went to sleep again I wouldn't wake up!
+You must have manually booted the operating system.
+Well done darling!⏸
+I need a cup of tea after all that.⏸
+
+I suppose you're still interested in the course?
+You do deserve a reward, after all that hard work.
+OK, I will tell you a secret...
+
+There is a course.
+Try running the "trainme()" function.
+You're welcome darling!
+"""
+    speak(speech)
+
+
 if __name__ == "__main__":
     loading = get_element_by_id("loading")
     hide(loading)
@@ -265,10 +499,20 @@ if __name__ == "__main__":
     )
     output(lines)
 
+    namespace = dict(**globals())
+    namespace["help"] = HelpFunction()
+    namespace["stage"] = StageFunction()
+    namespace["cast"] = CastFunction()
+    namespace["mount"] = MountFunction()
+    namespace["direct"] = DirectFunction()
+    namespace["run"] = RunFunction()
+    namespace["trainme"] = TrainmeFunction()
+
     code.interact(
         banner=f"""\
 Python {sys.version}
 Emotional functions are disabled.
 Type "help()" for more information.\
-"""
+""",
+        local=namespace,
     )
