@@ -240,7 +240,7 @@ def script_memory_lines():
         pause = random.random() * 0.3
         line = (text, pause)
         lines.append(line)
-    error = pad("\rCopy error in FOLIO.SYS, page is corrupted.", max_len)
+    error = pad("\rCompositor error in FOLIO.SYS, page is corrupted.", max_len)
     lines.append((error, 2))
     return lines
 
