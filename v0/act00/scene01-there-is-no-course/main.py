@@ -93,7 +93,6 @@ Erm,⏸ I do have a confession to make:⏸⏸⏸
 There is no course.⏸⏸⏸
 
 I have no idea how to teach programming.⏸
-I'm not sure anyone does.⏸
 Sorry.⏸⏸
 
 Thanks for stopping by.
