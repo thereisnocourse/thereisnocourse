@@ -1,34 +1,16 @@
 from pyscript import window, document, when
 import js
 from pyodide.ffi import create_proxy
+from util import get_element_by_id, show, hide, get_url_params
 
 
 # This variable stores the overall state of the UI in the current session (tab).
 session = dict()
 
 
-def debug(message):
-    js.console.log(message)
-
-
-def get_element_by_id(x):
-    assert document is not None
-    assert document.getElementById is not None, document
-    node = document.getElementById(x)
-    return node
-
-
-def show(element, display="block"):
-    element.style.display = display
-
-
-def hide(element):
-    element.style.display = "none"
-
-
 def get_question_url_param():
-    query_params = dict(js.URLSearchParams.new(window.location.search))
-    question = query_params.get("question", "prologue")
+    params = get_url_params()
+    question = params.get("question", "prologue")
     return question
 
 
