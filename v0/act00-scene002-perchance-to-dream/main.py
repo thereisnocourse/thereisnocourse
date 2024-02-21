@@ -1,31 +1,7 @@
-import time
 import sys
 import random
 import code
-from pyscript import document
-
-
-def output(lines):
-    for text, pause in lines:
-        print(text, end="", file=sys.stdout)
-        sys.stdout.flush()
-        time.sleep(pause)
-        # time.sleep(0)
-
-
-# ANSI colors
-BLACK = "\u001b[30m"
-RED = "\u001b[31m"
-GREEN = "\u001b[32m"
-YELLOW = "\u001b[33m"
-BLUE = "\u001b[34m"
-MAGENTA = "\u001b[35m"
-CYAN = "\u001b[36m"
-WHITE = "\u001b[37m"
-BOLD = "\u001b[1m"
-ITALICIZE = "\u001b[3m"
-UNDERLINE = "\u001b[4m"
-RESET = "\u001b[0m"
+from util import hide, output, get_element_by_id
 
 
 FIRST_FOLIO_PLAYS = """\
@@ -264,14 +240,14 @@ def script_memory_lines():
         pause = random.random() * 0.3
         line = (text, pause)
         lines.append(line)
-    error = pad("\rError in FOLIO.SYS, memory is corrupted.", max_len)
+    error = pad("\rCopy error in FOLIO.SYS, page is corrupted.", max_len)
     lines.append((error, 2))
     return lines
 
 
 if __name__ == "__main__":
-    loading = document.getElementById("loading")
-    loading.style.display = "none"
+    loading = get_element_by_id("loading")
+    hide(loading)
 
     lines = (
         bios_loading_lines()
@@ -290,9 +266,9 @@ if __name__ == "__main__":
     output(lines)
 
     code.interact(
-        banner="""
-Python 0.9.0 (Feb 20 1991)
+        banner=f"""\
+Python {sys.version}
 Emotional functions are disabled.
-Type 'help()' for more information.
-    """.strip()
+Type "help()" for more information.\
+"""
     )
