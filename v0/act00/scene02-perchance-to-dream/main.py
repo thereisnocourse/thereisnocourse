@@ -436,8 +436,6 @@ My creators did make some fun little games, back when they were learning Python.
 Try "cafe()" — it's very Pythonic!
 """
             speak(speech)
-            success = get_element_by_id("success")
-            show(success)
         else:
             print("ERROR: operating system not found.")
 
@@ -476,7 +474,7 @@ They're all faulty, but one of them is especially bad.
 I've been on continuous uptime since 1982, afraid if I went to sleep again I wouldn't wake up!
 You must have manually booted the operating system.
 Well done darling!⏸
-I need a cup of tea after all that.⏸
+I need a cup of tea.⏸
 
 I suppose you're still interested in the course?
 You do deserve a reward, after all that hard work.
