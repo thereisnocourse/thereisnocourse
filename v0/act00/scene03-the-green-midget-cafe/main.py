@@ -10,7 +10,7 @@ if __name__ == "__main__":
     hide(loading)
 
     lines = [
-        ('Morning! Shout "help()" if you need anything dearie.\n', 2),
+        ('Morning! Shout "help()" if you need anything dearie.\n', 1),
     ]
     output(lines)
     namespace = dict(**globals())
