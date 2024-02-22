@@ -5,9 +5,9 @@ import traceback
 from util import hide, output, get_element_by_id, speak, show, pad
 
 
-# This is the main session state, records whether the different
+# This is the main game state, records whether the different
 # steps in manually booting the OS have been completed.
-session = {
+os_state = {
     "staged": False,
     "cast": False,
     "mounted": False,
@@ -246,6 +246,8 @@ def output_bios_loading():
 
 
 def output_cpu_memory():
+    # This is a small joke, values for CPU and memory below are
+    # for the first generation IBM PC released in 1981.
     lines = [("\n8088 CPU at 4.77 MHz\n", 1)]
     for i in range(17):
         text = f"\rMemory Test :  {i}K OK"
@@ -310,7 +312,7 @@ class HelpFunction:
         # Print different help messages, depending on whether or not the player
         # has managed to get the operating system running yet.
 
-        if session["running"]:
+        if os_state["running"]:
             # Operating system is running.
             speak(
                 """⏩
@@ -347,7 +349,7 @@ class StageFunction:
         return function_repr_template.format(name="stage")
 
     def __call__(self):
-        if session["staged"]:
+        if os_state["staged"]:
             print("Stage is set.")
         else:
             lines = [
@@ -357,7 +359,7 @@ class StageFunction:
                 ("OK\nStage is set.\n", 0),
             ]
             output(lines)
-            session["staged"] = True
+            os_state["staged"] = True
 
 
 class CastFunction:
@@ -365,9 +367,9 @@ class CastFunction:
         return function_repr_template.format(name="cast")
 
     def __call__(self):
-        if session["cast"]:
+        if os_state["cast"]:
             print("Casting complete.")
-        elif session["staged"]:
+        elif os_state["staged"]:
             lines = [
                 ("Sending callbacks... ", random.random() * 2),
                 ("OK\nNegotiating with agents... ", 4),
@@ -379,7 +381,7 @@ class CastFunction:
                 ("OK\nCasting complete.\n", 0),
             ]
             output(lines)
-            session["cast"] = True
+            os_state["cast"] = True
         else:
             print("ERROR: stage is not set.")
 
@@ -389,9 +391,9 @@ class MountFunction:
         return function_repr_template.format(name="mount")
 
     def __call__(self):
-        if session["mounted"]:
+        if os_state["mounted"]:
             print("Actors are onstage.")
-        elif session["cast"]:
+        elif os_state["cast"]:
             lines = [
                 ("Copying scripts... ", random.random() * 2),
                 ("OK\nInitiating read-through... ", random.random() * 3),
@@ -400,7 +402,7 @@ class MountFunction:
                 ("OK\nActors are onstage.\n", 0),
             ]
             output(lines)
-            session["mounted"] = True
+            os_state["mounted"] = True
         else:
             print("ERROR: actors not found.")
 
@@ -410,9 +412,9 @@ class DirectFunction:
         return function_repr_template.format(name="direct")
 
     def __call__(self):
-        if session["directed"]:
+        if os_state["directed"]:
             print("Actors are ready.")
-        elif session["mounted"]:
+        elif os_state["mounted"]:
             lines = [
                 ("Attempting blocking... ", random.random() * 2),
                 ("OK\nMarking out... ", random.random() * 3),
@@ -420,7 +422,7 @@ class DirectFunction:
                 ("OK\nActors are ready.\n", 0),
             ]
             output(lines)
-            session["directed"] = True
+            os_state["directed"] = True
         else:
             print("ERROR: actors are not onstage.")
 
@@ -430,9 +432,9 @@ class RunFunction:
         return function_repr_template.format(name="run")
 
     def __call__(self):
-        if session["running"]:
+        if os_state["running"]:
             print("Operating system is running.")
-        elif session["directed"]:
+        elif os_state["directed"]:
             lines = [
                 ("Scheduling main performance... ", random.random() * 2),
                 ("OK\nPreparing emergency prompt... ", random.random() * 3),
@@ -445,7 +447,7 @@ class RunFunction:
                 ),
             ]
             output(lines)
-            session["running"] = True
+            os_state["running"] = True
             thespian_restored()
         else:
             print("ERROR: actors are frozen.")
@@ -473,7 +475,7 @@ class TrainMeFunction:
         return function_repr_template.format(name="train_me")
 
     def __call__(self):
-        if session["running"]:
+        if os_state["running"]:
             try:
                 training_course()
             except Exception as e:
@@ -488,7 +490,7 @@ class CafeFunction:
         return """Hello, I am a function! Type "cafe()" if you want to call me."""
 
     def __call__(self):
-        if session["running"]:
+        if os_state["running"]:
             success = get_element_by_id("success")
             show(success)
         else:

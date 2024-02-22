@@ -9,13 +9,12 @@ if __name__ == "__main__":
     loading = get_element_by_id("loading")
     hide(loading)
 
-    print("TODO")
-
+    lines = [
+        ('Morning! Shout "help()" if you need anything dearie.\n', 2),
+    ]
+    output(lines)
     namespace = dict(**globals())
     code.interact(
-        banner=f"""\
-The Green Midget Cafe
-Type "help()" for more information.\
-""",
+        banner="",
         local=namespace,
     )

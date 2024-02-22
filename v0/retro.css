@@ -75,8 +75,10 @@ input {
 	width: 100%;
 	/* SVGA width */
 	max-width: 800px;
-	height: 410px;
-	border: 2px solid rgb(238, 238, 238);
+	height: 408px;
+	border: 3px solid rgb(238, 238, 238);
+	border-radius: 5px;
+	padding: 3px;
 }
 
 #screen #loading {
@@ -86,7 +88,7 @@ input {
 	font-size: 15px;
 	line-height: 17px;
 	font-family: courier-new, courier, monospace;
-	padding: 0 3px 0 3px;
+	padding: 3px;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -104,7 +106,7 @@ input {
 	/* font-family: 'VT323', monospace !important;
 	font-size: 17px !important;
 	line-height: 17px !important; */
-	padding: 0 3px 0 3px;
+	padding: 0;
 }
 
 #title>p {
