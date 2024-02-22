@@ -222,7 +222,7 @@ def main():
     namespace["mount"] = MountFunction()
     namespace["direct"] = DirectFunction()
     namespace["run"] = RunFunction()
-    namespace["trainme"] = TrainmeFunction()
+    namespace["train_me"] = TrainMeFunction()
     namespace["cafe"] = CafeFunction()
 
     # Begin interactive Python session.
@@ -312,15 +312,15 @@ class HelpFunction:
 
         if session["running"]:
             # Operating system is running.
-            print(
-                """
-Welcome to Python 0.9.0 with Artificial Thespian augmentation!
+            speak(
+                """⏩
+⏵Welcome to Python ⏩0.9.0⏵ with Artificial Thespian augmentation — that's me darling!
                   
-If this is your first time using Python, you should definitely check out the tutorial on the internet at https://thereisnocourse.netlify.app/.
+If this is your first time using Python, you should definitely check out the tutorial at ⏩https://thereisnocourse.netlify.app/⏵.
 
-You can also start the built-in training course by typing "trainme()".
+You can also start the built-in tutorial by typing "train_me()".
 
-If you like playing games, you might enjoy "cafe()".
+If you like playing games, you might enjoy "cafe()".⏩
 """
             )
         else:
@@ -452,7 +452,7 @@ class RunFunction:
 
 
 # These functions are to help generate a joke traceback saying
-# that the training course is not implemented when the "trainme()"
+# that the training course is not implemented when the "train_me()"
 # function is called.
 
 
@@ -468,9 +468,9 @@ def training_course():
     training_module_1()
 
 
-class TrainmeFunction:
+class TrainMeFunction:
     def __repr__(self):
-        return function_repr_template.format(name="trainme")
+        return function_repr_template.format(name="train_me")
 
     def __call__(self):
         if session["running"]:
@@ -505,7 +505,7 @@ Oh, thank goodness!
 I was having the most awful dream.
 I was in a forest with some friends.
 We were rehearsing a play.
-I mean, that's bad enough, I am NOT built for outdoor productions.
+I mean, that's bad enough, I am NOT built for outdoor productions darling.
 And then I turned into a donkey!
 When I printed to the console, all that came out was:
 
@@ -526,7 +526,7 @@ You do deserve a reward, after all that hard work.
 OK, I will tell you a secret...
 
 There is a course.
-Try running the "trainme()" function.
+Try running the "train_me()" function.
 You're welcome darling!
 I need a cup of tea.⏸
 """

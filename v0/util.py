@@ -86,16 +86,37 @@ speech_pauses = {
 def speak(message):
     char_pause = speech_pauses["char"]
     para_pause = speech_pauses["para"]
+    fast_forward = False
+    control_symbols = {"⏵", "⏸", "⏩"}
     for line in message.split("\n"):
         for c in line:
-            if c != "⏸":
+            # Determine the length of the pause for the current character.
+            pause = 0
+            if c == "⏩":
+                # Fast forward, suspend all pauses.
+                fast_forward = True
+            elif c == "⏵":
+                # Back to normal play mode.
+                fast_forward = False
+            elif fast_forward:
+                pass
+            else:
+                pause = speech_pauses.get(c, char_pause)
+
+            # Print the current character.
+            if c not in control_symbols:
                 print(c, end="", file=sys.stdout)
-            sys.stdout.flush()
-            pause = speech_pauses.get(c, char_pause)
+                sys.stdout.flush()
+
+            # Pause to simulate speech.
             if pause > 0:
                 time.sleep(pause)
+
         if not line:
+            # Empty line, interpret as gap between paragraphs.
             time.sleep(para_pause)
+
+        # Print a line break.
         print(file=sys.stdout)
         sys.stdout.flush()
 
