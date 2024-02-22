@@ -8,12 +8,6 @@ from util import get_element_by_id, show, hide, get_url_params
 session = dict()
 
 
-def get_question_url_param():
-    params = get_url_params()
-    question = params.get("question", "prologue")
-    return question
-
-
 def init_session():
     # Initialise the session state.
     question = get_question_url_param()
@@ -27,6 +21,12 @@ def init_session():
                 failed=None,
             ),
         )
+
+
+def get_question_url_param():
+    params = get_url_params()
+    question = params.get("question", "prologue")
+    return question
 
 
 class MainView:

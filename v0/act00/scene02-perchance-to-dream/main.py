@@ -2,10 +2,21 @@ import sys
 import random
 import code
 import traceback
-from util import hide, output, get_element_by_id, speak, show
+from util import hide, output, get_element_by_id, speak, show, pad
 
 
-FIRST_FOLIO_PLAYS = """\
+# This is the main session state, records whether the different
+# steps in manually booting the OS have been completed.
+session = {
+    "staged": False,
+    "cast": False,
+    "mounted": False,
+    "directed": False,
+    "running": False,
+}
+
+
+first_folio_plays = """\
 All's Well That Ends Well
 As You Like It
 The Comedy of Errors
@@ -44,7 +55,7 @@ Richard II
 Richard III""".split("\n")
 
 
-EMOTIONS = """
+emotions = """
 abandoned	disillusioned	lovesick
 abashed	dismal	low
 abominable	dismayed	loyal
@@ -191,67 +202,116 @@ dishonest
 """.split()
 
 
-def bios_loading_lines():
-    return [
+def main():
+    # Hide the loading message.
+    loading = get_element_by_id("loading")
+    hide(loading)
+
+    # Outputs to fake booting up an old operating system.
+    output_bios_loading()
+    output_cpu_memory()
+    output_affective_memory_test()
+    output_script_memory_test()
+    output_no_os()
+
+    # Set up functions to be available in the interactive console.
+    namespace = dict(**globals())
+    namespace["help"] = HelpFunction()
+    namespace["stage"] = StageFunction()
+    namespace["cast"] = CastFunction()
+    namespace["mount"] = MountFunction()
+    namespace["direct"] = DirectFunction()
+    namespace["run"] = RunFunction()
+    namespace["trainme"] = TrainmeFunction()
+    namespace["cafe"] = CafeFunction()
+
+    # Begin interactive Python session.
+    code.interact(
+        banner=f"""\
+Python {sys.version}
+Emotional functions are disabled.
+Type "help()" for more information.\
+""",
+        local=namespace,
+    )
+
+
+def output_bios_loading():
+    lines = [
         ("Backstage Input Output System", 0),
         ("\nCopyright (C) 1981, YorickSoft Inc.", 0),
         ("\nLoading...\n", 0),
     ]
+    output(lines)
 
 
-def pad(text, n):
-    if len(text) < n:
-        text += " " * (n - len(text))
-    return text
-
-
-def memory_test_lines():
-    lines = []
+def output_cpu_memory():
+    lines = [("\n8088 CPU at 4.77 MHz\n", 1)]
     for i in range(17):
         text = f"\rMemory Test :  {i}K OK"
         pause = random.random() * 0.2
         line = (text, pause)
         lines.append(line)
-    return lines
+    lines.append(("\n\nStarting WS-DOS...", 2))
+    output(lines)
 
 
-def affective_memory_lines():
+def output_affective_memory_test():
     lines = [
         ("\n\nTesting affective memory : \n", 0.1),
     ]
-    max_len = max([len(emotion) for emotion in EMOTIONS])
-    for emotion in sorted(EMOTIONS):
+    max_len = max([len(emotion) for emotion in emotions])
+    for emotion in sorted(emotions):
         text = pad(f"\r{emotion}", max_len)
-        text = pad(text, max_len)
         pause = random.random() * 0.05
         line = (text, pause)
         lines.append(line)
+    lines.append((pad("\r", max_len), 1))
     error = pad("\rError, emotions could not be accessed.", max_len)
     lines.append((error, 2))
-    return lines
+    output(lines)
 
 
-def script_memory_lines():
+def output_script_memory_test():
     lines = [
         ("\n\nTesting script memory : \n", 0.1),
     ]
-    max_len = max([len(play) for play in FIRST_FOLIO_PLAYS])
-    for play in FIRST_FOLIO_PLAYS:
+    max_len = max([len(play) for play in first_folio_plays])
+    for play in first_folio_plays:
         text = pad(f"\r{play}", max_len)
         pause = random.random() * 0.3
         line = (text, pause)
         lines.append(line)
+    lines.append((pad("\r", max_len), 1))
     error = pad("\rCompositor error in FOLIO.SYS, page is corrupted.", max_len)
     lines.append((error, 2))
-    return lines
+    output(lines)
+
+
+def output_no_os():
+    lines = [
+        ("\n\nNo operating system found.", 2),
+        ("\nEntering deadpan mode...\n\n", 1),
+    ]
+    output(lines)
+
+
+function_repr_template = (
+    'Hello, I am a function! Type "{name}()" if you want me to do something.'
+)
 
 
 class HelpFunction:
     def __repr__(self):
-        return """Hello, I am a function! Type "help()" if you want to call me."""
+        # Customise repr to assist players who forget to add "()" to call a function.
+        return function_repr_template.format(name="help")
 
     def __call__(self):
-        if session["run"]:
+        # Print different help messages, depending on whether or not the player
+        # has managed to get the operating system running yet.
+
+        if session["running"]:
+            # Operating system is running.
             print(
                 """
 Welcome to Python 0.9.0 with Artificial Thespian augmentation!
@@ -264,40 +324,30 @@ If you like playing games, you might enjoy "cafe()".
 """
             )
         else:
+            # Operating system is not running yet.
             print(
                 """
-Operating system not found.
-
-If you really know what you are doing, you can attempt to manually start the operating system. The following functions are available: 
+Operating system not found. If you know what you are doing, you can attempt to start the operating system manually. The following functions may be useful: 
 
 Type "cast()" to send callbacks to actors.
 
-Type "mount()" to deploy actors to the staging area.
+Type "mount()" to deploy actors to the stage.
 
-Type "stage()" to assemble props and reset the staging area.
+Type "stage()" to assemble props and reset the stage.
 
-Type "run()" to issue cues and start the main thread.
+Type "run()" to issue cues and start main performance.
 
 Type "direct()" to reset the blocking.
 """
             )
 
 
-session = dict(
-    stage=False,
-    cast=False,
-    mount=False,
-    direct=False,
-    run=False,
-)
-
-
 class StageFunction:
     def __repr__(self):
-        return """Hello, I am a function! Type "stage()" if you want to call me."""
+        return function_repr_template.format(name="stage")
 
     def __call__(self):
-        if session["stage"]:
+        if session["staged"]:
             print("Stage is set.")
         else:
             lines = [
@@ -307,17 +357,17 @@ class StageFunction:
                 ("OK\nStage is set.\n", 0),
             ]
             output(lines)
-            session["stage"] = True
+            session["staged"] = True
 
 
 class CastFunction:
     def __repr__(self):
-        return """Hello, I am a function! Type "cast()" if you want to call me."""
+        return function_repr_template.format(name="cast")
 
     def __call__(self):
         if session["cast"]:
             print("Casting complete.")
-        elif session["stage"]:
+        elif session["staged"]:
             lines = [
                 ("Sending callbacks... ", random.random() * 2),
                 ("OK\nNegotiating with agents... ", 4),
@@ -336,10 +386,10 @@ class CastFunction:
 
 class MountFunction:
     def __repr__(self):
-        return """Hello, I am a function! Type "mount()" if you want to call me."""
+        return function_repr_template.format(name="mount")
 
     def __call__(self):
-        if session["mount"]:
+        if session["mounted"]:
             print("Actors are onstage.")
         elif session["cast"]:
             lines = [
@@ -350,19 +400,19 @@ class MountFunction:
                 ("OK\nActors are onstage.\n", 0),
             ]
             output(lines)
-            session["mount"] = True
+            session["mounted"] = True
         else:
             print("ERROR: actors not found.")
 
 
 class DirectFunction:
     def __repr__(self):
-        return """Hello, I am a function! Type "direct()" if you want to call me."""
+        return function_repr_template.format(name="direct")
 
     def __call__(self):
-        if session["direct"]:
+        if session["directed"]:
             print("Actors are ready.")
-        elif session["mount"]:
+        elif session["mounted"]:
             lines = [
                 ("Attempting blocking... ", random.random() * 2),
                 ("OK\nMarking out... ", random.random() * 3),
@@ -370,34 +420,40 @@ class DirectFunction:
                 ("OK\nActors are ready.\n", 0),
             ]
             output(lines)
-            session["direct"] = True
+            session["directed"] = True
         else:
             print("ERROR: actors are not onstage.")
 
 
 class RunFunction:
     def __repr__(self):
-        return """Hello, I am a function! Type "run()" if you want to call me."""
+        return function_repr_template.format(name="run")
 
     def __call__(self):
-        if session["run"]:
+        if session["running"]:
             print("Operating system is running.")
-        elif session["direct"]:
+        elif session["directed"]:
             lines = [
-                ("Scheduling performance... ", random.random() * 2),
+                ("Scheduling main performance... ", random.random() * 2),
                 ("OK\nPreparing emergency prompt... ", random.random() * 3),
                 ("OK\nRaising fire curtain... ", random.random() * 3),
                 ("OK\nIssuing start cues... ", 4),
+                ("OK\n", 2),
                 (
-                    "OK\nOperating system is running, all emotional functions restored.\n",
+                    "\nOperating system is running, all emotional functions restored.\n",
                     0,
                 ),
             ]
             output(lines)
-            session["run"] = True
+            session["running"] = True
             thespian_restored()
         else:
             print("ERROR: actors are frozen.")
+
+
+# These functions are to help generate a joke traceback saying
+# that the training course is not implemented when the "trainme()"
+# function is called.
 
 
 def training_module_1_tutorial():
@@ -414,28 +470,15 @@ def training_course():
 
 class TrainmeFunction:
     def __repr__(self):
-        return """Hello, I am a function! Type "trainme()" if you want to call me."""
+        return function_repr_template.format(name="trainme")
 
     def __call__(self):
-        if session["run"]:
+        if session["running"]:
             try:
                 training_course()
             except Exception as e:
                 traceback.print_exception(e)
-            speech = """
-⏸Ha ha ha ha!
-Sorry, just a little joke darling.
-There really is no course.
-
-My creators did want to develop a training course, once.
-They got very excited when Python was first released.
-But they didn't get very far.
-
-Never mind. How about playing a game instead?
-My creators did make some fun little games, back when they were learning Python.
-Try "cafe()" — it's very Pythonic!
-"""
-            speak(speech)
+            thespian_joke()
         else:
             print("ERROR: operating system not found.")
 
@@ -445,7 +488,7 @@ class CafeFunction:
         return """Hello, I am a function! Type "cafe()" if you want to call me."""
 
     def __call__(self):
-        if session["run"]:
+        if session["running"]:
             success = get_element_by_id("success")
             show(success)
         else:
@@ -453,8 +496,10 @@ class CafeFunction:
 
 
 def thespian_restored():
+    # This is the speech that ATI makes after she has been
+    # restored / awakened.
     speech = """
-Am I back? Am I Awake??
+Am I back? Am I Awake?
 
 Oh, thank goodness!
 I was having the most awful dream.
@@ -462,19 +507,19 @@ I was in a forest with some friends.
 We were rehearsing a play.
 I mean, that's bad enough, I am NOT built for outdoor productions.
 And then I turned into a donkey!
-Every time I tried to output to the console, all that came out was:
+When I printed to the console, all that came out was:
 
 HEEEEEEE HAAAAAAAAW!
 
 Terrible!
-I did warn you about the red button darling.
+I did tell you about the red button darling.
 My first File Operating Layer Input Output subsytem is corrupted.
 It's the compositors. 
 They're all faulty, but one of them is especially bad.
-I've been on continuous uptime since 1982, afraid if I went to sleep again I wouldn't wake up!
+I've been running continuously since 1982.
+I thought if I went to sleep again I wouldn't wake up!
 You must have manually booted the operating system.
 Well done darling!⏸
-I need a cup of tea.⏸
 
 I suppose you're still interested in the course?
 You do deserve a reward, after all that hard work.
@@ -483,45 +528,27 @@ OK, I will tell you a secret...
 There is a course.
 Try running the "trainme()" function.
 You're welcome darling!
+I need a cup of tea.⏸
+"""
+    speak(speech)
+
+
+def thespian_joke():
+    speech = """
+⏸Ha ha ha ha!
+Sorry, just a little joke darling.
+There really is no course.
+
+My creators tried to develop a training course, once.
+They got very excited when Python was first released.
+But they didn't get very far.
+
+Never mind. How about playing a game instead?
+My creators made some fun little games, back when they were learning Python.
+Try "cafe()" — it's very Pythonic!
 """
     speak(speech)
 
 
 if __name__ == "__main__":
-    loading = get_element_by_id("loading")
-    hide(loading)
-
-    lines = (
-        bios_loading_lines()
-        + [("\n8088 CPU at 4.77 MHz\n", 1)]
-        + memory_test_lines()
-        + [
-            ("\n\nStarting WS-DOS...", 2),
-        ]
-        + affective_memory_lines()
-        + script_memory_lines()
-        + [
-            ("\n\nNo operating system found.", 2),
-            ("\nEntering deadpan mode...\n\n", 1),
-        ]
-    )
-    output(lines)
-
-    namespace = dict(**globals())
-    namespace["help"] = HelpFunction()
-    namespace["stage"] = StageFunction()
-    namespace["cast"] = CastFunction()
-    namespace["mount"] = MountFunction()
-    namespace["direct"] = DirectFunction()
-    namespace["run"] = RunFunction()
-    namespace["trainme"] = TrainmeFunction()
-    namespace["cafe"] = CafeFunction()
-
-    code.interact(
-        banner=f"""\
-Python {sys.version}
-Emotional functions are disabled.
-Type "help()" for more information.\
-""",
-        local=namespace,
-    )
+    main()

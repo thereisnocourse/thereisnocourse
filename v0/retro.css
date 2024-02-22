@@ -11,7 +11,6 @@ body {
 	margin: 0;
 	overflow-y: scroll;
 	padding: 2ch;
-	/*	text-align: center;*/
 }
 
 button,
@@ -35,7 +34,6 @@ input {
 	font-size: 24px;
 	margin: 0rem;
 	padding: .5rem;
-	/* text-transform: uppercase; */
 	text-decoration: none;
 
 	&:focus,
@@ -75,7 +73,8 @@ input {
 	position: relative;
 	background-color: rgb(25, 26, 25);
 	width: 100%;
-	max-width: 960px;
+	/* SVGA width */
+	max-width: 800px;
 	height: 410px;
 	border: 2px solid rgb(238, 238, 238);
 }
@@ -88,16 +87,6 @@ input {
 	line-height: 17px;
 	font-family: courier-new, courier, monospace;
 	padding: 0 3px 0 3px;
-}
-
-.xterm-rows>div {
-	/* font-family: 'VT323', monospace !important;
-	font-size: 17px !important;
-	line-height: 17px !important; */
-	padding: 0 3px 0 3px;
-}
-
-#screen #loading {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -109,6 +98,13 @@ input {
 	margin-block: 0;
 	width: 100%;
 	border-width: 0;
+}
+
+.xterm-rows>div {
+	/* font-family: 'VT323', monospace !important;
+	font-size: 17px !important;
+	line-height: 17px !important; */
+	padding: 0 3px 0 3px;
 }
 
 #title>p {

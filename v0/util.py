@@ -38,6 +38,12 @@ def get_url_params():
     return params
 
 
+def pad(text, n):
+    if len(text) < n:
+        text += " " * (n - len(text))
+    return text
+
+
 def output(lines):
     for text, pause in lines:
         print(text, end="", file=sys.stdout)
