@@ -30,33 +30,29 @@
             <h1>The Green Midget Cafe</h1>
         </div>
 
+        <div id="prologue">
+            <p>
+                <img src="cafe.jpg" />
+            </p>
+            <p>Welcome to the Green Midget Cafe, Bromley's finest!</p>
+            <p>The aim of the game is to help the customers order their favourite food.</p>
+            <p>Make sure you've got the sound turned up!</p>
+            <p>
+                <span id="loading">Loading...</span>
+                <button id="play_button" class="btn btn_primary">Play &gt;&gt;&gt;</button>
+            </p>
+        </div>
+
         <div id="screen">
             <div id="terminal">
-                <pre id="loading">
-Loading...
-                </pre>
             </div>
         </div>
 
-        <div id="audio" style="margin: .5em 0 0 0;">
-            <div id="audio-menu">
-                <table style="vertical-align: middle;">
-                    <tr>
-                        <td>
-                            <span>Menu:</span>
-                        </td>
-                        <td>
-                            <span>
-                                <audio controls preload="auto">
-                                    <source src="menu.ogg" type="audio/ogg" />
-                                    Your browser does not support audio.
-                                </audio>
-                            </span>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
+        <div id="audio">
+            <audio id="audio_morning" controls preload="auto" src="audio/morning.mp3" type="audio/mp3">
+            </audio>
+            <audio id="audio_menu" controls preload="auto" src="audio/menu.mp3" type="audio/mp3">
+            </audio>
         </div>
 
     </div>

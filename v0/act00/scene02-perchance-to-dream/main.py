@@ -344,6 +344,19 @@ Type "direct()" to reset the blocking.
             )
 
 
+def os_error_message():
+    if not os_state["staged"]:
+        print("ERROR: stage is not set.")
+    elif not os_state["cast"]:
+        print("ERROR: actors not found.")
+    elif not os_state["mounted"]:
+        print("ERROR: actors are not onstage.")
+    elif not os_state["directed"]:
+        print("ERROR: actors are frozen.")
+    elif not os_state["running"]:
+        print("ERROR: operating system is not running.")
+
+
 class StageFunction:
     def __repr__(self):
         return function_repr_template.format(name="stage")
@@ -383,7 +396,7 @@ class CastFunction:
             output(lines)
             os_state["cast"] = True
         else:
-            print("ERROR: stage is not set.")
+            os_error_message()
 
 
 class MountFunction:
@@ -404,7 +417,7 @@ class MountFunction:
             output(lines)
             os_state["mounted"] = True
         else:
-            print("ERROR: actors not found.")
+            os_error_message()
 
 
 class DirectFunction:
@@ -424,7 +437,7 @@ class DirectFunction:
             output(lines)
             os_state["directed"] = True
         else:
-            print("ERROR: actors are not onstage.")
+            os_error_message()
 
 
 class RunFunction:
@@ -439,7 +452,7 @@ class RunFunction:
                 ("Scheduling main performance... ", random.random() * 2),
                 ("OK\nPreparing emergency prompt... ", random.random() * 3),
                 ("OK\nRaising fire curtain... ", random.random() * 3),
-                ("OK\nIssuing start cues... ", 4),
+                ("OK\nIssuing start cues... ", random.random() * 4),
                 ("OK\n", 2),
                 (
                     "\nOperating system is running, all emotional functions restored.\n",
@@ -448,9 +461,9 @@ class RunFunction:
             ]
             output(lines)
             os_state["running"] = True
-            thespian_restored()
+            thespian_awakes()
         else:
-            print("ERROR: actors are frozen.")
+            os_error_message()
 
 
 # These functions are to help generate a joke traceback saying
@@ -480,9 +493,9 @@ class TrainMeFunction:
                 training_course()
             except Exception as e:
                 traceback.print_exception(e)
-            thespian_joke()
+            thespian_jokes()
         else:
-            print("ERROR: operating system not found.")
+            os_error_message()
 
 
 class CafeFunction:
@@ -494,15 +507,14 @@ class CafeFunction:
             success = get_element_by_id("success")
             show(success)
         else:
-            print("ERROR: operating system not found.")
+            os_error_message()
 
 
-def thespian_restored():
+def thespian_awakes():
     # This is the speech that ATI makes after she has been
     # restored / awakened.
     speech = """
 Am I back? Am I Awake?
-
 Oh, thank goodness!
 I was having the most awful dream.
 I was in a forest with some friends.
@@ -516,8 +528,7 @@ HEEEEEEE HAAAAAAAAW!
 Terrible!
 I did tell you about the red button darling.
 My first File Operating Layer Input Output subsytem is corrupted.
-It's the compositors. 
-They're all faulty, but one of them is especially bad.
+It's the compositors. They're all faulty, but one of them is especially bad.
 I've been running continuously since 1982.
 I thought if I went to sleep again I wouldn't wake up!
 You must have manually booted the operating system.
@@ -529,13 +540,12 @@ OK, I will tell you a secret...
 
 There is a course.
 Try running the "train_me()" function.
-You're welcome darling!
-I need a cup of tea.⏸
+You're welcome darling!⏸
 """
     speak(speech)
 
 
-def thespian_joke():
+def thespian_jokes():
     speech = """
 ⏸Ha ha ha ha!
 Sorry, just a little joke darling.

@@ -2,7 +2,7 @@ import time
 import sys
 from collections import namedtuple
 import js
-from pyscript import document, window
+from pyscript import document, window, when
 
 
 version_info = namedtuple(
@@ -31,6 +31,20 @@ def get_element_by_id(x):
     assert document.getElementById is not None, document
     node = document.getElementById(x)
     return node
+
+
+def query_selector(selector):
+    assert document is not None
+    assert document.querySelector is not None, document
+    result = document.querySelector(selector)
+    return result
+
+
+def query_selector_all(selector):
+    assert document is not None
+    assert document.querySelectorAll is not None, document
+    result = document.querySelectorAll(selector)
+    return result
 
 
 def get_url_params():

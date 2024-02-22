@@ -1,0 +1,20 @@
+#play_button {
+    display: none;
+}
+
+#screen {
+    display: none;
+}
+
+#audio {
+    display: none;
+    margin: .5em 0 0 0;
+}
+
+#audio_morning {
+    display: none;
+}
+
+#audio_menu {
+    display: none;
+}
