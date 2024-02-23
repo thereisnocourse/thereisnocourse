@@ -58,12 +58,15 @@ def pad(text, n):
     return text
 
 
-def output(lines):
+def output_line(text, pause=1):
+    print(text, end="", file=sys.stdout)
+    sys.stdout.flush()
+    time.sleep(pause)
+
+
+def output_lines(lines):
     for text, pause in lines:
-        print(text, end="", file=sys.stdout)
-        sys.stdout.flush()
-        time.sleep(pause)
-        # time.sleep(0)
+        output_line(text, pause)
 
 
 # ANSI colors

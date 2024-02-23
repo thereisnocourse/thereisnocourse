@@ -2,7 +2,7 @@ import sys
 import random
 import code
 import traceback
-from util import hide, output, get_element_by_id, speak, show, pad
+from util import hide, output_lines, get_element_by_id, speak, show, pad
 
 
 # This is the main game state, records whether the different
@@ -242,7 +242,7 @@ def output_bios_loading():
         ("\nCopyright (C) 1981, YorickSoft Inc.", 0),
         ("\nLoading...\n", 0),
     ]
-    output(lines)
+    output_lines(lines)
 
 
 def output_cpu_memory():
@@ -255,7 +255,7 @@ def output_cpu_memory():
         line = (text, pause)
         lines.append(line)
     lines.append(("\n\nStarting WS-DOS...", 2))
-    output(lines)
+    output_lines(lines)
 
 
 def output_affective_memory_test():
@@ -271,7 +271,7 @@ def output_affective_memory_test():
     lines.append((pad("\r", max_len), 1))
     error = pad("\rError, emotions could not be accessed.", max_len)
     lines.append((error, 2))
-    output(lines)
+    output_lines(lines)
 
 
 def output_script_memory_test():
@@ -287,7 +287,7 @@ def output_script_memory_test():
     lines.append((pad("\r", max_len), 1))
     error = pad("\rCompositor error in FOLIO.SYS, page is corrupted.", max_len)
     lines.append((error, 2))
-    output(lines)
+    output_lines(lines)
 
 
 def output_no_os():
@@ -295,7 +295,7 @@ def output_no_os():
         ("\n\nNo operating system found.", 2),
         ("\nEntering deadpan mode...\n\n", 1),
     ]
-    output(lines)
+    output_lines(lines)
 
 
 function_repr_template = (
@@ -371,7 +371,7 @@ class StageFunction:
                 ("OK\nPainting backdrop... ", random.random() * 2),
                 ("OK\nStage is set.\n", 0),
             ]
-            output(lines)
+            output_lines(lines)
             os_state["staged"] = True
 
 
@@ -393,7 +393,7 @@ class CastFunction:
                 ("OK\nAssigning characters... ", random.random() * 2),
                 ("OK\nCasting complete.\n", 0),
             ]
-            output(lines)
+            output_lines(lines)
             os_state["cast"] = True
         else:
             os_error_message()
@@ -414,7 +414,7 @@ class MountFunction:
                 ("OK\nLocking treads... ", random.random() * 2),
                 ("OK\nActors are onstage.\n", 0),
             ]
-            output(lines)
+            output_lines(lines)
             os_state["mounted"] = True
         else:
             os_error_message()
@@ -434,7 +434,7 @@ class DirectFunction:
                 ("OK\nPerforming dry run... ", random.random() * 2),
                 ("OK\nActors are ready.\n", 0),
             ]
-            output(lines)
+            output_lines(lines)
             os_state["directed"] = True
         else:
             os_error_message()
@@ -459,7 +459,7 @@ class RunFunction:
                     0,
                 ),
             ]
-            output(lines)
+            output_lines(lines)
             os_state["running"] = True
             thespian_awakes()
         else:

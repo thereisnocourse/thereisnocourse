@@ -22,4 +22,6 @@
 #prologue img {
     max-width: 100%;
     height: auto;
+    border: 3px solid rgb(238, 238, 238);
+    border-radius: 5px;
 }
