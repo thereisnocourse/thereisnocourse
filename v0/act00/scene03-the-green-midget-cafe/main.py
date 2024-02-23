@@ -270,13 +270,20 @@ class ExitFunction:
             output_line("You can't leave yet dearie! You haven't heard the vikings.\n")
         else:
             output_line("Bye bye dearie! Hope you liked the spam.\n")
-            output_line("--- GAME OVER ---\n")
+            output_line("--- GAME OVER ---\n", 2)
             thespian_game_over()
 
 
 def thespian_game_over():
+    print(
+        """
+Artificial Thespian v37.154
+Copyright (C) 1981, YorickSoft Inc.
+Loading...\
+"""
+    )
     speech = """
-Did you enjoy the game darling?
+⏸Did you enjoy the game darling?
 """
     speak(speech)
 
