@@ -17,12 +17,12 @@ def play():
     prologue = get_element_by_id("prologue")
     hide(prologue)
     screen = get_element_by_id("screen")
-    show(screen)
-    audio = get_element_by_id("audio")
-    show(audio)
+    screen.style.visibility = "visible"
+    # audio = get_element_by_id("audio")
+    # show(audio)
 
     audio_morning = get_element_by_id("audio_morning")
-    show(audio_morning)
+    # show(audio_morning)
     audio_morning.play()
 
     lines = [
@@ -70,7 +70,7 @@ class MenuFunction:
         for element in query_selector_all("#audio>audio"):
             hide(element)
         audio_menu = get_element_by_id("audio_menu")
-        show(audio_menu)
+        # show(audio_menu)
         audio_menu.play()
         menu_items = [
             ("\nWell there's...\n", 1),

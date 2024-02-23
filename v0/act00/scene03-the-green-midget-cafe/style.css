@@ -3,7 +3,7 @@
 }
 
 #screen {
-    display: none;
+    visibility: hidden;
 }
 
 #audio {
@@ -17,4 +17,9 @@
 
 #audio_menu {
     display: none;
+}
+
+#prologue img {
+    max-width: 100%;
+    height: auto;
 }
