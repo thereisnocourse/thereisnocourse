@@ -6,7 +6,7 @@
 
 body {
 	font-family: 'VT323', monospace;
-	font-size: 24px;
+	font-size: 22px;
 	background: slategray;
 	margin: 0;
 	overflow-y: scroll;
@@ -18,7 +18,7 @@ pre,
 code,
 input {
 	font-family: 'VT323', monospace;
-	font-size: 24px;
+	font-size: 22px;
 }
 
 .btn {
@@ -31,7 +31,7 @@ input {
 	color: white;
 	cursor: pointer;
 	display: inline-block;
-	font-size: 24px;
+	font-size: 22px;
 	margin: 0rem;
 	padding: .5rem;
 	text-decoration: none;
@@ -73,8 +73,7 @@ input {
 	position: relative;
 	background-color: rgb(25, 26, 25);
 	width: 100%;
-	/* SVGA width */
-	max-width: 800px;
+	max-width: 740px;
 	height: 408px;
 	border: 3px solid rgb(238, 238, 238);
 	border-radius: 5px;

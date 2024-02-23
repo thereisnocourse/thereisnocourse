@@ -1,4 +1,5 @@
 import code
+from textwrap import fill
 from util import (
     hide,
     output_line,
@@ -7,6 +8,8 @@ from util import (
     speak,
     show,
     when,
+    get_terminal,
+    clear_terminal,
 )
 
 
@@ -84,17 +87,19 @@ class HelpFunction:
         return function_repr_template.format(name="help")
 
     def __call__(self):
-        print(
-            f"""
+        message = fill(
+            f"""\
 Type "menu()" to hear what we\'ve got to eat.
-              
 Type "order(N)" to choose a dish for the next customer, where N is a number on the menu.
-
 The "vikings()" like to sing but they are very noisy!
-
-{hint()}     
-"""
+Type "exit()" to leave the cafe.
+{hint()}
+""",
+            drop_whitespace=True,
+            replace_whitespace=True,
+            width=get_terminal().cols,
         )
+        print(message)
 
 
 class MenuFunction:
@@ -107,7 +112,7 @@ class MenuFunction:
         audio_menu.play()
         lines = [
             ("Well there's...\n", 1),
-            ("\n0. Egg and bacon.\n", 1.1),
+            ("0. Egg and bacon.\n", 1.1),
             ("1. Egg sausage and bacon.\n", 1.4),
             ("2. Egg and spam.\n", 0.9),
             ("3. Egg bacon and spam.\n", 1.9),  # 6.0
@@ -124,7 +129,7 @@ class MenuFunction:
                 7.9,  # 29.0
             ),
             (
-                "10. Lobster Thermidor aux crevettes with a mornay sauce served in a Provencale manner with shallots and aubergines garnished with truffle paté, brandy and a fried egg on top and spam.\n\n",
+                "10. Lobster Thermidor aux crevettes with a mornay sauce served in a Provencale manner with shallots and aubergines garnished with truffle paté, brandy and a fried egg on top and spam.\n",
                 9,
             ),
             (f"{hint()}\n", 1),
@@ -246,11 +251,13 @@ class VikingsFunction:
         if game_state["mr_bun"]:
             audio_vikings.play()
             game_state["vikings"] = True
+            output_line("Lovely spam, wonderful spam...\n", 21)
+            output_line("...Spam spam spam spam!\n", 8)
             output_line(f"{hint()}\n")
         else:
             audio_shut_up.play()
             lines = [
-                ("Vikings: Spam wonderful spam...\n", 1),
+                ("Vikings: Spam wonderful spam...\n", 3),
                 ("SHUT UP!\n", 1),
             ]
             output_lines(lines)
@@ -275,8 +282,9 @@ class ExitFunction:
 
 
 def thespian_game_over():
+    clear_terminal()
     print(
-        """
+        """\
 Artificial Thespian v37.154
 Copyright (C) 1981, YorickSoft Inc.
 Loading...\

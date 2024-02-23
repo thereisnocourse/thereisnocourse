@@ -1,6 +1,7 @@
 import time
 import sys
 from collections import namedtuple
+from textwrap import fill
 import js
 from pyscript import document, window, when
 
@@ -52,6 +53,20 @@ def get_url_params():
     return params
 
 
+terminal = None
+
+
+def get_terminal():
+    global terminal
+    if terminal is None:
+        terminal = query_selector("script[terminal]").terminal
+    return terminal
+
+
+def clear_terminal():
+    get_terminal().clear()
+
+
 def pad(text, n):
     if len(text) < n:
         text += " " * (n - len(text))
@@ -59,6 +74,9 @@ def pad(text, n):
 
 
 def output_line(text, pause=1):
+    text = fill(
+        text, width=get_terminal().cols, drop_whitespace=False, replace_whitespace=False
+    )
     print(text, end="", file=sys.stdout)
     sys.stdout.flush()
     time.sleep(pause)
