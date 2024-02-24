@@ -2,7 +2,7 @@ import sys
 import random
 import code
 import traceback
-from util import hide, output_lines, get_element_by_id, speak, show, pad
+from util import hide, output_lines, get_element_by_id, speak, show, pad, print_line
 
 
 # This is the main game state, records whether the different
@@ -327,21 +327,14 @@ If you like playing games, you might enjoy "cafe()".⏩
             )
         else:
             # Operating system is not running yet.
-            print(
-                """
-Operating system not found. If you know what you are doing, you can attempt to start the operating system manually. The following functions may be useful: 
-
-Type "cast()" to send callbacks to actors.
-
-Type "mount()" to deploy actors to the stage.
-
-Type "stage()" to assemble props and reset the stage.
-
-Type "run()" to issue cues and start main performance.
-
-Type "direct()" to reset the blocking.
-"""
+            print_line(
+                "Operating system not found. If you know what you are doing, you can attempt to start the operating system manually. The following functions may be useful:"
             )
+            print_line('Type "cast()" to send callbacks to actors.')
+            print_line('Type "mount()" to deploy actors to the stage.')
+            print_line('Type "stage()" to assemble props and reset the stage.')
+            print_line('Type "run()" to issue cues and start main performance.')
+            print_line('Type "direct()" to reset the blocking.')
 
 
 def os_error_message():

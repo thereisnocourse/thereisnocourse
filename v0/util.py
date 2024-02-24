@@ -82,6 +82,12 @@ def output_line(text, pause=1):
     time.sleep(pause)
 
 
+def print_line(text, end="\n"):
+    text = fill(text, width=get_terminal().cols)
+    print(text, end=end, file=sys.stdout)
+    sys.stdout.flush()
+
+
 def output_lines(lines):
     for text, pause in lines:
         output_line(text, pause)
