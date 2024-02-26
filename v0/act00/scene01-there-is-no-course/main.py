@@ -1,6 +1,6 @@
 import code
 import sys
-from util import speak, get_element_by_id, hide, show
+from util import speak, get_element_by_id, hide, show, ANSI
 
 
 def main():
@@ -64,7 +64,7 @@ Bad things will happen darling.
         banner=f"""\
 Python {sys.version}
 Compiled with Artificial Thespian v37.154.
-Type "help()" if you need anything, darling.\
+Type {ANSI.BOLD}help(){ANSI.RESET} if you need anything, darling.\
 """,
         local=namespace,
     )

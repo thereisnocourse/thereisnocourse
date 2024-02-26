@@ -184,3 +184,6 @@ Suspendies, and a bra
 I wish I'd been a girlie
 Just like my dear Papa.\
 """
+
+
+function_repr_template = f"Hello, I am a function! Type {ANSI.BOLD}{{name}}(){ANSI.RESET} if you want me to do something."

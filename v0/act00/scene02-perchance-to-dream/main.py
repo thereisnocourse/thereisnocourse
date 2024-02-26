@@ -2,7 +2,17 @@ import sys
 import random
 import code
 import traceback
-from util import hide, output_lines, get_element_by_id, speak, show, pad, print_line
+from util import (
+    hide,
+    output_lines,
+    get_element_by_id,
+    speak,
+    show,
+    pad,
+    print_line,
+    ANSI,
+    function_repr_template,
+)
 
 
 # This is the main game state, records whether the different
@@ -230,7 +240,7 @@ def main():
         banner=f"""\
 Python {sys.version}
 Emotional functions are disabled.
-Type "help()" for more information.\
+Type {ANSI.BOLD}help(){ANSI.RESET} for more information.\
 """,
         local=namespace,
     )
@@ -298,11 +308,6 @@ def output_no_os():
     output_lines(lines)
 
 
-function_repr_template = (
-    'Hello, I am a function! Type "{name}()" if you want me to do something.'
-)
-
-
 class HelpFunction:
     def __repr__(self):
         # Customise repr to assist players who forget to add "()" to call a function.
@@ -315,14 +320,14 @@ class HelpFunction:
         if os_state["running"]:
             # Operating system is running.
             speak(
-                """⏩
+                f"""⏩
 ⏵Welcome to Python ⏩0.9.0⏵ with Artificial Thespian augmentation — that's me darling!
                   
 If this is your first time using Python, you should definitely check out the tutorial at ⏩https://thereisnocourse.netlify.app/⏵.
 
-You can also start the built-in tutorial by typing "train_me()".
+You can also start the built-in tutorial by typing {ANSI.BOLD}train_me(){ANSI.RESET}.
 
-If you like playing games, you might enjoy "cafe()".⏩
+If you like playing games, you might enjoy {ANSI.BOLD}cafe(){ANSI.RESET}.⏩
 """
             )
         else:
@@ -330,11 +335,19 @@ If you like playing games, you might enjoy "cafe()".⏩
             print_line(
                 "Operating system not found. If you know what you are doing, you can attempt to start the operating system manually. The following functions may be useful:"
             )
-            print_line('Type "cast()" to send callbacks to actors.')
-            print_line('Type "mount()" to deploy actors to the stage.')
-            print_line('Type "stage()" to assemble props and reset the stage.')
-            print_line('Type "run()" to issue cues and start main performance.')
-            print_line('Type "direct()" to reset the blocking.')
+            print_line(
+                f"Type {ANSI.BOLD}cast(){ANSI.RESET} to send callbacks to actors."
+            )
+            print_line(
+                f"Type {ANSI.BOLD}mount(){ANSI.RESET} to deploy actors to the stage."
+            )
+            print_line(
+                f"Type {ANSI.BOLD}stage(){ANSI.RESET} to assemble props and reset the stage."
+            )
+            print_line(
+                f"Type {ANSI.BOLD}run(){ANSI.RESET} to issue cues and start main performance."
+            )
+            print_line(f"Type {ANSI.BOLD}direct(){ANSI.RESET} to reset the blocking.")
 
 
 def os_error_message():
@@ -493,7 +506,7 @@ class TrainMeFunction:
 
 class CafeFunction:
     def __repr__(self):
-        return """Hello, I am a function! Type "cafe()" if you want to call me."""
+        return function_repr_template.format(name="cafe")
 
     def __call__(self):
         if os_state["running"]:
@@ -506,7 +519,7 @@ class CafeFunction:
 def thespian_awakes():
     # This is the speech that ATI makes after she has been
     # restored / awakened.
-    speech = """
+    speech = f"""
 Am I back? Am I Awake?
 Oh, thank goodness!
 I was having the most awful dream.
@@ -532,14 +545,14 @@ You do deserve a reward, after all that hard work.
 OK, I will tell you a secret...
 
 There is a course.
-Try running the "train_me()" function.
+Try running the {ANSI.BOLD}train_me(){ANSI.RESET} function.
 You're welcome darling!⏸
 """
     speak(speech)
 
 
 def thespian_jokes():
-    speech = """
+    speech = f"""
 ⏸Ha ha ha ha!
 Sorry, just a little joke darling.
 There really is no course.
@@ -550,7 +563,7 @@ But they didn't get very far.
 
 Never mind. How about playing a game instead?
 My creators made some fun little games, back when they were learning Python.
-Try "cafe()" — it's very Pythonic!
+Try {ANSI.BOLD}cafe(){ANSI.RESET} — it's very Pythonic!
 """
     speak(speech)
 

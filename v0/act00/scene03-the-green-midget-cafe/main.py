@@ -10,6 +10,8 @@ from util import (
     when,
     get_terminal,
     clear_terminal,
+    ANSI,
+    function_repr_template,
 )
 
 
@@ -47,7 +49,9 @@ def play():
 
     # Initial output.
     audio_morning.play()
-    output_line('Morning! Type "help()" if you need anything dearie.\n', 2)
+    output_line(
+        f"Morning! Type {ANSI.BOLD}help(){ANSI.RESET} if you need anything dearie.\n", 2
+    )
 
     # Set up the interactive prompt.
     namespace = dict(**globals())
@@ -62,11 +66,6 @@ def play():
     )
 
 
-function_repr_template = (
-    'Hello, I am a function! Type "{name}()" if you want me to do something.'
-)
-
-
 def hint():
     if not game_state["menu"]:
         message = "Would you like to see the menu?"
@@ -77,7 +76,7 @@ def hint():
     elif not game_state["vikings"]:
         message = "Everyone's ordered. Let's have a song!"
     else:
-        message = 'Well done, you\'ve completed the game! Type "exit()" to leave, or you can order a dish for yourself dearie.'
+        message = f"Well done, you've completed the game! Type {ANSI.BOLD}exit(){ANSI.RESET} to leave, or you can order a dish for yourself dearie."
     return message
 
 
@@ -89,10 +88,10 @@ class HelpFunction:
     def __call__(self):
         message = fill(
             f"""\
-Type "menu()" to hear what we\'ve got to eat.
-Type "order(N)" to choose a dish for the next customer, where N is a number on the menu.
-The "vikings()" like to sing but they are very noisy!
-Type "exit()" to leave the cafe.
+Type {ANSI.BOLD}menu(){ANSI.RESET} to hear what we\'ve got to eat.
+Type {ANSI.BOLD}order(N){ANSI.RESET} to choose a dish for the next customer, where {ANSI.BOLD}N{ANSI.RESET} is a number on the menu.
+The {ANSI.BOLD}vikings(){ANSI.RESET} like to sing but they are very noisy!
+Type {ANSI.BOLD}exit(){ANSI.RESET} to leave the cafe.
 {hint()}
 """,
             drop_whitespace=True,
