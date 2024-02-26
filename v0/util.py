@@ -128,6 +128,7 @@ def speak(message):
     char_pause = speech_pauses["char"]
     para_pause = speech_pauses["para"]
     fast_forward = False
+    ansi = 0
     control_symbols = {"⏵", "⏸", "⏩"}
     for line in message.split("\n"):
         for c in line:
@@ -139,8 +140,12 @@ def speak(message):
             elif c == "⏵":
                 # Back to normal play mode.
                 fast_forward = False
+            elif c == "\u001b":
+                ansi = 4
             elif fast_forward:
                 pass
+            elif ansi > 0:
+                ansi -= 1
             else:
                 pause = speech_pauses.get(c, char_pause)
 

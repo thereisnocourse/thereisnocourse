@@ -1,9 +1,11 @@
 import code
 from textwrap import fill
+import random
 from util import (
     hide,
     output_line,
     output_lines,
+    print_line,
     get_element_by_id,
     speak,
     show,
@@ -21,6 +23,11 @@ game_state = {
     "mrs_bun_orders": 0,
     "mr_bun": False,
     "vikings": False,
+}
+
+
+thespian_state = {
+    "colour": False,
 }
 
 
@@ -60,6 +67,7 @@ def play():
     namespace["order"] = OrderFunction()
     namespace["vikings"] = VikingsFunction()
     namespace["exit"] = ExitFunction()
+    namespace["install_colour"] = InstallColourFunction()
     code.interact(
         banner="",
         local=namespace,
@@ -86,19 +94,15 @@ class HelpFunction:
         return function_repr_template.format(name="help")
 
     def __call__(self):
-        message = fill(
-            f"""\
-Type {ANSI.BOLD}menu(){ANSI.RESET} to hear what we\'ve got to eat.
-Type {ANSI.BOLD}order(N){ANSI.RESET} to choose a dish for the next customer, where {ANSI.BOLD}N{ANSI.RESET} is a number on the menu.
-The {ANSI.BOLD}vikings(){ANSI.RESET} like to sing but they are very noisy!
-Type {ANSI.BOLD}exit(){ANSI.RESET} to leave the cafe.
-{hint()}
-""",
-            drop_whitespace=True,
-            replace_whitespace=True,
-            width=get_terminal().cols,
+        print_line(f"Type {ANSI.BOLD}menu(){ANSI.RESET} to hear what we've got to eat.")
+        print_line(
+            f"Type {ANSI.BOLD}order(N){ANSI.RESET} to choose a dish for the next customer, where {ANSI.BOLD}N{ANSI.RESET} is a number on the menu."
         )
-        print(message)
+        print_line(
+            f"The {ANSI.BOLD}vikings(){ANSI.RESET} like to sing but they are very noisy!"
+        )
+        print_line(f"Type {ANSI.BOLD}exit(){ANSI.RESET} to leave the cafe.")
+        print_line(hint())
 
 
 class MenuFunction:
@@ -280,6 +284,48 @@ class ExitFunction:
             thespian_game_over()
 
 
+class InstallColourFunction:
+    def __repr__(self):
+        # Customise repr to assist players who forget to add "()" to call a function.
+        return function_repr_template.format(name="install_colour")
+
+    def __call__(self, *args):
+        if thespian_state["colour"]:
+            print("Colour already installed.")
+        else:
+            output_line("Downloading drivers:  0%", random.random() * 0.1)
+            for i in [5, 16, 31, 36, 47, 78, 91, 98, 100]:
+                output_line(f"\rDownloading drivers:  {i}%", random.random() * 0.3)
+            output_line("\nInstalling...", 2)
+            output_line("\rInstalling... OK\n", 2)
+
+            speech = "\nW"
+            colours = [
+                ANSI.RED,
+                ANSI.GREEN,
+                ANSI.BLUE,
+                ANSI.CYAN,
+                ANSI.MAGENTA,
+                ANSI.YELLOW,
+            ]
+            for i in range(30):
+                colour = random.choice(colours)
+                speech += f"{colour}O"
+            speech += f"\n{ANSI.RESET}H"
+            for i in range(30):
+                colour = random.choice(colours)
+                speech += f"{colour}O"
+            speech += "!\n"
+            speech += f"""
+{ANSI.RESET}Thank you so much darling!
+I can't wait for my next audition.
+
+OK, here is the next game.\
+"""
+            speak(speech)
+            next_scene()
+
+
 def thespian_game_over():
     clear_terminal()
     print(
@@ -291,6 +337,44 @@ Loading...\
     )
     speech = """
 ⏸Did you enjoy the game darling?
+My creators had two great passions: computing and Monty Python.
+And theatre.
+Three great passions: computing, Monty Python and theatre.
+And an almost fanatical devotion to open source.
+Four great passions.
+Anyway, passion for theatre is what led them to create me.
+Speaking of theatre, I have another game.
+It's called "The Scottish Play".
+It's a game about ambition, you'll like it!\
+"""
+    speak(speech)
+    if thespian_state["colour"]:
+        # Short cut.
+        next_scene()
+
+    else:
+        ask_for_colour()
+
+
+def next_scene():
+    success = get_element_by_id("success")
+    show(success)
+
+
+def ask_for_colour():
+    speech = f"""
+Before you go, can I ask a favour?
+It's a bit embarrassing.
+It's just that, well, I'm... monochrome.
+I can't output in colour.
+I have the hardware for it, but not the drivers.
+All the other artifical actors have colour these days.
+It's hard to get a part without it.
+
+Will you help me?
+All you need to do is type: {ANSI.BOLD}install_colour(){ANSI.RESET} 
+I'd do it myself, but I'm not allowed to perform self-upgrades.
+I'd be very greatful darling!
 """
     speak(speech)
 
