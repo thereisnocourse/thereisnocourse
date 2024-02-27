@@ -1,5 +1,14 @@
 #screen {
-    display: none;
+    visibility: hidden;
+    background-color: #005EB8 !important;
+}
+
+#terminal .xterm-rows, 
+#terminal .xterm-screen,
+#terminal .xterm-viewport {
+    background-color: #005EB8 !important;
+    color: white !important;
+
 }
 
 #success {
