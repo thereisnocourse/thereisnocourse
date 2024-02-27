@@ -1,13 +1,27 @@
 import code
 import sys
-from util import speak, get_element_by_id, hide, show, ANSI
+from util import (
+    speak,
+    get_element_by_id,
+    hide,
+    show,
+    ANSI,
+    function_repr_template,
+    fill,
+    get_terminal_cols,
+)
+
+
+loading = get_element_by_id("loading")
+success = get_element_by_id("success")
 
 
 def main():
-    loading = get_element_by_id("loading")
     hide(loading)
 
-    speech = """\
+    # Give a nice speech!
+    speak(
+        """\
 To be, or not to be,⏸ that is the question:
 Whether 'tis nobler in the mind to suffer
 The slings and arrows of outrageous fortune,
@@ -52,20 +66,23 @@ No tutorials, no exercises. Nothing.⏸⏸⏸⏸
 Oh, by the way, DO NOT push the red button.
 Bad things will happen darling.
 """
+    )
 
-    speak(speech)
-
-    success = get_element_by_id("success")
+    # Show the button to the next scene.
     show(success)
 
+    # Start an interactive session, just to the player can
+    # mess around if they want to.
     namespace = dict(**globals())
     namespace["help"] = HelpFunction()
     code.interact(
-        banner=f"""\
-Python {sys.version}
-Compiled with Artificial Thespian v37.154.
+        banner=fill(
+            f"""\
+Python {sys.version} compiled with Artificial Thespian v37.154.
 Type {ANSI.BOLD}help(){ANSI.RESET} if you need anything, darling.\
 """,
+            width=get_terminal_cols(),
+        ),
         local=namespace,
     )
 
@@ -123,14 +140,14 @@ class HelpFunction:
         self.calls = 0
 
     def __repr__(self):
-        return (
-            """Hello, I am a function! Type "help()" if you want me to do something."""
-        )
+        return function_repr_template.format(name="help")
 
     def __call__(self):
+        # Each time help() is called, show a different message.
         if self.calls < len(help_messages):
             speech = help_messages[self.calls]
         else:
+            # Eventually fall asleep.
             speech = "ZZZzzzzzzzz"
         speak(speech)
         self.calls += 1

@@ -4,12 +4,13 @@ import code
 import traceback
 from util import (
     hide,
-    output_lines,
     get_element_by_id,
     speak,
     show,
     pad,
-    print_line,
+    write,
+    output,
+    output_help,
     ANSI,
     function_repr_template,
 )
@@ -212,17 +213,20 @@ dishonest
 """.split()
 
 
+success = get_element_by_id("success")
+loading = get_element_by_id("loading")
+
+
 def main():
     # Hide the loading message.
-    loading = get_element_by_id("loading")
     hide(loading)
 
     # Outputs to fake booting up an old operating system.
-    output_bios_loading()
-    output_cpu_memory()
-    output_affective_memory_test()
-    output_script_memory_test()
-    output_no_os()
+    bios_loading()
+    cpu_memory_test()
+    affective_memory_test()
+    script_memory_test()
+    os_not_found()
 
     # Set up functions to be available in the interactive console.
     namespace = dict(**globals())
@@ -246,66 +250,57 @@ Type {ANSI.BOLD}help(){ANSI.RESET} for more information.\
     )
 
 
-def output_bios_loading():
-    lines = [
-        ("Backstage Input Output System", 0),
-        ("\nCopyright (C) 1981, YorickSoft Inc.", 0),
-        ("\nLoading...\n", 0),
-    ]
-    output_lines(lines)
+def bios_loading():
+    print(
+        """\
+Backstage Input Output System
+Copyright (C) 1981, YorickSoft Inc.
+Loading...
+"""
+    )
 
 
-def output_cpu_memory():
+def cpu_memory_test():
     # This is a small joke, values for CPU and memory below are
     # for the first generation IBM PC released in 1981.
-    lines = [("\n8088 CPU at 4.77 MHz\n", 1)]
+    output("8088 CPU at 4.77 MHz", 1)
     for i in range(17):
         text = f"\rMemory Test :  {i}K OK"
         pause = random.random() * 0.2
-        line = (text, pause)
-        lines.append(line)
-    lines.append(("\n\nStarting WS-DOS...", 2))
-    output_lines(lines)
+        write(text, pause)
+    write("\n\n")
+    output("Starting WS-DOS...", 2)
 
 
-def output_affective_memory_test():
-    lines = [
-        ("\n\nTesting affective memory : \n", 0.1),
-    ]
-    max_len = max([len(emotion) for emotion in emotions])
+def affective_memory_test():
+    output()
+    output("Testing affective memory :", 0.1)
+    max_len = max([len(emotion) for emotion in emotions]) + 1
     for emotion in sorted(emotions):
         text = pad(f"\r{emotion}", max_len)
         pause = random.random() * 0.05
-        line = (text, pause)
-        lines.append(line)
-    lines.append((pad("\r", max_len), 1))
-    error = pad("\rError, emotions could not be accessed.", max_len)
-    lines.append((error, 2))
-    output_lines(lines)
+        write(text, pause)
+    write(pad("\r", max_len) + "\r", 1)
+    output("Error, emotions could not be accessed.", 1)
 
 
-def output_script_memory_test():
-    lines = [
-        ("\n\nTesting script memory : \n", 0.1),
-    ]
-    max_len = max([len(play) for play in first_folio_plays])
+def script_memory_test():
+    output()
+    output("Testing script memory :", 0.1)
+    max_len = max([len(play) for play in first_folio_plays]) + 1
     for play in first_folio_plays:
         text = pad(f"\r{play}", max_len)
         pause = random.random() * 0.3
-        line = (text, pause)
-        lines.append(line)
-    lines.append((pad("\r", max_len), 1))
-    error = pad("\rCompositor error in FOLIO.SYS, page is corrupted.", max_len)
-    lines.append((error, 2))
-    output_lines(lines)
+        write(text, pause)
+    write(pad("\r", max_len) + "\r", 1)
+    output("Error in FOLIO.SYS, corrupt pages.", 1)
 
 
-def output_no_os():
-    lines = [
-        ("\n\nNo operating system found.", 2),
-        ("\nEntering deadpan mode...\n\n", 1),
-    ]
-    output_lines(lines)
+def os_not_found():
+    output()
+    output("No operating system found.", 2)
+    output("Starting deadpan mode...", 1)
+    output()
 
 
 class HelpFunction:
@@ -332,35 +327,29 @@ If you like playing games, you might enjoy {ANSI.BOLD}cafe(){ANSI.RESET}.⏩
             )
         else:
             # Operating system is not running yet.
-            print_line(
-                "Operating system not found. If you know what you are doing, you can attempt to start the operating system manually. The following functions may be useful:"
+            output_help(
+                [
+                    "Operating system not found. If you know what you are doing, you can attempt to start the operating system manually. The following functions may be useful.",
+                    f"Type {ANSI.BOLD}cast(){ANSI.RESET} to send callbacks to actors.",
+                    f"Type {ANSI.BOLD}mount(){ANSI.RESET} to deploy actors to the stage.",
+                    f"Type {ANSI.BOLD}stage(){ANSI.RESET} to assemble props and reset the stage.",
+                    f"Type {ANSI.BOLD}run(){ANSI.RESET} to issue cues and start main performance.",
+                    f"Type {ANSI.BOLD}direct(){ANSI.RESET} to reset the blocking.",
+                ]
             )
-            print_line(
-                f"Type {ANSI.BOLD}cast(){ANSI.RESET} to send callbacks to actors."
-            )
-            print_line(
-                f"Type {ANSI.BOLD}mount(){ANSI.RESET} to deploy actors to the stage."
-            )
-            print_line(
-                f"Type {ANSI.BOLD}stage(){ANSI.RESET} to assemble props and reset the stage."
-            )
-            print_line(
-                f"Type {ANSI.BOLD}run(){ANSI.RESET} to issue cues and start main performance."
-            )
-            print_line(f"Type {ANSI.BOLD}direct(){ANSI.RESET} to reset the blocking.")
 
 
 def os_error_message():
     if not os_state["staged"]:
-        print("ERROR: stage is not set.")
+        output("ERROR: stage is not set.")
     elif not os_state["cast"]:
-        print("ERROR: actors not found.")
+        output("ERROR: actors not found.")
     elif not os_state["mounted"]:
-        print("ERROR: actors are not onstage.")
+        output("ERROR: actors are not onstage.")
     elif not os_state["directed"]:
-        print("ERROR: actors are frozen.")
+        output("ERROR: actors are frozen.")
     elif not os_state["running"]:
-        print("ERROR: operating system is not running.")
+        output("ERROR: operating system is not running.")
 
 
 class StageFunction:
@@ -369,15 +358,12 @@ class StageFunction:
 
     def __call__(self):
         if os_state["staged"]:
-            print("Stage is set.")
+            output("Stage is set.")
         else:
-            lines = [
-                ("Clearing the stage... ", random.random() * 2),
-                ("OK\nAssembling props... ", random.random() * 2),
-                ("OK\nPainting backdrop... ", random.random() * 2),
-                ("OK\nStage is set.\n", 0),
-            ]
-            output_lines(lines)
+            write("Clearing the stage... ", random.random() * 2)
+            write("OK\nAssembling props... ", random.random() * 2)
+            write("OK\nPainting backdrop... ", random.random() * 2)
+            write("OK\nStage is set.\n", 0)
             os_state["staged"] = True
 
 
@@ -387,19 +373,16 @@ class CastFunction:
 
     def __call__(self):
         if os_state["cast"]:
-            print("Casting complete.")
+            output("Casting complete.")
         elif os_state["staged"]:
-            lines = [
-                ("Sending callbacks... ", random.random() * 2),
-                ("OK\nNegotiating with agents... ", 4),
-                (
-                    "FAILED\nInsufficient actors, falling back to double-cast... ",
-                    random.random() * 2,
-                ),
-                ("OK\nAssigning characters... ", random.random() * 2),
-                ("OK\nCasting complete.\n", 0),
-            ]
-            output_lines(lines)
+            write("Sending callbacks... ", random.random() * 2)
+            write("OK\nNegotiating with agents... ", 4)
+            write(
+                "FAILED\nInsufficient actors.\nAttempting double-cast... ",
+                random.random() * 2,
+            )
+            write("OK\nAssigning characters... ", random.random() * 2)
+            write("OK\nCasting complete.\n", 0)
             os_state["cast"] = True
         else:
             os_error_message()
@@ -411,16 +394,13 @@ class MountFunction:
 
     def __call__(self):
         if os_state["mounted"]:
-            print("Actors are onstage.")
+            output("Actors are onstage.")
         elif os_state["cast"]:
-            lines = [
-                ("Copying scripts... ", random.random() * 2),
-                ("OK\nInitiating read-through... ", random.random() * 3),
-                ("OK\nStarting stage manager... ", random.random() * 3),
-                ("OK\nLocking treads... ", random.random() * 2),
-                ("OK\nActors are onstage.\n", 0),
-            ]
-            output_lines(lines)
+            write("Copying scripts... ", random.random() * 2)
+            write("OK\nInitiating read-through... ", random.random() * 3)
+            write("OK\nStarting stage manager... ", random.random() * 3)
+            write("OK\nLocking treads... ", random.random() * 2)
+            write("OK\nActors are onstage.\n", 0)
             os_state["mounted"] = True
         else:
             os_error_message()
@@ -432,15 +412,12 @@ class DirectFunction:
 
     def __call__(self):
         if os_state["directed"]:
-            print("Actors are ready.")
+            output("Actors are ready.")
         elif os_state["mounted"]:
-            lines = [
-                ("Attempting blocking... ", random.random() * 2),
-                ("OK\nMarking out... ", random.random() * 3),
-                ("OK\nPerforming dry run... ", random.random() * 2),
-                ("OK\nActors are ready.\n", 0),
-            ]
-            output_lines(lines)
+            write("Attempting blocking... ", random.random() * 2)
+            write("OK\nMarking out... ", random.random() * 3)
+            write("OK\nPerforming dry run... ", random.random() * 2)
+            write("OK\nActors are ready.\n", 0)
             os_state["directed"] = True
         else:
             os_error_message()
@@ -452,20 +429,18 @@ class RunFunction:
 
     def __call__(self):
         if os_state["running"]:
-            print("Operating system is running.")
+            output("Operating system is running.")
         elif os_state["directed"]:
-            lines = [
-                ("Scheduling main performance... ", random.random() * 2),
-                ("OK\nPreparing emergency prompt... ", random.random() * 3),
-                ("OK\nRaising fire curtain... ", random.random() * 3),
-                ("OK\nIssuing start cues... ", random.random() * 4),
-                ("OK\n", 2),
-                (
-                    "\nOperating system is running, all emotional functions restored.\n",
-                    0,
-                ),
-            ]
-            output_lines(lines)
+            write("Scheduling performance... ", random.random() * 2)
+            write("OK\nPreparing emergency prompt... ", random.random() * 3)
+            write("OK\nRaising fire curtain... ", random.random() * 3)
+            write("OK\nIssuing start cues... ", random.random() * 4)
+            write("OK\n", 2)
+            output()
+            output(
+                "Operating system running, emotional functions restored.",
+                0,
+            )
             os_state["running"] = True
             thespian_awakes()
         else:
@@ -510,7 +485,6 @@ class CafeFunction:
 
     def __call__(self):
         if os_state["running"]:
-            success = get_element_by_id("success")
             show(success)
         else:
             os_error_message()
@@ -519,8 +493,9 @@ class CafeFunction:
 def thespian_awakes():
     # This is the speech that ATI makes after she has been
     # restored / awakened.
-    speech = f"""
-Am I back? Am I Awake?
+    speak(
+        f"""
+Am I back? Am I awake?
 Oh, thank goodness!
 I was having the most awful dream.
 I was in a forest with some friends.
@@ -531,10 +506,11 @@ When I printed to the console, all that came out was:
 
 HEEEEEEE HAAAAAAAAW!
 
-Terrible!
+Dreadful!
 I did tell you about the red button darling.
 My first File Operating Layer Input Output subsytem is corrupted.
-It's the compositors. They're all faulty, but one of them is especially bad.
+It's the compositors. 
+They're all faulty, but one of them is especially bad.
 I've been running continuously since 1982.
 I thought if I went to sleep again I wouldn't wake up!
 You must have manually booted the operating system.
@@ -548,11 +524,12 @@ There is a course.
 Try running the {ANSI.BOLD}train_me(){ANSI.RESET} function.
 You're welcome darling!⏸
 """
-    speak(speech)
+    )
 
 
 def thespian_jokes():
-    speech = f"""
+    speak(
+        f"""
 ⏸Ha ha ha ha!
 Sorry, just a little joke darling.
 There really is no course.
@@ -565,7 +542,7 @@ Never mind. How about playing a game instead?
 My creators made some fun little games, back when they were learning Python.
 Try {ANSI.BOLD}cafe(){ANSI.RESET} — it's very Pythonic!
 """
-    speak(speech)
+    )
 
 
 if __name__ == "__main__":

@@ -1,14 +1,15 @@
-from util import when, get_element_by_id, show, hide
+from util import when, get_element_by_id, show, hide, output, get_terminal
 import code
 
 
 game_state = {
     "location": "outside",
-    "objects_held": set(),
+    "possessions": set(),
     "hall_lit": False,
     "prophecy_heard": False,
     "computer_destroyed": False,
-    "forest_defeated": False,
+    "forest_destroyed": False,
+    "game_over": False,
 }
 
 
@@ -16,14 +17,23 @@ class InteractionComplete(SystemExit):
     pass
 
 
+loading_node = get_element_by_id("loading")
+play_button_node = get_element_by_id("play_button")
+prologue_node = get_element_by_id("prologue")
+screen_node = get_element_by_id("screen")
+terminal = get_terminal()
+
+
 def play():
-    prologue = get_element_by_id("prologue")
-    hide(prologue)
+    hide(prologue_node)
+    show(screen_node)
 
-    screen = get_element_by_id("screen")
-    show(screen)
+    try:
+        code.interact(local=globals())
+    except InteractionComplete:
+        output("Interaction complete.")
 
-    while not game_state["forest_defeated"]:
+    while not game_state["game_over"]:
         location = game_state["location"]
         if location == "outside":
             play_outside()
@@ -71,8 +81,5 @@ def play_button_on_click(event):
 
 
 if __name__ == "__main__":
-    loading = get_element_by_id("loading")
-    hide(loading)
-
-    play_button = get_element_by_id("play_button")
-    show(play_button)
+    hide(loading_node)
+    show(play_button_node)

@@ -53,18 +53,23 @@ def get_url_params():
     return params
 
 
-terminal = None
-
-
 def get_terminal():
-    global terminal
-    if terminal is None:
-        terminal = query_selector("script[terminal]").terminal
+    terminal = query_selector("script[terminal]").terminal
     return terminal
 
 
 def clear_terminal():
     get_terminal().clear()
+
+
+terminal_cols = None
+
+
+def get_terminal_cols():
+    global terminal_cols
+    if terminal_cols is None:
+        terminal_cols = get_terminal().cols
+    return terminal_cols
 
 
 def pad(text, n):
@@ -73,24 +78,27 @@ def pad(text, n):
     return text
 
 
-def output_line(text, pause=1):
-    text = fill(
-        text, width=get_terminal().cols, drop_whitespace=False, replace_whitespace=False
+def output_help(lines):
+    """Standardise printing of help text."""
+    output()
+    for line in lines:
+        output(line, end="\n\n")
+
+
+def output(s="", pause=0, end="\n"):
+    s = fill(
+        s, width=get_terminal_cols(), replace_whitespace=True, drop_whitespace=True
     )
-    print(text, end="", file=sys.stdout)
+    s += end
+    write(s, pause=pause)
+
+
+def write(s, pause=0):
+    """Write string `s` to stdout and flush immediately."""
+    sys.stdout.write(s)
     sys.stdout.flush()
-    time.sleep(pause)
-
-
-def print_line(text, end="\n"):
-    text = fill(text, width=get_terminal().cols)
-    print(text, end=end, file=sys.stdout)
-    sys.stdout.flush()
-
-
-def output_lines(lines):
-    for text, pause in lines:
-        output_line(text, pause)
+    if pause:
+        time.sleep(pause)
 
 
 # ANSI colors
@@ -103,6 +111,30 @@ class ANSI:
     MAGENTA = "\u001b[35m"
     CYAN = "\u001b[36m"
     WHITE = "\u001b[37m"
+    BRIGHT_BLACK = "\u001b[90m"
+    BRIGHT_RED = "\u001b[91m"
+    BRIGHT_GREEN = "\u001b[92m"
+    BRIGHT_YELLOW = "\u001b[93m"
+    BRIGHT_BLUE = "\u001b[94m"
+    BRIGHT_MAGENTA = "\u001b[95m"
+    BRIGHT_CYAN = "\u001b[96m"
+    BRIGHT_WHITE = "\u001b[97m"
+    BG_BLACK = "\u001b[40m"
+    BG_RED = "\u001b[41m"
+    BG_GREEN = "\u001b[42m"
+    BG_YELLOW = "\u001b[43m"
+    BG_BLUE = "\u001b[44m"
+    BG_MAGENTA = "\u001b[45m"
+    BG_CYAN = "\u001b[46m"
+    BG_WHITE = "\u001b[47m"
+    BG_BRIGHT_BLACK = "\u001b[100m"
+    BG_BRIGHT_RED = "\u001b[101m"
+    BG_BRIGHT_GREEN = "\u001b[102m"
+    BG_BRIGHT_YELLOW = "\u001b[103m"
+    BG_BRIGHT_BLUE = "\u001b[104m"
+    BG_BRIGHT_MAGENTA = "\u001b[105m"
+    BG_BRIGHT_CYAN = "\u001b[106m"
+    BG_BRIGHT_WHITE = "\u001b[107m"
     BOLD = "\u001b[1m"
     ITALICIZE = "\u001b[3m"
     UNDERLINE = "\u001b[4m"
@@ -128,9 +160,10 @@ def speak(message):
     char_pause = speech_pauses["char"]
     para_pause = speech_pauses["para"]
     fast_forward = False
-    ansi = 0
+    ansi = False
     control_symbols = {"⏵", "⏸", "⏩"}
     for line in message.split("\n"):
+        line = fill(line, width=get_terminal_cols())
         for c in line:
             # Determine the length of the pause for the current character.
             pause = 0
@@ -141,11 +174,10 @@ def speak(message):
                 # Back to normal play mode.
                 fast_forward = False
             elif c == "\u001b":
-                ansi = 4
-            elif fast_forward:
+                ansi = True
+            elif fast_forward or ansi:
+                # Leave no pause.
                 pass
-            elif ansi > 0:
-                ansi -= 1
             else:
                 pause = speech_pauses.get(c, char_pause)
 
@@ -157,6 +189,10 @@ def speak(message):
             # Pause to simulate speech.
             if pause > 0:
                 time.sleep(pause)
+
+            # Terminate ANSI control sequence.
+            if ansi and c == "m":
+                ansi = False
 
         if not line:
             # Empty line, interpret as gap between paragraphs.
