@@ -78,11 +78,11 @@ def pad(text, n):
     return text
 
 
-def output_help(lines):
+def output_help(paragraphs):
     """Standardise printing of help text."""
     output()
-    for line in lines:
-        output(line, end="\n\n")
+    for para in paragraphs:
+        output(para, end="\n\n")
 
 
 def output(s="", pause=0, end="\n"):
