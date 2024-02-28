@@ -1,11 +1,10 @@
+from enum import Enum
 from util import (
     when,
     get_element_by_id,
     show,
     hide,
-    write,
     output,
-    output_help,
     get_terminal,
     speak,
     function_repr_template,
@@ -25,6 +24,9 @@ screen_node = get_element_by_id("screen")
 terminal = get_terminal()
 
 
+Location = Enum("Location", ["OUTSIDE", "HALL", "DUNGEON", "BEDROOM", "BATTLEMENTS"])
+
+
 def play():
     hide(prologue_node)
     screen_node.style.visibility = "visible"
@@ -42,15 +44,15 @@ def play():
 
     while not game_state["game_over"]:
         location = game_state["location"]
-        if location == "outside":
+        if location == Location.OUTSIDE:
             play_outside()
-        elif location == "hall":
+        elif location == Location.HALL:
             play_hall()
-        elif location == "dungeon":
+        elif location == Location.DUNGEON:
             play_dungeon()
-        elif location == "bedroom":
+        elif location == Location.BEDROOM:
             play_bedroom()
-        elif location == "battlements":
+        elif location == Location.BATTLEMENTS:
             play_battlements()
         else:
             raise RuntimeError("unexpected location")
@@ -67,8 +69,34 @@ class Newspaper:
     def __str__(self):
         return "newspaper"
 
+    def use(self):
+        # There are no preconditions, the newspaper can be used at
+        # any time in the game.
+        output()
+        speak(
+            f"""\
+14 August 1040
 
-newspaper = Newspaper()
+{ANSI.BOLD}MACDONWALD DEFEATED{ANSI.RESET}
+
+Dunguido Macrossum, King of Scotland, has defeated the rebel Macdonwald of the Western Isles and his ally Sweno, King of Norway.
+
+Led by his captains Macbeth and Banquo, King Dunguido's army dealt a decisive blow and ended the revolt.
+
+A sergeant in the King's army said:
+
+{ANSI.ITALICIZE}For brave Macbeth (well he deserves that name),
+Disdaining Fortune, with his brandished steel,
+Which smoked with bloody execution,
+Like Valor's minion, carved out his passage
+Till he faced the slave;
+Which ne'er shook hands, nor bade farewell to him,
+Till he unseamed him from the nave to th' chops,
+And fixed his head upon our battlements.{ANSI.RESET}
+
+Macbeth will now travel to the King's castle to celebrate the victory.
+"""
+        )
 
 
 class Torch:
@@ -81,9 +109,6 @@ class Torch:
         return "torch"
 
 
-torch = Torch()
-
-
 class FrontDoor:
     """You could use the front door to enter the castle."""
 
@@ -93,20 +118,27 @@ class FrontDoor:
     def __str__(self):
         return "door"
 
-
-front_door = FrontDoor()
+    def use(self):
+        location = game_state["location"]
+        if location == Location.OUTSIDE:
+            game_state["location"] = Location.HALL
+        elif location == Location.HALL:
+            game_state["location"] = Location.OUTSIDE
+        raise InteractionComplete
 
 
 class HelpFunction:
+    """Type help() for the in-game tutorial. Type help(X) to get a hint about how to use object X. But then you already knew that :)"""
+
     def __repr__(self):
-        return function_repr_template.format(name="help")
+        return function_repr_template.format(name="help") + "\n"
 
     def __call__(self, *args):
         if len(args) == 0:
             self._tutorial()
         elif len(args) == 1:
             arg = args[0]
-            speak(arg.__doc__)
+            output(arg.__doc__)
             output()
 
     def _tutorial(self):
@@ -140,12 +172,15 @@ And we'll not fail!{ANSI.RESET}
 
 
 class TakeFunction:
+    """Type take(X) to pick up object X and carry it with you to the next location."""
+
     def __repr__(self):
-        return function_repr_template.format(name="take")
+        return function_repr_template.format(name="take") + "\n"
 
     def __call__(self, *args):
         if len(args) == 0:
-            speak("Did you mean to take something?")
+            output("Did you mean to take something?")
+            output()
         for o in args:
             self._take(o)
 
@@ -155,27 +190,61 @@ class TakeFunction:
         holding = game_state["holding"]
 
         if o in holding:
-            speak(f"You are alreading holding the {ANSI.BOLD}{o}{ANSI.RESET}.")
+            output(f"You are alreading holding the {o}.")
         elif o not in available:
-            speak(f"The {ANSI.BOLD}{o}{ANSI.RESET} is not available.")
+            output(f"The {o} is not available.")
         elif o in fixed:
-            speak(f"The {ANSI.BOLD}{o}{ANSI.RESET} cannot be taken.")
+            output(f"The {o} cannot be taken.")
         else:
             available.remove(o)
             holding.add(o)
-            speak(f"You have taken the {ANSI.BOLD}{o}{ANSI.RESET}.")
+            output(f"You have taken the {o}.", 1)
             output()
             status()
         output()
 
 
+class UseFunction:
+    """Type use(X) to try and use object X."""
+
+    def __repr__(self):
+        return function_repr_template.format(name="use") + "\n"
+
+    def __call__(self, *args):
+        if len(args) == 0:
+            output("Did you mean to use something?")
+            output()
+        for o in args:
+            if hasattr(o, "use"):
+                o.use()
+            else:
+                output(f"Object {o} cannot be used.")
+
+
+class SingFunction:
+    """Type sing() if you feel like singing!"""
+
+    def __repr__(self):
+        return function_repr_template.format(name="sing") + "\n"
+
+    def __call__(self, *args):
+        pass
+
+
+newspaper = Newspaper()
+torch = Torch()
+front_door = FrontDoor()
 help = HelpFunction()
 take = TakeFunction()
+use = UseFunction()
+sing = SingFunction()
 
 
+# Initial game state.
 game_state = {
-    "location": "outside",
-    "outside": {newspaper, torch, front_door},
+    "location": Location.OUTSIDE,
+    Location.OUTSIDE: {newspaper, torch, front_door},
+    Location.HALL: {front_door},
     "holding": set(),
     "hall_lit": False,
     "prophecy_heard": False,
@@ -195,8 +264,8 @@ def status():
     holding = game_state["holding"]
     available_str = ", ".join([str(o) for o in available])
     holding_str = ", ".join([str(o) for o in holding])
-    speak(f"Objects available: [{ANSI.BOLD}{available_str}{ANSI.RESET}]")
-    speak(f"Objects held: [{ANSI.BOLD}{holding_str}{ANSI.RESET}]")
+    output(f"Objects available: [{ANSI.BOLD}{available_str}{ANSI.RESET}]", 1)
+    output(f"Objects held: [{ANSI.BOLD}{holding_str}{ANSI.RESET}]", 1)
 
     namespace = dict()
     for o in available:
@@ -205,14 +274,14 @@ def status():
         namespace[str(o)] = o
     namespace["help"] = help
     namespace["take"] = take
-    # TODO use
-    # TODO sing
+    namespace["use"] = use
+    namespace["sing"] = sing
     return namespace
 
 
 def play_outside():
     output()
-    speak("You are standing outside a castle.")
+    output("You are standing outside a castle.", 1)
     output()
     namespace = status()
     output()
@@ -224,7 +293,16 @@ def play_outside():
 
 
 def play_hall():
-    pass
+    output()
+    output("You are in the main hall.", 1)
+    output()
+    namespace = status()
+    output()
+
+    try:
+        code.interact(local=namespace, banner="")
+    except InteractionComplete:
+        pass
 
 
 def play_dungeon():
