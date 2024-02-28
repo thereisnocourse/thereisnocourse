@@ -4,6 +4,7 @@ from util import (
     get_element_by_id,
     show,
     hide,
+    write,
     output,
     get_terminal,
     speak,
@@ -31,16 +32,16 @@ def play():
     hide(prologue_node)
     screen_node.style.visibility = "visible"
 
-    #     write(f"\n{ANSI.BOLD}")
-    #     speak("   || The Scottish Play")
-    #     speak(f"===||========={ANSI.BG_RED}=======>>{ANSI.RESET}")
-    #     speak(f"{ANSI.BOLD}   ||")
-    #     write(f"{ANSI.RESET}\n")
-    #     speak(
-    #         f"""\
-    # Type {ANSI.BOLD}help(){ANSI.RESET} for the game tutorial.
-    # ---"""
-    #     )
+    write(f"\n{ANSI.BOLD}")
+    speak("   || The Scottish Play")
+    speak(f"===||========={ANSI.BG_RED}=======>>{ANSI.RESET}")
+    speak(f"{ANSI.BOLD}   ||")
+    write(f"{ANSI.RESET}\n")
+    speak(
+        f"""\
+Type {ANSI.BOLD}help(){ANSI.RESET} for the game tutorial.
+---"""
+    )
 
     while not game_state["game_over"]:
         location = game_state["location"]
