@@ -152,7 +152,7 @@ speech_pauses = {
     ".": 1,
     "!": 1.2,
     "?": 1.4,
-    "⏸": 2,  # hidden pause
+    "⏸": 1.6,  # hidden pause
 }
 
 
@@ -194,7 +194,7 @@ def speak(message):
             if ansi and c == "m":
                 ansi = False
 
-        if not line:
+        if not line and not fast_forward:
             # Empty line, interpret as gap between paragraphs.
             time.sleep(para_pause)
 
