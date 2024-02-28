@@ -1,3 +1,5 @@
+* [ ] Refactor to use classes for locations, with play() method and objects property.
+
 ## Help
 
 You are a Scottish general returning from victory in battle. The aim of the game is to fulfil your ambition for power and glory!
