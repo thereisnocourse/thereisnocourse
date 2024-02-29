@@ -32,16 +32,16 @@ class Game:
         hide(replay_node)
         screen_node.style.visibility = "visible"
 
-        # output()
-        # speak(f"{Text.BOLD}   || The Scottish play")
-        # speak(f"===||====={Text.BG_RED}=====>>>{Text.RESET}")
-        # speak(f"{Text.BOLD}   ||{Text.RESET}")
-        # output()
-        # speak(f'{Text.ITALICIZE}"So foul and fair a day I have not seen."{Text.RESET}')
-        # output()
-        # speak(f"Type {Text.BOLD}help(){Text.RESET} for the in-game tutorial.")
-        # output("---", 1)
-        # output()
+        output()
+        speak(f"{Text.BOLD}   || The Scottish play")
+        speak(f"===||====={Text.BG_RED}=====>>>{Text.RESET}")
+        speak(f"{Text.BOLD}   ||{Text.RESET}")
+        output()
+        speak(f'{Text.ITALICIZE}"So foul and fair a day I have not seen."{Text.RESET}')
+        output()
+        speak(f"Type {Text.BOLD}help(){Text.RESET} for the in-game tutorial.")
+        output("---", 1)
+        output()
 
         while not self.over:
             player.location.play()
@@ -89,9 +89,8 @@ def setup_namespace():
 
 class Player:
     def __init__(self):
-        # TODO restore initial location
-        # self.location = outside
-        self.location = bedroom
+        self.location = outside
+        # self.location = bedroom
         self.objects = set()
         self.crowned = False
 
