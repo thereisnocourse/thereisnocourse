@@ -1,4 +1,3 @@
-from enum import Enum
 from util import (
     when,
     get_element_by_id,
@@ -23,14 +22,101 @@ terminal = get_terminal()
 
 class Game:
     def __init__(self):
-        self.location = outside
-        self.game_over = False
+        self.over = False
 
     def play(self):
-        pass
+        hide(prologue_node)
+        screen_node.style.visibility = "visible"
+
+        write(f"\n{ANSI.BOLD}")
+        speak("   || The Scottish play")
+        speak(f"===||====={ANSI.BG_RED}=====>>>{ANSI.RESET}")
+        speak(f"{ANSI.BOLD}   ||")
+        write(f"{ANSI.RESET}\n")
+        speak(
+            f"""\
+Type {ANSI.BOLD}help(){ANSI.RESET} for the in-game tutorial.
+---"""
+        )
+
+        while not self.over:
+            player.location.play()
+
+        output_game_over()
+
+
+def output_game_over():
+    output("TODO GAME OVER")
+
+
+def output_objects():
+    available = player.location.objects
+    taken = player.objects
+    available_str = ", ".join([str(o) for o in available])
+    taken_str = ", ".join([str(o) for o in taken])
+    output(f"Objects available: [{ANSI.BOLD}{available_str}{ANSI.RESET}]", 0)
+    output(f"Objects taken: [{ANSI.BOLD}{taken_str}{ANSI.RESET}]", 1)
+
+
+def setup_namespace():
+    namespace = dict()
+
+    # Add objects.
+    for o in player.objects:
+        namespace[str(o)] = o
+    for o in player.location.objects:
+        namespace[str(o)] = o
+
+    # Add action functions.
+    namespace["help"] = help
+    namespace["take"] = take
+    namespace["use"] = use
+    namespace["sing"] = sing
+
+    return namespace
+
+
+class Player:
+    def __init__(self):
+        self.location = outside
+        self.objects = set()
+
+    def sing(self):
+        if self.location is battlements:
+            speak(
+                f"""
+{ANSI.ITALICIZE}I'm a lumberjack, and I'm okay.
+I sleep all night and I work all day.
+I cut down trees, I eat my lunch,
+I go to the lavatory.
+On Wednesdays I go shoppin',
+And have buttered scones for tea.{ANSI.RESET}
+"""
+            )
+            if crown.used:
+                output("TODO forest runs away, you win!")
+                game.forest = False
+                game.over = True
+                raise BreakInteraction
+        else:
+            output("TODO singing causes death")
+            game.over = True
+            raise BreakInteraction
+
+
+class Forest:
+    def __init__(self):
+        self.defeated = False
+
+
+forest = Forest()
 
 
 class BreakInteraction(SystemExit):
+    """This exception is used to signal that the game state has
+    changed and that the current interactive session should be
+    interrupted."""
+
     pass
 
 
@@ -41,53 +127,167 @@ class Location:
 
 class Outside(Location):
     def __init__(self):
+        super().__init__()
         self.objects.add(door)
         self.objects.add(torch)
         self.objects.add(newspaper)
 
     def play(self):
-        pass
+        output()
+        output("You are standing outside the king's castle.", 1)
+        output()
+        output_objects()
+        output()
+
+        namespace = setup_namespace()
+        try:
+            code.interact(local=namespace, banner="")
+        except BreakInteraction:
+            pass
 
 
-outside = Outside()
+class Hall(Location):
+    def __init__(self):
+        super().__init__()
+        self.objects.add(door)
+        self.dark = True
 
-Location = Enum("Location", ["OUTSIDE", "HALL", "DUNGEON", "BEDROOM", "BATTLEMENTS"])
-
-
-def play():
-    hide(prologue_node)
-    screen_node.style.visibility = "visible"
-
-    #     write(f"\n{ANSI.BOLD}")
-    #     speak("   || The Scottish play")
-    #     speak(f"===||====={ANSI.BG_RED}=====>>>{ANSI.RESET}")
-    #     speak(f"{ANSI.BOLD}   ||")
-    #     write(f"{ANSI.RESET}\n")
-    #     speak(
-    #         f"""\
-    # Type {ANSI.BOLD}help(){ANSI.RESET} for the in-game tutorial.
-    # ---"""
-    #     )
-
-    while not game_state["game_over"]:
-        location = game_state["location"]
-        if location == Location.OUTSIDE:
-            play_outside()
-        elif location == Location.HALL:
-            play_hall()
-        elif location == Location.DUNGEON:
-            play_dungeon()
-        elif location == Location.BEDROOM:
-            play_bedroom()
-        elif location == Location.BATTLEMENTS:
-            play_battlements()
+    def play(self):
+        if self.dark:
+            self.play_dark()
         else:
-            raise RuntimeError("unexpected location")
+            self.play_light()
 
-    game_over()
+    def play_dark(self):
+        output()
+        output("You are in the main hall. It's very dark in here.", 1)
+        output()
+        output_objects()
+        output()
+
+        namespace = setup_namespace()
+        try:
+            code.interact(local=namespace, banner="")
+        except BreakInteraction:
+            pass
+
+    def play_light(self):
+        output()
+        output("You are in the main hall. It's nice and light in here.", 1)
+        output("There's are stairs going up and a tunnel going down.", 1)
+        output()
+        output_objects()
+        output()
+
+        if dagger in self.objects:
+            speak(
+                f"""{ANSI.ITALICIZE}\
+Is this a dagger which I see before me,
+The handle toward my hand? Come, let me clutch thee.
+I have thee not, and yet I see thee still.{ANSI.RESET}"""
+            )
+            output()
+
+        namespace = setup_namespace()
+        try:
+            code.interact(local=namespace, banner="")
+        except BreakInteraction:
+            pass
 
 
-class Newspaper:
+class Dungeon(Location):
+    def __init__(self):
+        super().__init__()
+        self.objects.add(tunnel)
+        self.witches = True
+
+    def play(self):
+        if self.witches:
+            self.play_witches()
+        else:
+            self.play_no_witches()
+
+    def play_witches(self):
+        output()
+        output("You are in the dungeon.", 1)
+        output("There are three witches. They don't look very happy.", 1)
+        output("The fire under their cauldron is burning out.", 1)
+        output()
+        output_objects()
+        output()
+
+        namespace = setup_namespace()
+        try:
+            code.interact(local=namespace, banner="")
+        except BreakInteraction:
+            pass
+
+    def play_no_witches(self):
+        output()
+        output("You are in the dungeon. The witches are gone.", 1)
+        output()
+        output_objects()
+        output()
+
+        namespace = setup_namespace()
+        try:
+            code.interact(local=namespace, banner="")
+        except BreakInteraction:
+            pass
+
+
+class Bedroom(Location):
+    def __init__(self):
+        super().__init__()
+        self.objects.add(stairs)
+        self.objects.add(window)
+        self.objects.add(computer)
+
+    def play(self):
+        output()
+        output("You are in the king's bedroom.", 1)
+        output()
+        output_objects()
+        output()
+
+        namespace = setup_namespace()
+        try:
+            code.interact(local=namespace, banner="")
+        except BreakInteraction:
+            pass
+
+
+class Battlements(Location):
+    def __init__(self):
+        super().__init__()
+        self.objects.add(window)
+        self.objects.add(telescope)
+
+    def play(self):
+        output()
+        output("You are on the castle battlements.", 1)
+        if crown.used:
+            output("TODO an army of trees is attacking! You won't be king for long.")
+        output()
+        output_objects()
+        output()
+
+        namespace = setup_namespace()
+        try:
+            code.interact(local=namespace, banner="")
+        except BreakInteraction:
+            pass
+
+
+class Usable:
+    pass
+
+
+class Takeable:
+    pass
+
+
+class Newspaper(Usable, Takeable):
     """Newspapers are good for reading."""
 
     def __repr__(self):
@@ -108,7 +308,7 @@ class Newspaper:
 
 Dunguido Macrossum, King of Scotland, has defeated the rebel Macdonwald of the Western Isles and his ally Sweno, King of Norway.
 
-Led by his captains Macbeth and Banquo, King Dunguido's army dealt a decisive blow and ended the revolt.
+Led by Macbeth, his greatest captain, King Dunguido's army dealt a decisive blow and ended the revolt.
 
 A sergeant in the King's army said:
 
@@ -121,12 +321,12 @@ Which ne'er shook hands, nor bade farewell to him,
 Till he unseamed him from the nave to th' chops,
 And fixed his head upon our battlements.{ANSI.RESET}
 
-Macbeth will now travel to the King's castle to celebrate the victory.
+Macbeth is on his way to the King's castle to celebrate the victory.
 """
         )
 
 
-class FlamingTorch:
+class Torch(Usable, Takeable):
     """Torches help to shed light in the darkness."""
 
     def __repr__(self):
@@ -136,22 +336,21 @@ class FlamingTorch:
         return "torch"
 
     def use(self):
-        location = game_state["location"]
-        if location == Location.HALL:
-            assert not game_state["hall_lit"]
+        if player.location is hall:
+            assert hall.dark
             # TODO output?
-            game_state["hall_lit"] = True
-            game_state["holding"].remove(self)
-            game_state[location].add(stairs)
-            game_state[location].add(tunnel)
-            game_state[location].add(log)
+            hall.dark = False
+            player.objects.remove(self)
+            hall.objects.add(stairs)
+            hall.objects.add(tunnel)
+            hall.objects.add(log)
             raise BreakInteraction
         else:
             output("No point using the torch here, it's nice and light already.")
             output()
 
 
-class FrontDoor:
+class Door(Usable):
     """You could use the front door to enter the castle."""
 
     def __repr__(self):
@@ -161,16 +360,16 @@ class FrontDoor:
         return "door"
 
     def use(self):
-        location = game_state["location"]
-        assert location in {Location.OUTSIDE, Location.HALL}
-        if location == Location.OUTSIDE:
-            game_state["location"] = Location.HALL
+        location = player.location
+        assert location in {outside, hall}
+        if location is outside:
+            player.location = hall
         else:
-            game_state["location"] = Location.OUTSIDE
+            player.location = outside
         raise BreakInteraction
 
 
-class Stairs:
+class Stairs(Usable):
     """You could see what's upstairs."""
 
     def __repr__(self):
@@ -180,16 +379,16 @@ class Stairs:
         return "stairs"
 
     def use(self):
-        location = game_state["location"]
-        assert location in {Location.HALL, Location.BEDROOM}
-        if location == Location.HALL:
-            game_state["location"] = Location.BEDROOM
+        location = player.location
+        assert location in {hall, bedroom}
+        if location is hall:
+            player.location = bedroom
         else:
-            game_state["location"] = Location.HALL
+            player.location = hall
         raise BreakInteraction
 
 
-class Tunnel:
+class Tunnel(Usable):
     """You could use the tunnel to find out what's below the castle."""
 
     def __repr__(self):
@@ -199,16 +398,16 @@ class Tunnel:
         return "tunnel"
 
     def use(self):
-        location = game_state["location"]
-        assert location in {Location.HALL, Location.DUNGEON}
-        if location == Location.HALL:
-            game_state["location"] = Location.DUNGEON
+        location = player.location
+        assert location in {hall, dungeon}
+        if location is hall:
+            player.location = dungeon
         else:
-            game_state["location"] = Location.HALL
+            player.location = hall
         raise BreakInteraction
 
 
-class WoodenLog:
+class Log(Usable, Takeable):
     """TODO help."""
 
     def __repr__(self):
@@ -218,21 +417,21 @@ class WoodenLog:
         return "log"
 
     def use(self):
-        location = game_state["location"]
-        if location == Location.DUNGEON:
-            assert not game_state["prophecy_heard"]
-            game_state["holding"].remove(self)
+        location = player.location
+        if location is dungeon:
+            assert dungeon.witches
+            player.objects.remove(self)
             output("TODO prophecy")
             output()
-            game_state["prophecy_heard"] = True
-            game_state[Location.HALL].add(dagger)
+            dungeon.witches = False
+            hall.objects.add(dagger)
             raise BreakInteraction
         else:
             output("TODO not very useful here.")
             output()
 
 
-class BedroomWindow:
+class Window(Usable):
     """You could use the window to get out onto the battlements."""
 
     def __repr__(self):
@@ -242,16 +441,16 @@ class BedroomWindow:
         return "window"
 
     def use(self):
-        location = game_state["location"]
-        assert location in {Location.BEDROOM, Location.BATTLEMENTS}
-        if location == Location.BEDROOM:
-            game_state["location"] = Location.BATTLEMENTS
+        location = player.location
+        assert location in {bedroom, battlements}
+        if location is bedroom:
+            player.location = battlements
         else:
-            game_state["location"] = Location.BEDROOM
+            player.location = bedroom
         raise BreakInteraction
 
 
-class Dagger:
+class Dagger(Usable, Takeable):
     """TODO help."""
 
     def __repr__(self):
@@ -261,20 +460,21 @@ class Dagger:
         return "dagger"
 
     def use(self):
-        location = game_state["location"]
-        if location == Location.BEDROOM:
+        location = player.location
+        if location is bedroom:
             assert not computer.destroyed
-            output("TODO you used the dagger")
             computer.destroyed = True
-            game_state["holding"].remove(dagger)
-            game_state[Location.BEDROOM].add(crown)
+            player.objects.remove(dagger)
+            bedroom.objects.add(crown)
+            output("TODO you used the dagger")
             output()
+            raise BreakInteraction
         else:
             output("TODO can't use that here")
             output()
 
 
-class Computer:
+class Computer(Usable):
     """TODO help."""
 
     def __init__(self):
@@ -296,7 +496,7 @@ class Computer:
             output("TODO use the computer.")
 
 
-class Crown:
+class Crown(Usable, Takeable):
     """TODO help."""
 
     def __init__(self):
@@ -309,11 +509,11 @@ class Crown:
         return "crown"
 
     def use(self):
-        location = game_state["location"]
-        if location == Location.BATTLEMENTS:
+        location = player.location
+        if location is battlements:
             assert not self.used
             self.used = True
-            game_state["holding"].remove(crown)
+            player.objects.remove(crown)
             output("TODO you used the crown")
             output()
         else:
@@ -321,7 +521,7 @@ class Crown:
             output()
 
 
-class Telescope:
+class Telescope(Usable):
     """TODO help."""
 
     def __repr__(self):
@@ -334,7 +534,11 @@ class Telescope:
         pass
 
 
-class HelpFunction:
+class Action:
+    pass
+
+
+class Help(Action):
     """Type help() for the in-game tutorial. Type help(X) to get a hint about how to use object X. But then you already knew that :)"""
 
     def __repr__(self):
@@ -352,7 +556,7 @@ class HelpFunction:
         output()
         speak(
             f"""\
-In each location you will find some objects. These objects can be used to help you on your quest for power and glory.
+In each location you will find some objects. These objects can be used to help you on your quest for ultimate power and glory.
 
 To look at an object, type the name of the object and press return. For example, to look at the {ANSI.BOLD}newspaper{ANSI.RESET}:⏩
               
@@ -378,7 +582,7 @@ And we'll not fail!{ANSI.RESET}
         )
 
 
-class TakeFunction:
+class Take(Action):
     """Type take(X) to pick up object X and carry it with you to the next location."""
 
     def __repr__(self):
@@ -392,26 +596,25 @@ class TakeFunction:
             self._take(o)
 
     def _take(self, o):
-        location = game_state["location"]
-        available = game_state[location]
-        holding = game_state["holding"]
+        available = player.location.objects
+        taken = player.objects
 
-        if o in holding:
-            output(f"You are alreading holding the {o}.")
+        if o in taken:
+            output(f"You have already taken the {o}.")
         elif o not in available:
             output(f"The {o} is not available.")
-        elif o in fixed:
+        elif not isinstance(o, Takeable):
             output(f"The {o} cannot be taken.")
         else:
             available.remove(o)
-            holding.add(o)
+            taken.add(o)
             output(f"You have taken the {o}.", 1)
             output()
-            output_object_status()
+            output_objects()
         output()
 
 
-class UseFunction:
+class Use(Action):
     """Type use(X) to try and use object X."""
 
     def __repr__(self):
@@ -422,243 +625,59 @@ class UseFunction:
             output("Did you mean to use something?")
             output()
         for o in args:
-            if hasattr(o, "use"):
+            if isinstance(o, Usable):
                 o.use()
             else:
                 output(f"Object {o} cannot be used.")
 
 
-class SingFunction:
-    """Type sing() if you feel like singing!"""
+class Sing(Action):
+    """Type sing() any time you feel like singing!"""
 
     def __repr__(self):
         return function_repr_template.format(name="sing") + "\n"
 
     def __call__(self, *args):
-        location = game_state["location"]
-        if location == Location.BATTLEMENTS:
-            speak(
-                f"""{ANSI.ITALICIZE}\
-I'm a lumberjack, and I'm okay
-I sleep all night and I work all day
-I cut down trees, I eat my lunch
-I go to the lavatory
-On Wednesdays I go shoppin'
-And have buttered scones for tea.{ANSI.RESET}
-"""
-            )
-            if crown.used:
-                output("TODO forest runs away, you win!")
-                game_state["forest_defeated"] = True
-                game_state["game_over"] = True
-                raise BreakInteraction
-        else:
-            # TODO sing causes death
-            output("TODO sing")
-            game_state["game_over"] = True
-            raise BreakInteraction
+        player.sing()
 
 
+# Objects.
 newspaper = Newspaper()
-torch = FlamingTorch()
-door = FrontDoor()
+torch = Torch()
+door = Door()
 stairs = Stairs()
 tunnel = Tunnel()
-window = BedroomWindow()
-log = WoodenLog()
+window = Window()
+log = Log()
 dagger = Dagger()
 computer = Computer()
 telescope = Telescope()
 crown = Crown()
-help = HelpFunction()
-take = TakeFunction()
-use = UseFunction()
-sing = SingFunction()
 
+# Locations.
+outside = Outside()
+hall = Hall()
+dungeon = Dungeon()
+bedroom = Bedroom()
+battlements = Battlements()
 
-# Initial game state.
-game_state = {
-    "location": Location.OUTSIDE,
-    Location.OUTSIDE: {newspaper, torch, door},
-    Location.HALL: {door},
-    Location.DUNGEON: {tunnel},
-    Location.BEDROOM: {stairs, window, computer},
-    Location.BATTLEMENTS: {window, telescope},
-    "holding": set(),
-    "hall_lit": False,
-    "prophecy_heard": False,
-    "forest_defeated": False,
-    "game_over": False,
-}
+# Actions.
+help = Help()
+take = Take()
+use = Use()
+sing = Sing()
 
-
-# These objects cannot be taken.
-fixed = {door, tunnel, stairs, window, telescope, computer}
-
-
-def output_object_status():
-    location = game_state["location"]
-    available = game_state[location]
-    holding = game_state["holding"]
-    available_str = ", ".join([str(o) for o in available])
-    holding_str = ", ".join([str(o) for o in holding])
-    output(f"Objects available: [{ANSI.BOLD}{available_str}{ANSI.RESET}]", 0)
-    output(f"Objects held: [{ANSI.BOLD}{holding_str}{ANSI.RESET}]", 1)
-
-
-def setup_namespace():
-    location = game_state["location"]
-    available = game_state[location]
-    holding = game_state["holding"]
-    namespace = dict()
-    for o in available:
-        namespace[str(o)] = o
-    for o in holding:
-        namespace[str(o)] = o
-    namespace["help"] = help
-    namespace["take"] = take
-    namespace["use"] = use
-    namespace["sing"] = sing
-    return namespace
-
-
-def play_outside():
-    output()
-    output("You are standing outside the king's castle.", 1)
-    output()
-    output_object_status()
-    output()
-
-    namespace = setup_namespace()
-    try:
-        code.interact(local=namespace, banner="")
-    except BreakInteraction:
-        pass
-
-
-def play_hall():
-    hall_lit = game_state["hall_lit"]
-    if hall_lit:
-        play_hall_lit()
-    else:
-        play_hall_dark()
-
-
-def play_hall_dark():
-    output()
-    output("You are in the main hall. It's very dark in here.", 1)
-    output()
-    output_object_status()
-    output()
-
-    namespace = setup_namespace()
-    try:
-        code.interact(local=namespace, banner="")
-    except BreakInteraction:
-        pass
-
-
-def play_hall_lit():
-    output()
-    if dagger in game_state[Location.HALL]:
-        speak(
-            f"""{ANSI.ITALICIZE}\
-Is this a dagger which I see before me,
-The handle toward my hand? Come, let me clutch thee.
-I have thee not, and yet I see thee still.{ANSI.RESET}"""
-        )
-        output()
-    output("You are in the main hall. It's nice and light in here.", 1)
-    output("There's are stairs going up and a tunnel going down.", 1)
-    output()
-    output_object_status()
-    output()
-
-    namespace = setup_namespace()
-    try:
-        code.interact(local=namespace, banner="")
-    except BreakInteraction:
-        pass
-
-
-def play_dungeon():
-    prophecy_heard = game_state["prophecy_heard"]
-    if prophecy_heard:
-        play_dungeon_no_witches()
-    else:
-        play_dungeon_witches()
-
-
-def play_dungeon_witches():
-    output()
-    output("You are in the dungeon.", 1)
-    output("There are three witches. They don't look very happy.", 1)
-    output("The fire under their cauldron is burning out.", 1)
-    output()
-    output_object_status()
-    output()
-
-    namespace = setup_namespace()
-    try:
-        code.interact(local=namespace, banner="")
-    except BreakInteraction:
-        pass
-
-
-def play_dungeon_no_witches():
-    output()
-    output("You are in the dungeon. The witches are gone.", 1)
-    output()
-    output_object_status()
-    output()
-
-    namespace = setup_namespace()
-    try:
-        code.interact(local=namespace, banner="")
-    except BreakInteraction:
-        pass
-
-
-def play_bedroom():
-    output()
-    output("You are in the king's bedroom.", 1)
-    output()
-    output_object_status()
-    output()
-
-    namespace = setup_namespace()
-    try:
-        code.interact(local=namespace, banner="")
-    except BreakInteraction:
-        pass
-
-
-def play_battlements():
-    output()
-    output("You are on the castle battlements.", 1)
-    if crown.used:
-        output("TODO an army of trees is attacking! You won't be king for long.")
-    output()
-    output_object_status()
-    output()
-
-    namespace = setup_namespace()
-    try:
-        code.interact(local=namespace, banner="")
-    except BreakInteraction:
-        pass
-
-
-def game_over():
-    pass
+# Game setup.
+player = Player()
+game = Game()
 
 
 @when("click", "#play_button")
 def play_button_on_click(event):
-    play()
+    game.play()
 
 
 if __name__ == "__main__":
     hide(loading_node)
     show(play_button_node)
-    play()
+    game.play()
