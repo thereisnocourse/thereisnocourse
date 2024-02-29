@@ -1,3 +1,5 @@
+from abc import ABC, abstractmethod
+import code
 from util import (
     when,
     get_element_by_id,
@@ -10,7 +12,6 @@ from util import (
     function_repr_template,
     Text,
 )
-import code
 
 
 loading_node = get_element_by_id("loading")
@@ -31,16 +32,16 @@ class Game:
         hide(replay_node)
         screen_node.style.visibility = "visible"
 
-        output()
-        speak(f"{Text.BOLD}   || The Scottish play")
-        speak(f"===||====={Text.BG_RED}=====>>>{Text.RESET}")
-        speak(f"{Text.BOLD}   ||{Text.RESET}")
-        output()
-        speak(f'{Text.ITALICIZE}"So foul and fair a day I have not seen."{Text.RESET}')
-        output()
-        speak(f"Type {Text.BOLD}help(){Text.RESET} for the in-game tutorial.")
-        output("---", 1)
-        output()
+        # output()
+        # speak(f"{Text.BOLD}   || The Scottish play")
+        # speak(f"===||====={Text.BG_RED}=====>>>{Text.RESET}")
+        # speak(f"{Text.BOLD}   ||{Text.RESET}")
+        # output()
+        # speak(f'{Text.ITALICIZE}"So foul and fair a day I have not seen."{Text.RESET}')
+        # output()
+        # speak(f"Type {Text.BOLD}help(){Text.RESET} for the in-game tutorial.")
+        # output("---", 1)
+        # output()
 
         while not self.over:
             player.location.play()
@@ -88,8 +89,11 @@ def setup_namespace():
 
 class Player:
     def __init__(self):
-        self.location = outside
+        # TODO restore initial location
+        # self.location = outside
+        self.location = bedroom
         self.objects = set()
+        self.crowned = False
 
     def take(self, o):
         available = self.location.objects
@@ -119,7 +123,8 @@ Do de do do do do de
 I'm siiiiingin' in the rain, just siiiiiingin' in the rain⏸
 What a gloooooorious feeeeeeeling I'm haaaaaappy again⏸
 I'm laaaaaughing at clouds, so daaaaaark up above⏸
-The sun's in my heart and I'm ready for..." ⏩{Text.RESET}{Text.BOLD}[KAZAM!]{Text.RESET}"""
+The sun's in my heart and I'm ready for..."
+⏩{Text.RESET}{Text.BOLD}[FLASH!]{Text.RESET}"""
             )
             output("", 1)
             output(
@@ -127,7 +132,7 @@ The sun's in my heart and I'm ready for..." ⏩{Text.RESET}{Text.BOLD}[KAZAM!]{T
                 1,
             )
             game.over = True
-            raise BreakInteraction
+            raise SystemExit
 
         elif self.location is hall:
             output()
@@ -137,7 +142,8 @@ The sun's in my heart and I'm ready for..." ⏩{Text.RESET}{Text.BOLD}[KAZAM!]{T
 I was held up so high, I used to be great,
 They used to cheer when they saw my face,
 Now, I fear I have fallen from grace,
-And I feel like my castle's crumbling down..." ⏩{Text.RESET}{Text.BOLD}[CRASH!]{Text.RESET}"""
+And I feel like my castle's crumbling down..."
+⏩{Text.RESET}{Text.BOLD}[CRASH!]{Text.RESET}"""
             )
             output("", 1)
             output(
@@ -145,7 +151,7 @@ And I feel like my castle's crumbling down..." ⏩{Text.RESET}{Text.BOLD}[CRASH!
                 1,
             )
             game.over = True
-            raise BreakInteraction
+            raise SystemExit
 
         elif self.location is dungeon:
             output()
@@ -156,37 +162,53 @@ Which old witch — the wicked witch!
 Ding-dong the wicked witch is dead.
 Wake up you sleepyhead,
 Rub your eyes, get out of bed,
-Wake up the wicked witch is..." ⏩{Text.RESET}{Text.BOLD}[FLASH!]{Text.RESET}"""
+Wake up the wicked witch is..."
+⏩{Text.RESET}{Text.BOLD}[KAZAM!]{Text.RESET}"""
+            )
+            output("", 1)
+            output("The witches have turned you into a toad.", 1)
+            game.over = True
+            raise SystemExit
+
+        elif self.location is bedroom:
+            output()
+            speak(
+                f"""{Text.ITALICIZE}\
+"Het is een nacht
+Die je normaal alleen in films ziet
+Het is een nacht
+Die wordt bezongen in het mooiste lied
+Het is een nacht
+Waarvan ik dacht dat ik hem nooit beleven zou
+Maar vannacht beleef ik hem met jouooooooooOOOOoo..."
+⏩{Text.RESET}{Text.BOLD}[CRUNCH!]{Text.RESET}"""
             )
             output("", 1)
             output(
-                "The witches have turned you into a toad.",
+                "The king has mistaken you for an alarm clock and thrown you out of the window.",
                 1,
             )
             game.over = True
-            raise BreakInteraction
+            raise SystemExit
 
-        elif self.location is battlements:
+        else:
+            assert self.location is battlements
             output()
             speak(
-                f"""\
-{Text.ITALICIZE}"I'm a lumberjack and I'm okay,
+                f"""{Text.ITALICIZE}\
+"I'm a lumberjack and I'm okay,
 I sleep all night and I work all day.
 I cut down trees, I eat my lunch,
 I go to the lavatory.
 On Wednesdays I go shoppin',
-And have buttered scones for tea."{Text.RESET}
+And have buttered scones for tea."{Text.RESET}\
 """
             )
-            if crown.used:
+            if player.crowned:
                 output("TODO forest runs away, you win!")
                 game.forest = False
                 game.over = True
-                raise BreakInteraction
-        else:
-            output("TODO singing causes death")
-            game.over = True
-            raise BreakInteraction
+                raise SystemExit
 
 
 class Forest:
@@ -195,14 +217,6 @@ class Forest:
 
 
 forest = Forest()
-
-
-class BreakInteraction(SystemExit):
-    """This exception is used to signal that the game state has
-    changed and that the current interactive session should be
-    interrupted."""
-
-    pass
 
 
 class Location:
@@ -228,7 +242,7 @@ class Outside(Location):
         namespace = setup_namespace()
         try:
             code.interact(local=namespace, banner="")
-        except BreakInteraction:
+        except SystemExit:
             pass
 
 
@@ -254,7 +268,7 @@ class Hall(Location):
         namespace = setup_namespace()
         try:
             code.interact(local=namespace, banner="")
-        except BreakInteraction:
+        except SystemExit:
             pass
 
     def play_light(self):
@@ -277,7 +291,7 @@ I have thee not, and yet I see thee still."{Text.RESET}"""
         namespace = setup_namespace()
         try:
             code.interact(local=namespace, banner="")
-        except BreakInteraction:
+        except SystemExit:
             pass
 
 
@@ -305,7 +319,7 @@ class Dungeon(Location):
         namespace = setup_namespace()
         try:
             code.interact(local=namespace, banner="")
-        except BreakInteraction:
+        except SystemExit:
             pass
 
     def play_no_witches(self):
@@ -317,7 +331,7 @@ class Dungeon(Location):
         namespace = setup_namespace()
         try:
             code.interact(local=namespace, banner="")
-        except BreakInteraction:
+        except SystemExit:
             pass
 
 
@@ -329,7 +343,7 @@ class Bedroom(Location):
         self.objects.add(computer)
 
     def play(self):
-        output("Location: You are in the king's bedroom.", 1)
+        output("Location: You are in the king's bedroom.")
         output()
         output_objects()
         output()
@@ -337,7 +351,7 @@ class Bedroom(Location):
         namespace = setup_namespace()
         try:
             code.interact(local=namespace, banner="")
-        except BreakInteraction:
+        except SystemExit:
             pass
 
 
@@ -348,8 +362,8 @@ class Battlements(Location):
         self.objects.add(telescope)
 
     def play(self):
-        output("Location: You are on the castle battlements.", 1)
-        if crown.used:
+        output("Location: You are on the castle battlements.")
+        if player.crowned:
             output("TODO an army of trees is attacking! You won't be king for long.")
         output()
         output_objects()
@@ -358,15 +372,17 @@ class Battlements(Location):
         namespace = setup_namespace()
         try:
             code.interact(local=namespace, banner="")
-        except BreakInteraction:
+        except SystemExit:
             pass
 
 
-class Usable:
-    pass
+class Usable(ABC):
+    @abstractmethod
+    def use(self):
+        pass
 
 
-class Takeable:
+class Takeable(ABC):
     pass
 
 
@@ -434,7 +450,7 @@ class Torch(Usable, Takeable):
             hall.objects.add(stairs)
             hall.objects.add(tunnel)
             hall.objects.add(log)
-            raise BreakInteraction
+            raise SystemExit
         else:
             output("No point using the torch here, it's nice and light already.")
             output()
@@ -459,7 +475,7 @@ class Door(Usable):
         else:
             speak("You open the door and go back outside into the rain...")
             player.location = outside
-        raise BreakInteraction
+        raise SystemExit
 
 
 class Stairs(Usable):
@@ -483,7 +499,7 @@ class Stairs(Usable):
             player.location = bedroom
         else:
             player.location = hall
-        raise BreakInteraction
+        raise SystemExit
 
 
 class Tunnel(Usable):
@@ -503,7 +519,7 @@ class Tunnel(Usable):
             player.location = dungeon
         else:
             player.location = hall
-        raise BreakInteraction
+        raise SystemExit
 
 
 class Log(Usable, Takeable):
@@ -541,7 +557,7 @@ Then into thin air, the witches vanish...
             )
             dungeon.witches = False
             hall.objects.add(dagger)
-            raise BreakInteraction
+            raise SystemExit
         else:
             output("TODO not very useful here.")
             output()
@@ -567,7 +583,7 @@ class Window(Usable):
             player.location = battlements
         else:
             player.location = bedroom
-        raise BreakInteraction
+        raise SystemExit
 
 
 class Dagger(Usable, Takeable):
@@ -590,16 +606,19 @@ class Dagger(Usable, Takeable):
             bedroom.objects.add(crown)
             output()
             speak("TODO you used the dagger")
-            raise BreakInteraction
+            raise SystemExit
         else:
             output("TODO can't use that here")
             output()
 
 
-class Computer(Usable):
+# Computer is a special game-within-a-game, behaves like an
+# object and a playable location.
+class Computer(Usable, Location):
     """TODO help."""
 
     def __init__(self):
+        super().__init__()
         self.destroyed = False
 
     def __repr__(self):
@@ -616,14 +635,28 @@ class Computer(Usable):
         if self.destroyed:
             output("TODO can't use computer, it's destroyed")
         else:
-            output("TODO use the computer.")
+            output("TODO use the computer.", 2)
+            player.location = self
+            raise SystemExit
+
+    def play(self):
+        terminal.clear()
+        screen_node.classList.remove("scottish")
+        screen_node.classList.add("old_computer")
+
+        namespace = setup_namespace()
+        try:
+            code.interact(local=namespace, banner="")
+        except SystemExit:
+            pass
+
+        screen_node.classList.add("scottish")
+        screen_node.classList.remove("old_computer")
+        player.location = bedroom
 
 
 class Crown(Usable, Takeable):
     """TODO help."""
-
-    def __init__(self):
-        self.used = False
 
     def __repr__(self):
         return (
@@ -639,7 +672,7 @@ class Crown(Usable, Takeable):
     def use(self):
         if player.location is battlements:
             assert not self.used
-            self.used = True
+            player.crowned = True
             player.objects.remove(crown)
             output()
             speak("TODO you used the crown - here come the trees!")

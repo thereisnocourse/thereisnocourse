@@ -9,6 +9,13 @@
     color: white !important;
 }
 
+.old_computer,
+.old_computer .xterm-rows,
+.old_computer .xterm-viewport {
+    background-color: black !important;
+    color: #33FF00 !important;
+}
+
 #success {
     display: none;
     margin-top: 1em;
