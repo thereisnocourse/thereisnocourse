@@ -1,22 +1,26 @@
 #screen {
     visibility: hidden;
-    background-color: #005EB8 !important;
 }
 
-#terminal .xterm-rows,
-#terminal .xterm-screen,
-#terminal .xterm-viewport {
+.scottish,
+.scottish .xterm-rows,
+.scottish .xterm-viewport {
     background-color: #005EB8 !important;
     color: white !important;
-
 }
 
 #success {
     display: none;
+    margin-top: 1em;
 }
 
 #play_button {
     display: none;
+}
+
+#replay {
+    display: none;
+    margin-top: 1em;
 }
 
 #prologue img {

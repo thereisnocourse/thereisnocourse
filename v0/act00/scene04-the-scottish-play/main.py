@@ -17,6 +17,7 @@ loading_node = get_element_by_id("loading")
 play_button_node = get_element_by_id("play_button")
 prologue_node = get_element_by_id("prologue")
 screen_node = get_element_by_id("screen")
+replay_node = get_element_by_id("replay")
 terminal = get_terminal()
 
 
@@ -26,6 +27,7 @@ class Game:
 
     def play(self):
         hide(prologue_node)
+        hide(replay_node)
         screen_node.style.visibility = "visible"
 
         write(f"\n{ANSI.BOLD}")
@@ -33,11 +35,10 @@ class Game:
         speak(f"===||====={ANSI.BG_RED}=====>>>{ANSI.RESET}")
         speak(f"{ANSI.BOLD}   ||")
         write(f"{ANSI.RESET}\n")
-        speak(
-            f"""\
-Type {ANSI.BOLD}help(){ANSI.RESET} for the in-game tutorial.
----"""
-        )
+        output(f"Type {ANSI.BOLD}help(){ANSI.RESET} for the in-game tutorial.")
+        output("---", 1)
+        output()
+        speak(f"{ANSI.ITALICIZE}So foul and fair a day I have not seen.{ANSI.RESET}")
 
         while not self.over:
             player.location.play()
@@ -46,7 +47,8 @@ Type {ANSI.BOLD}help(){ANSI.RESET} for the in-game tutorial.
 
 
 def output_game_over():
-    output("TODO GAME OVER")
+    output("GAME OVER")
+    show(replay_node)
 
 
 def output_objects():
@@ -82,15 +84,72 @@ class Player:
         self.objects = set()
 
     def sing(self):
-        if self.location is battlements:
+        if self.location is outside:
+            output()
             speak(
-                f"""
+                f"""\
+{ANSI.ITALICIZE}Do de do do do do
+Do de do do do do de 
+I'm siiiiingin' in the rain, just siiiiiingin' in the rain⏸
+What a gloooooorious feeeeeeeling I'm haaaaaappy again⏸
+I'm laaaaaughing at clouds, so daaaaaark up above⏸
+The sun's in my heart and I'm ready for ⏩{ANSI.RESET}{ANSI.BOLD}[KAZAM!]{ANSI.RESET}"""
+            )
+            output("", 1)
+            output(
+                "You've been struck by a bolt of lightning.",
+                1,
+            )
+            game.over = True
+            raise BreakInteraction
+
+        elif self.location is hall:
+            output()
+            speak(
+                f"""\
+{ANSI.ITALICIZE}Once, I had an empire in a golden age,
+I was held up so high, I used to be great,
+They used to cheer when they saw my face,
+Now, I fear I have fallen from grace,
+And I feel like my castle's crumbling down ⏩{ANSI.RESET}{ANSI.BOLD}[CRASH!]{ANSI.RESET}"""
+            )
+            output("", 1)
+            output(
+                "The ceiling has collapsed.",
+                1,
+            )
+            game.over = True
+            raise BreakInteraction
+
+        elif self.location is dungeon:
+            output()
+            speak(
+                f"""\
+{ANSI.ITALICIZE}Ding-dong the witch is dead,
+Which old witch — the wicked witch!
+Ding-dong the wicked witch is dead.
+Wake up you sleepyhead,
+Rub your eyes, get out of bed,
+Wake up the wicked witch is ⏩{ANSI.RESET}{ANSI.BOLD}[FLASH!]{ANSI.RESET}"""
+            )
+            output("", 1)
+            output(
+                "The witches have turned you into a toad.",
+                1,
+            )
+            game.over = True
+            raise BreakInteraction
+
+        elif self.location is battlements:
+            output()
+            speak(
+                f"""\
 {ANSI.ITALICIZE}I'm a lumberjack, and I'm okay.
 I sleep all night and I work all day.
 I cut down trees, I eat my lunch,
 I go to the lavatory.
 On Wednesdays I go shoppin',
-And have buttered scones for tea.{ANSI.RESET}
+And have buttered scones for tea...{ANSI.RESET}
 """
             )
             if crown.used:
@@ -134,7 +193,10 @@ class Outside(Location):
 
     def play(self):
         output()
-        output("You are standing outside the king's castle.", 1)
+        output(
+            "You are standing outside the king's castle. The weather is awful - thunder, lightning and rain.",
+            1,
+        )
         output()
         output_objects()
         output()
@@ -288,10 +350,10 @@ class Takeable:
 
 
 class Newspaper(Usable, Takeable):
-    """Newspapers are good for reading."""
+    """You can use newspapers to learn more about current affairs."""
 
     def __repr__(self):
-        return "It's today's newspaper.\n"
+        return "Today's newspaper. The front page story looks interesting.\n"
 
     def __str__(self):
         return "newspaper"
@@ -327,10 +389,10 @@ Macbeth is on his way to the King's castle to celebrate the victory.
 
 
 class Torch(Usable, Takeable):
-    """Torches help to shed light in the darkness."""
+    """Torches can be used to provide light in the darkness."""
 
     def __repr__(self):
-        return "It's a flaming torch.\n"
+        return "A flaming torch.\n"
 
     def __str__(self):
         return "torch"
@@ -370,10 +432,10 @@ class Door(Usable):
 
 
 class Stairs(Usable):
-    """You could see what's upstairs."""
+    """You could use the stairs to visit the king's bedroom."""
 
     def __repr__(self):
-        return "TODO A spiral stone staircase.\n"
+        return "A spiral staircase between the hall and the king's bedroom.\n"
 
     def __str__(self):
         return "stairs"
@@ -408,10 +470,10 @@ class Tunnel(Usable):
 
 
 class Log(Usable, Takeable):
-    """TODO help."""
+    """You could use the log to stoke a fire."""
 
     def __repr__(self):
-        return "TODO a wooden log.\n"
+        return "A wooden log.\n"
 
     def __str__(self):
         return "log"
@@ -435,7 +497,7 @@ class Window(Usable):
     """You could use the window to get out onto the battlements."""
 
     def __repr__(self):
-        return "The bedroom window.\n"
+        return "The bedroom window. It looks out onto the battlements.\n"
 
     def __str__(self):
         return "window"
@@ -454,14 +516,13 @@ class Dagger(Usable, Takeable):
     """TODO help."""
 
     def __repr__(self):
-        return "TODO a dagger.\n"
+        return "A dagger. Very pointy. Much more dangerous than fruit.\n"
 
     def __str__(self):
         return "dagger"
 
     def use(self):
-        location = player.location
-        if location is bedroom:
+        if player.location is bedroom:
             assert not computer.destroyed
             computer.destroyed = True
             player.objects.remove(dagger)
@@ -482,9 +543,9 @@ class Computer(Usable):
 
     def __repr__(self):
         if self.destroyed:
-            return "TODO a destroyed computer.\n"
+            return "A broken computer.\n"
         else:
-            return "TODO a computer.\n"
+            return "An old computer. Looks like it's still working though.\n"
 
     def __str__(self):
         return "computer"
@@ -503,14 +564,13 @@ class Crown(Usable, Takeable):
         self.used = False
 
     def __repr__(self):
-        return "TODO a crown.\n"
+        return 'The king\'s crown. It has the letters "BDFL" engraved in it. Not sure what that means.\n'
 
     def __str__(self):
         return "crown"
 
     def use(self):
-        location = player.location
-        if location is battlements:
+        if player.location is battlements:
             assert not self.used
             self.used = True
             player.objects.remove(crown)
@@ -525,7 +585,7 @@ class Telescope(Usable):
     """TODO help."""
 
     def __repr__(self):
-        return "TODO a telescope.\n"
+        return "A telescope.\n"
 
     def __str__(self):
         return "telescope"
@@ -641,43 +701,77 @@ class Sing(Action):
         player.sing()
 
 
-# Objects.
-newspaper = Newspaper()
-torch = Torch()
-door = Door()
-stairs = Stairs()
-tunnel = Tunnel()
-window = Window()
-log = Log()
-dagger = Dagger()
-computer = Computer()
-telescope = Telescope()
-crown = Crown()
+def init():
+    global \
+        game, \
+        player, \
+        newspaper, \
+        torch, \
+        door, \
+        stairs, \
+        tunnel, \
+        window, \
+        log, \
+        dagger, \
+        computer, \
+        telescope, \
+        crown, \
+        outside, \
+        hall, \
+        dungeon, \
+        bedroom, \
+        battlements, \
+        help, \
+        take, \
+        use, \
+        sing
 
-# Locations.
-outside = Outside()
-hall = Hall()
-dungeon = Dungeon()
-bedroom = Bedroom()
-battlements = Battlements()
+    # Objects.
+    newspaper = Newspaper()
+    torch = Torch()
+    door = Door()
+    stairs = Stairs()
+    tunnel = Tunnel()
+    window = Window()
+    log = Log()
+    dagger = Dagger()
+    computer = Computer()
+    telescope = Telescope()
+    crown = Crown()
 
-# Actions.
-help = Help()
-take = Take()
-use = Use()
-sing = Sing()
+    # Locations.
+    outside = Outside()
+    hall = Hall()
+    dungeon = Dungeon()
+    bedroom = Bedroom()
+    battlements = Battlements()
 
-# Game setup.
-player = Player()
-game = Game()
+    # Actions.
+    help = Help()
+    take = Take()
+    use = Use()
+    sing = Sing()
+
+    # Game setup.
+    player = Player()
+    game = Game()
 
 
 @when("click", "#play_button")
 def play_button_on_click(event):
+    init()
+    game.play()
+
+
+@when("click", "#replay_button")
+def replay_button_on_click(event):
+    terminal.clear()
+    init()
     game.play()
 
 
 if __name__ == "__main__":
     hide(loading_node)
     show(play_button_node)
+    init()
     game.play()
