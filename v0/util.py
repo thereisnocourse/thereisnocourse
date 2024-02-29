@@ -1,7 +1,7 @@
 import time
 import sys
 from collections import namedtuple
-from textwrap import fill
+from textwrap import TextWrapper
 import js
 from pyscript import document, window, when
 
@@ -53,23 +53,28 @@ def get_url_params():
     return params
 
 
+_terminal = None
+
+
 def get_terminal():
-    terminal = query_selector("script[terminal]").terminal
-    return terminal
+    global _terminal
+    if _terminal is None:
+        _terminal = query_selector("script[terminal]").terminal
+    return _terminal
 
 
 def clear_terminal():
     get_terminal().clear()
 
 
-terminal_cols = None
+_terminal_cols = None
 
 
 def get_terminal_cols():
-    global terminal_cols
-    if terminal_cols is None:
-        terminal_cols = get_terminal().cols
-    return terminal_cols
+    global _terminal_cols
+    if _terminal_cols is None:
+        _terminal_cols = get_terminal().cols
+    return _terminal_cols
 
 
 def pad(text, n):
@@ -78,30 +83,7 @@ def pad(text, n):
     return text
 
 
-def output_help(paragraphs):
-    """Standardise printing of help text."""
-    output()
-    for para in paragraphs:
-        output(para, end="\n\n")
-
-
-def output(s="", pause=0, end="\n"):
-    s = fill(
-        s, width=get_terminal_cols(), replace_whitespace=True, drop_whitespace=True
-    )
-    s += end
-    write(s, pause=pause)
-
-
-def write(s, pause=0):
-    """Write string `s` to stdout and flush immediately."""
-    sys.stdout.write(s)
-    sys.stdout.flush()
-    if pause:
-        time.sleep(pause)
-
-
-# ANSI colors
+# ANSI colors and text formatting sequences
 class ANSI:
     BLACK = "\u001b[30m"
     RED = "\u001b[31m"
@@ -141,6 +123,89 @@ class ANSI:
     RESET = "\u001b[0m"
 
 
+# Custom coding of colors and text formatting as single unicode characters.
+# This is more compact and so has less impact on wrapping of text.
+class Text:
+    BLACK = "\uf030"
+    RED = "\uf031"
+    GREEN = "\uf032"
+    YELLOW = "\uf033"
+    BLUE = "\uf034"
+    MAGENTA = "\uf035"
+    CYAN = "\uf036"
+    WHITE = "\uf037"
+    BRIGHT_BLACK = "\uf090"
+    BRIGHT_RED = "\uf091"
+    BRIGHT_GREEN = "\uf092"
+    BRIGHT_YELLOW = "\uf093"
+    BRIGHT_BLUE = "\uf094"
+    BRIGHT_MAGENTA = "\uf095"
+    BRIGHT_CYAN = "\uf096"
+    BRIGHT_WHITE = "\uf097"
+    BG_BLACK = "\uf040"
+    BG_RED = "\uf041"
+    BG_GREEN = "\uf042"
+    BG_YELLOW = "\uf043"
+    BG_BLUE = "\uf044"
+    BG_MAGENTA = "\uf045"
+    BG_CYAN = "\uf046"
+    BG_WHITE = "\uf047"
+    BG_BRIGHT_BLACK = "\uf100"
+    BG_BRIGHT_RED = "\uf101"
+    BG_BRIGHT_GREEN = "\uf102"
+    BG_BRIGHT_YELLOW = "\uf103"
+    BG_BRIGHT_BLUE = "\uf104"
+    BG_BRIGHT_MAGENTA = "\uf105"
+    BG_BRIGHT_CYAN = "\uf106"
+    BG_BRIGHT_WHITE = "\uf107"
+    BOLD = "\uf001"
+    ITALICIZE = "\uf003"
+    UNDERLINE = "\uf004"
+    RESET = "\uf000"
+
+
+unicode_to_ansi = str.maketrans(
+    {
+        Text.BLACK: ANSI.BLACK,
+        Text.RED: ANSI.RED,
+        Text.GREEN: ANSI.GREEN,
+        Text.YELLOW: ANSI.YELLOW,
+        Text.BLUE: ANSI.BLUE,
+        Text.MAGENTA: ANSI.MAGENTA,
+        Text.CYAN: ANSI.CYAN,
+        Text.WHITE: ANSI.WHITE,
+        Text.BRIGHT_BLACK: ANSI.BRIGHT_BLACK,
+        Text.BRIGHT_RED: ANSI.BRIGHT_RED,
+        Text.BRIGHT_GREEN: ANSI.BRIGHT_GREEN,
+        Text.BRIGHT_YELLOW: ANSI.BRIGHT_YELLOW,
+        Text.BRIGHT_BLUE: ANSI.BRIGHT_BLUE,
+        Text.BRIGHT_MAGENTA: ANSI.BRIGHT_MAGENTA,
+        Text.BRIGHT_CYAN: ANSI.BRIGHT_CYAN,
+        Text.BRIGHT_WHITE: ANSI.BRIGHT_WHITE,
+        Text.BG_BLACK: ANSI.BG_BLACK,
+        Text.BG_RED: ANSI.BG_RED,
+        Text.BG_GREEN: ANSI.BG_GREEN,
+        Text.BG_YELLOW: ANSI.BG_YELLOW,
+        Text.BG_BLUE: ANSI.BG_BLUE,
+        Text.BG_MAGENTA: ANSI.BG_MAGENTA,
+        Text.BG_CYAN: ANSI.BG_CYAN,
+        Text.BG_WHITE: ANSI.BG_WHITE,
+        Text.BG_BRIGHT_BLACK: ANSI.BG_BRIGHT_BLACK,
+        Text.BG_BRIGHT_RED: ANSI.BG_BRIGHT_RED,
+        Text.BG_BRIGHT_GREEN: ANSI.BG_BRIGHT_GREEN,
+        Text.BG_BRIGHT_YELLOW: ANSI.BG_BRIGHT_YELLOW,
+        Text.BG_BRIGHT_BLUE: ANSI.BG_BRIGHT_BLUE,
+        Text.BG_BRIGHT_MAGENTA: ANSI.BG_BRIGHT_MAGENTA,
+        Text.BG_BRIGHT_CYAN: ANSI.BG_BRIGHT_CYAN,
+        Text.BG_BRIGHT_WHITE: ANSI.BG_BRIGHT_WHITE,
+        Text.BOLD: ANSI.BOLD,
+        Text.ITALICIZE: ANSI.ITALICIZE,
+        Text.UNDERLINE: ANSI.UNDERLINE,
+        Text.RESET: ANSI.RESET,
+    }
+)
+
+
 speech_pauses = {
     "para": 2,  # pause between paragraphs
     "char": 0.06,  # default pause between characters
@@ -156,14 +221,52 @@ speech_pauses = {
 }
 
 
+def write(s, pause=0):
+    """Write string `s` to stdout and flush immediately."""
+    sys.stdout.write(s)
+    sys.stdout.flush()
+    if pause:
+        time.sleep(pause)
+
+
+_wrapper = None
+
+
+def get_wrapper():
+    global _wrapper
+    if _wrapper is None:
+        _wrapper = TextWrapper(
+            width=min(get_terminal_cols(), 70),
+            replace_whitespace=True,
+            drop_whitespace=True,
+        )
+    return _wrapper
+
+
+def output(s="", pause=0, end="\n"):
+    s = get_wrapper().fill(s)
+    s = s.translate(unicode_to_ansi)
+    s += end
+    write(s, pause=pause)
+
+
+def output_help(paragraphs):
+    """Standardise printing of help text."""
+    output()
+    for para in paragraphs:
+        output(para, end="\n\n")
+
+
 def speak(message):
     char_pause = speech_pauses["char"]
     para_pause = speech_pauses["para"]
     fast_forward = False
     ansi = False
     control_symbols = {"⏵", "⏸", "⏩"}
-    for line in message.split("\n"):
-        line = fill(line, width=get_terminal_cols())
+    wrapper = get_wrapper()
+    for line in message.splitlines():
+        line = wrapper.fill(line)
+        line = line.translate(unicode_to_ansi)
         for c in line:
             # Determine the length of the pause for the current character.
             pause = 0

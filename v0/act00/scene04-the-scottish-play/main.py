@@ -3,12 +3,12 @@ from util import (
     get_element_by_id,
     show,
     hide,
-    write,
     output,
     get_terminal,
     speak,
+    get_wrapper,
     function_repr_template,
-    ANSI,
+    Text,
 )
 import code
 
@@ -18,6 +18,7 @@ play_button_node = get_element_by_id("play_button")
 prologue_node = get_element_by_id("prologue")
 screen_node = get_element_by_id("screen")
 replay_node = get_element_by_id("replay")
+success_node = get_element_by_id("success")
 terminal = get_terminal()
 
 
@@ -30,25 +31,32 @@ class Game:
         hide(replay_node)
         screen_node.style.visibility = "visible"
 
-        write(f"\n{ANSI.BOLD}")
-        speak("   || The Scottish play")
-        speak(f"===||====={ANSI.BG_RED}=====>>>{ANSI.RESET}")
-        speak(f"{ANSI.BOLD}   ||")
-        write(f"{ANSI.RESET}\n")
-        output(f"Type {ANSI.BOLD}help(){ANSI.RESET} for the in-game tutorial.")
+        output()
+        speak(f"{Text.BOLD}   || The Scottish play")
+        speak(f"===||====={Text.BG_RED}=====>>>{Text.RESET}")
+        speak(f"{Text.BOLD}   ||{Text.RESET}")
+        output()
+        speak(f'{Text.ITALICIZE}"So foul and fair a day I have not seen."{Text.RESET}')
+        output()
+        speak(f"Type {Text.BOLD}help(){Text.RESET} for the in-game tutorial.")
         output("---", 1)
         output()
-        speak(f"{ANSI.ITALICIZE}So foul and fair a day I have not seen.{ANSI.RESET}")
 
         while not self.over:
             player.location.play()
+            if not self.over:
+                terminal.clear()
 
         output_game_over()
 
 
 def output_game_over():
-    output("GAME OVER")
-    show(replay_node)
+    output()
+    output(f"{Text.BOLD}GAME OVER{Text.RESET}")
+    if forest.defeated:
+        show(success_node)
+    else:
+        show(replay_node)
 
 
 def output_objects():
@@ -56,8 +64,8 @@ def output_objects():
     taken = player.objects
     available_str = ", ".join([str(o) for o in available])
     taken_str = ", ".join([str(o) for o in taken])
-    output(f"Objects available: [{ANSI.BOLD}{available_str}{ANSI.RESET}]", 0)
-    output(f"Objects taken: [{ANSI.BOLD}{taken_str}{ANSI.RESET}]", 1)
+    output(f"Objects available: [{Text.BOLD}{available_str}{Text.RESET}]")
+    output(f"You are holding: [{Text.BOLD}{taken_str}{Text.RESET}]")
 
 
 def setup_namespace():
@@ -83,17 +91,35 @@ class Player:
         self.location = outside
         self.objects = set()
 
+    def take(self, o):
+        available = self.location.objects
+        taken = self.objects
+
+        if o in taken:
+            output(f"You've already taken the {o}.")
+        elif o not in available:
+            output(f"The {o} is not available.")
+        elif not isinstance(o, Takeable):
+            output(f"The {o} cannot be taken.")
+        else:
+            available.remove(o)
+            taken.add(o)
+            output(f"You have taken the {o}.")
+            # output()
+            # output_objects()
+        output()
+
     def sing(self):
         if self.location is outside:
             output()
             speak(
                 f"""\
-{ANSI.ITALICIZE}Do de do do do do
+{Text.ITALICIZE}"Do de do do do do
 Do de do do do do de 
 I'm siiiiingin' in the rain, just siiiiiingin' in the rain⏸
 What a gloooooorious feeeeeeeling I'm haaaaaappy again⏸
 I'm laaaaaughing at clouds, so daaaaaark up above⏸
-The sun's in my heart and I'm ready for ⏩{ANSI.RESET}{ANSI.BOLD}[KAZAM!]{ANSI.RESET}"""
+The sun's in my heart and I'm ready for..." ⏩{Text.RESET}{Text.BOLD}[KAZAM!]{Text.RESET}"""
             )
             output("", 1)
             output(
@@ -107,11 +133,11 @@ The sun's in my heart and I'm ready for ⏩{ANSI.RESET}{ANSI.BOLD}[KAZAM!]{ANSI.
             output()
             speak(
                 f"""\
-{ANSI.ITALICIZE}Once, I had an empire in a golden age,
+{Text.ITALICIZE}"Once, I had an empire in a golden age,
 I was held up so high, I used to be great,
 They used to cheer when they saw my face,
 Now, I fear I have fallen from grace,
-And I feel like my castle's crumbling down ⏩{ANSI.RESET}{ANSI.BOLD}[CRASH!]{ANSI.RESET}"""
+And I feel like my castle's crumbling down..." ⏩{Text.RESET}{Text.BOLD}[CRASH!]{Text.RESET}"""
             )
             output("", 1)
             output(
@@ -125,12 +151,12 @@ And I feel like my castle's crumbling down ⏩{ANSI.RESET}{ANSI.BOLD}[CRASH!]{AN
             output()
             speak(
                 f"""\
-{ANSI.ITALICIZE}Ding-dong the witch is dead,
+{Text.ITALICIZE}"Ding-dong the witch is dead,
 Which old witch — the wicked witch!
 Ding-dong the wicked witch is dead.
 Wake up you sleepyhead,
 Rub your eyes, get out of bed,
-Wake up the wicked witch is ⏩{ANSI.RESET}{ANSI.BOLD}[FLASH!]{ANSI.RESET}"""
+Wake up the wicked witch is..." ⏩{Text.RESET}{Text.BOLD}[FLASH!]{Text.RESET}"""
             )
             output("", 1)
             output(
@@ -144,12 +170,12 @@ Wake up the wicked witch is ⏩{ANSI.RESET}{ANSI.BOLD}[FLASH!]{ANSI.RESET}"""
             output()
             speak(
                 f"""\
-{ANSI.ITALICIZE}I'm a lumberjack, and I'm okay.
+{Text.ITALICIZE}"I'm a lumberjack and I'm okay,
 I sleep all night and I work all day.
 I cut down trees, I eat my lunch,
 I go to the lavatory.
 On Wednesdays I go shoppin',
-And have buttered scones for tea...{ANSI.RESET}
+And have buttered scones for tea."{Text.RESET}
 """
             )
             if crown.used:
@@ -192,10 +218,8 @@ class Outside(Location):
         self.objects.add(newspaper)
 
     def play(self):
-        output()
         output(
-            "You are standing outside the king's castle. The weather is awful - thunder, lightning and rain.",
-            1,
+            "Location: You are standing outside the king's castle. The weather is awful - thunder, lightning and rain.",
         )
         output()
         output_objects()
@@ -215,14 +239,14 @@ class Hall(Location):
         self.dark = True
 
     def play(self):
+        output("Location: You are in the main hall.")
         if self.dark:
             self.play_dark()
         else:
             self.play_light()
 
     def play_dark(self):
-        output()
-        output("You are in the main hall. It's very dark in here.", 1)
+        output("It's very dark in here.")
         output()
         output_objects()
         output()
@@ -234,19 +258,19 @@ class Hall(Location):
             pass
 
     def play_light(self):
-        output()
-        output("You are in the main hall. It's nice and light in here.", 1)
-        output("There's are stairs going up and a tunnel going down.", 1)
+        output(
+            "It's nice and light in here now. There's are stairs going up and a tunnel going down."
+        )
         output()
         output_objects()
         output()
 
         if dagger in self.objects:
             speak(
-                f"""{ANSI.ITALICIZE}\
-Is this a dagger which I see before me,
+                f"""{Text.ITALICIZE}\
+"Is this a dagger which I see before me,
 The handle toward my hand? Come, let me clutch thee.
-I have thee not, and yet I see thee still.{ANSI.RESET}"""
+I have thee not, and yet I see thee still."{Text.RESET}"""
             )
             output()
 
@@ -264,16 +288,16 @@ class Dungeon(Location):
         self.witches = True
 
     def play(self):
+        output("Location: You are in the dungeon.")
         if self.witches:
             self.play_witches()
         else:
             self.play_no_witches()
 
     def play_witches(self):
-        output()
-        output("You are in the dungeon.", 1)
-        output("There are three witches. They don't look very happy.", 1)
-        output("The fire under their cauldron is burning out.", 1)
+        output(
+            "There are three witches. They don't look very happy. The fire under their cauldron is going out."
+        )
         output()
         output_objects()
         output()
@@ -285,8 +309,7 @@ class Dungeon(Location):
             pass
 
     def play_no_witches(self):
-        output()
-        output("You are in the dungeon. The witches are gone.", 1)
+        output("The witches are gone.", 1)
         output()
         output_objects()
         output()
@@ -306,8 +329,7 @@ class Bedroom(Location):
         self.objects.add(computer)
 
     def play(self):
-        output()
-        output("You are in the king's bedroom.", 1)
+        output("Location: You are in the king's bedroom.", 1)
         output()
         output_objects()
         output()
@@ -326,8 +348,7 @@ class Battlements(Location):
         self.objects.add(telescope)
 
     def play(self):
-        output()
-        output("You are on the castle battlements.", 1)
+        output("Location: You are on the castle battlements.", 1)
         if crown.used:
             output("TODO an army of trees is attacking! You won't be king for long.")
         output()
@@ -353,7 +374,12 @@ class Newspaper(Usable, Takeable):
     """You can use newspapers to learn more about current affairs."""
 
     def __repr__(self):
-        return "Today's newspaper. The front page story looks interesting.\n"
+        return (
+            get_wrapper().fill(
+                "Today's newspaper. The story on the front page looks interesting."
+            )
+            + "\n"
+        )
 
     def __str__(self):
         return "newspaper"
@@ -366,33 +392,34 @@ class Newspaper(Usable, Takeable):
             f"""\
 14 August 1040
 
-{ANSI.BOLD}MACDONWALD DEFEATED{ANSI.RESET}
+{Text.BOLD}MACDONWALD DEFEATED{Text.RESET}
 
-Dunguido Macrossum, King of Scotland, has defeated the rebel Macdonwald of the Western Isles and his ally Sweno, King of Norway.
+Dunguido Macrossum, King of Scotland, has defeated the rebel Macdonwald of the Western Isles.
 
 Led by Macbeth, his greatest captain, King Dunguido's army dealt a decisive blow and ended the revolt.
 
 A sergeant in the King's army said:
 
-{ANSI.ITALICIZE}For brave Macbeth (well he deserves that name),
+{Text.ITALICIZE}"For brave Macbeth (well he deserves that name),
 Disdaining Fortune, with his brandished steel,
 Which smoked with bloody execution,
 Like Valor's minion, carved out his passage
 Till he faced the slave;
 Which ne'er shook hands, nor bade farewell to him,
 Till he unseamed him from the nave to th' chops,
-And fixed his head upon our battlements.{ANSI.RESET}
+And fixed his head upon our battlements."{Text.RESET}
 
-Macbeth is on his way to the King's castle to celebrate the victory.
+Macbeth now travels to the King's castle to celebrate the victory.
 """
         )
+        output()
 
 
 class Torch(Usable, Takeable):
     """Torches can be used to provide light in the darkness."""
 
     def __repr__(self):
-        return "A flaming torch.\n"
+        return get_wrapper().fill("A flaming torch.") + "\n"
 
     def __str__(self):
         return "torch"
@@ -400,7 +427,8 @@ class Torch(Usable, Takeable):
     def use(self):
         if player.location is hall:
             assert hall.dark
-            # TODO output?
+            output()
+            speak("Good idea! You use the torch to find some candles and light them...")
             hall.dark = False
             player.objects.remove(self)
             hall.objects.add(stairs)
@@ -416,7 +444,7 @@ class Door(Usable):
     """You could use the front door to enter the castle."""
 
     def __repr__(self):
-        return "The front door of the castle.\n"
+        return get_wrapper().fill("The front door of the castle.") + "\n"
 
     def __str__(self):
         return "door"
@@ -424,9 +452,12 @@ class Door(Usable):
     def use(self):
         location = player.location
         assert location in {outside, hall}
+        output()
         if location is outside:
+            speak("You open the door and step into the castle...")
             player.location = hall
         else:
+            speak("You open the door and go back outside into the rain...")
             player.location = outside
         raise BreakInteraction
 
@@ -435,7 +466,12 @@ class Stairs(Usable):
     """You could use the stairs to visit the king's bedroom."""
 
     def __repr__(self):
-        return "A spiral staircase between the hall and the king's bedroom.\n"
+        return (
+            get_wrapper().fill(
+                "A spiral staircase between the hall and the king's bedroom."
+            )
+            + "\n"
+        )
 
     def __str__(self):
         return "stairs"
@@ -454,7 +490,7 @@ class Tunnel(Usable):
     """You could use the tunnel to find out what's below the castle."""
 
     def __repr__(self):
-        return "TODO A dark and smelly tunnel.\n"
+        return get_wrapper().fill("A dark tunnel.") + "\n"
 
     def __str__(self):
         return "tunnel"
@@ -462,6 +498,7 @@ class Tunnel(Usable):
     def use(self):
         location = player.location
         assert location in {hall, dungeon}
+        # TODO output
         if location is hall:
             player.location = dungeon
         else:
@@ -473,7 +510,7 @@ class Log(Usable, Takeable):
     """You could use the log to stoke a fire."""
 
     def __repr__(self):
-        return "A wooden log.\n"
+        return get_wrapper().fill("A wooden log, nice and dry.") + "\n"
 
     def __str__(self):
         return "log"
@@ -483,8 +520,25 @@ class Log(Usable, Takeable):
         if location is dungeon:
             assert dungeon.witches
             player.objects.remove(self)
-            output("TODO prophecy")
             output()
+            speak(
+                f"""\
+{Text.ITALICIZE}"Fillet of a fenny snake
+In the cauldron boil and bake.
+Eye of newt and toe of frog,
+Wool of bat and tongue of dog,
+Adder's fork and blindworm's sting,
+Lizard's leg and howlet's wing,
+For a charm of powerful trouble,
+Like a hell-broth boil and bubble."{Text.RESET}
+
+Looking at you, the witches speak:
+
+{Text.ITALICIZE}"All hail, Macbeth, that shalt be king hereafter!"{Text.RESET}
+
+Then into thin air, the witches vanish...
+"""
+            )
             dungeon.witches = False
             hall.objects.add(dagger)
             raise BreakInteraction
@@ -497,7 +551,10 @@ class Window(Usable):
     """You could use the window to get out onto the battlements."""
 
     def __repr__(self):
-        return "The bedroom window. It looks out onto the battlements.\n"
+        return (
+            get_wrapper().fill("The bedroom window. It looks out onto the battlements.")
+            + "\n"
+        )
 
     def __str__(self):
         return "window"
@@ -505,6 +562,7 @@ class Window(Usable):
     def use(self):
         location = player.location
         assert location in {bedroom, battlements}
+        # TODO output
         if location is bedroom:
             player.location = battlements
         else:
@@ -516,7 +574,10 @@ class Dagger(Usable, Takeable):
     """TODO help."""
 
     def __repr__(self):
-        return "A dagger. Very pointy. Much more dangerous than fruit.\n"
+        return (
+            get_wrapper().fill("A dagger. Very pointy. Much more dangerous than fruit.")
+            + "\n"
+        )
 
     def __str__(self):
         return "dagger"
@@ -527,8 +588,8 @@ class Dagger(Usable, Takeable):
             computer.destroyed = True
             player.objects.remove(dagger)
             bedroom.objects.add(crown)
-            output("TODO you used the dagger")
             output()
+            speak("TODO you used the dagger")
             raise BreakInteraction
         else:
             output("TODO can't use that here")
@@ -543,9 +604,10 @@ class Computer(Usable):
 
     def __repr__(self):
         if self.destroyed:
-            return "A broken computer.\n"
+            s = "A broken computer."
         else:
-            return "An old computer. Looks like it's still working though.\n"
+            s = "An old computer. Looks like it's still working though."
+        return get_wrapper().fill(s) + "\n"
 
     def __str__(self):
         return "computer"
@@ -564,7 +626,12 @@ class Crown(Usable, Takeable):
         self.used = False
 
     def __repr__(self):
-        return 'The king\'s crown. It has the letters "BDFL" engraved in it. Not sure what that means.\n'
+        return (
+            get_wrapper().fill(
+                'The king\'s crown. It has the letters "BDFL" engraved in it. Not sure what that means.'
+            )
+            + "\n"
+        )
 
     def __str__(self):
         return "crown"
@@ -574,8 +641,8 @@ class Crown(Usable, Takeable):
             assert not self.used
             self.used = True
             player.objects.remove(crown)
-            output("TODO you used the crown")
             output()
+            speak("TODO you used the crown - here come the trees!")
         else:
             output("TODO can't use that here")
             output()
@@ -585,7 +652,7 @@ class Telescope(Usable):
     """TODO help."""
 
     def __repr__(self):
-        return "A telescope.\n"
+        return get_wrapper().fill("A telescope.") + "\n"
 
     def __str__(self):
         return "telescope"
@@ -602,7 +669,7 @@ class Help(Action):
     """Type help() for the in-game tutorial. Type help(X) to get a hint about how to use object X. But then you already knew that :)"""
 
     def __repr__(self):
-        return function_repr_template.format(name="help") + "\n"
+        return get_wrapper().fill(function_repr_template.format(name="help")) + "\n"
 
     def __call__(self, *args):
         if len(args) == 0:
@@ -618,67 +685,50 @@ class Help(Action):
             f"""\
 In each location you will find some objects. These objects can be used to help you on your quest for ultimate power and glory.
 
-To look at an object, type the name of the object and press return. For example, to look at the {ANSI.BOLD}newspaper{ANSI.RESET}:⏩
+To look at an object, type the name of the object and press return. For example, to look at the {Text.BOLD}newspaper{Text.RESET}:⏩
               
 >>> ⏵⏸newspaper
               
-To get help on how to use an object, type {ANSI.BOLD}help(X){ANSI.RESET} where {ANSI.BOLD}X{ANSI.RESET} is the name of an object. For example:⏩
+To get help on how to use an object, type {Text.BOLD}help(X){Text.RESET} where {Text.BOLD}X{Text.RESET} is the name of an object. For example:⏩
               
 >>> ⏵⏸help(newspaper)
 
-To use an object, type {ANSI.BOLD}use(X){ANSI.RESET} where {ANSI.BOLD}X{ANSI.RESET} is the name of an object. For example:⏩
+To use an object, type {Text.BOLD}use(X){Text.RESET} where {Text.BOLD}X{Text.RESET} is the name of an object. For example:⏩
               
 >>> ⏵⏸use(newspaper)
 
-To take an object and carry it with you to the next location, type {ANSI.BOLD}take(X){ANSI.RESET} where {ANSI.BOLD}X{ANSI.RESET} is the name of an object. For example:⏩
+To take an object and carry it with you to the next location, type {Text.BOLD}take(X){Text.RESET} where {Text.BOLD}X{Text.RESET} is the name of an object. For example:⏩
 
 >>> ⏵⏸take(newspaper)
               
-At any point in the game you can {ANSI.BOLD}sing(){ANSI.RESET} if you feel like it.
+At any point in the game you can {Text.BOLD}sing(){Text.RESET} if you feel like it.
 
-{ANSI.ITALICIZE}But screw your courage to the sticking place
-And we'll not fail!{ANSI.RESET}
+"{Text.ITALICIZE}But screw your courage to the sticking place
+And we'll not fail!{Text.RESET}"
 """,
         )
+        output()
 
 
 class Take(Action):
     """Type take(X) to pick up object X and carry it with you to the next location."""
 
     def __repr__(self):
-        return function_repr_template.format(name="take") + "\n"
+        return get_wrapper().fill(function_repr_template.format(name="take")) + "\n"
 
     def __call__(self, *args):
         if len(args) == 0:
             output("Did you mean to take something?")
             output()
         for o in args:
-            self._take(o)
-
-    def _take(self, o):
-        available = player.location.objects
-        taken = player.objects
-
-        if o in taken:
-            output(f"You have already taken the {o}.")
-        elif o not in available:
-            output(f"The {o} is not available.")
-        elif not isinstance(o, Takeable):
-            output(f"The {o} cannot be taken.")
-        else:
-            available.remove(o)
-            taken.add(o)
-            output(f"You have taken the {o}.", 1)
-            output()
-            output_objects()
-        output()
+            player.take(o)
 
 
 class Use(Action):
     """Type use(X) to try and use object X."""
 
     def __repr__(self):
-        return function_repr_template.format(name="use") + "\n"
+        return get_wrapper().fill(function_repr_template.format(name="use")) + "\n"
 
     def __call__(self, *args):
         if len(args) == 0:
@@ -695,7 +745,7 @@ class Sing(Action):
     """Type sing() any time you feel like singing!"""
 
     def __repr__(self):
-        return function_repr_template.format(name="sing") + "\n"
+        return get_wrapper().fill(function_repr_template.format(name="sing")) + "\n"
 
     def __call__(self, *args):
         player.sing()
