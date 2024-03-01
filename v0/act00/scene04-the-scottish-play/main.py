@@ -37,7 +37,7 @@ class Game:
         speak(f"===||====={Text.BG_RED}=====>>>{Text.RESET}")
         speak(f"{Text.BOLD}   ||{Text.RESET}")
         output()
-        speak(f'{Text.ITALICIZE}"So foul and fair a day I have not seen."{Text.RESET}')
+        speak(f"{Text.ITALICIZE}So foul and fair a day I have not seen.{Text.RESET}")
         output()
         speak(f"Type {Text.BOLD}help(){Text.RESET} for the in-game tutorial.")
         output("---", 1)
@@ -62,11 +62,11 @@ def output_game_over():
 
 def output_objects():
     available = player.location.objects
-    taken = player.objects
+    holding = player.objects
     available_str = ", ".join([str(o) for o in available])
-    taken_str = ", ".join([str(o) for o in taken])
+    holding_str = ", ".join([str(o) for o in holding])
     output(f"Objects available: [{Text.BOLD}{available_str}{Text.RESET}]")
-    output(f"You are holding: [{Text.BOLD}{taken_str}{Text.RESET}]")
+    output(f"You are holding: [{Text.BOLD}{holding_str}{Text.RESET}]")
 
 
 def setup_namespace():
@@ -87,10 +87,23 @@ def setup_namespace():
     return namespace
 
 
+def interact():
+    namespace = setup_namespace()
+    try:
+        code.interact(local=namespace, banner="")
+    except SystemExit:
+        # This exception can be raised to end interaction and
+        # return control to the main game loop.
+        pass
+
+
+def make_repr(s):
+    return get_wrapper().fill(s) + "\n"
+
+
 class Player:
     def __init__(self):
         self.location = outside
-        # self.location = bedroom
         self.objects = set()
         self.crowned = False
 
@@ -117,12 +130,12 @@ class Player:
             output()
             speak(
                 f"""\
-{Text.ITALICIZE}"Do de do do do do
+{Text.ITALICIZE}Do de do do do do
 Do de do do do do de 
 I'm siiiiingin' in the rain, just siiiiiingin' in the rain⏸
 What a gloooooorious feeeeeeeling I'm haaaaaappy again⏸
 I'm laaaaaughing at clouds, so daaaaaark up above⏸
-The sun's in my heart and I'm ready for..."
+The sun's in my heart and I'm ready for...
 ⏩{Text.RESET}{Text.BOLD}[FLASH!]{Text.RESET}"""
             )
             output("", 1)
@@ -137,11 +150,11 @@ The sun's in my heart and I'm ready for..."
             output()
             speak(
                 f"""\
-{Text.ITALICIZE}"Once, I had an empire in a golden age,
+{Text.ITALICIZE}Once, I had an empire in a golden age,
 I was held up so high, I used to be great,
 They used to cheer when they saw my face,
 Now, I fear I have fallen from grace,
-And I feel like my castle's crumbling down..."
+And I feel like my castle's crumbling down...
 ⏩{Text.RESET}{Text.BOLD}[CRASH!]{Text.RESET}"""
             )
             output("", 1)
@@ -156,35 +169,35 @@ And I feel like my castle's crumbling down..."
             output()
             speak(
                 f"""\
-{Text.ITALICIZE}"Ding-dong the witch is dead,
+{Text.ITALICIZE}Ding-dong the witch is dead,
 Which old witch — the wicked witch!
 Ding-dong the wicked witch is dead.
 Wake up you sleepyhead,
 Rub your eyes, get out of bed,
-Wake up the wicked witch is..."
+Wake up the wicked witch is...
 ⏩{Text.RESET}{Text.BOLD}[KAZAM!]{Text.RESET}"""
             )
             output("", 1)
-            output("The witches have turned you into a toad.", 1)
+            output("You have been turned into a toad.", 1)
             game.over = True
             raise SystemExit
 
         elif self.location is bedroom:
             output()
             speak(
-                f"""{Text.ITALICIZE}\
-"Het is een nacht
+                f"""\
+{Text.ITALICIZE}Het is een nacht
 Die je normaal alleen in films ziet
 Het is een nacht
 Die wordt bezongen in het mooiste lied
 Het is een nacht
 Waarvan ik dacht dat ik hem nooit beleven zou
-Maar vannacht beleef ik hem met jouooooooooOOOOoo..."
+Maar vannacht beleef ik hem met jouooooooooOOOOoo...
 ⏩{Text.RESET}{Text.BOLD}[CRUNCH!]{Text.RESET}"""
             )
             output("", 1)
             output(
-                "The king has mistaken you for an alarm clock and thrown you out of the window.",
+                "The king has banished you for mangling his favourite song.",
                 1,
             )
             game.over = True
@@ -194,18 +207,26 @@ Maar vannacht beleef ik hem met jouooooooooOOOOoo..."
             assert self.location is battlements
             output()
             speak(
-                f"""{Text.ITALICIZE}\
-"I'm a lumberjack and I'm okay,
+                f"""\
+{Text.ITALICIZE}I'm a lumberjack and I'm okay,
 I sleep all night and I work all day.
 I cut down trees, I eat my lunch,
 I go to the lavatory.
 On Wednesdays I go shoppin',
-And have buttered scones for tea."{Text.RESET}\
+And have buttered scones for tea.{Text.RESET}\
 """
             )
             if player.crowned:
-                output("TODO forest runs away, you win!")
-                game.forest = False
+                output()
+                speak(
+                    """\
+The army of trees has throw down their weapons and surrendered! HOORAY!                      
+
+Congratulations! You have nothing more to fear. You shall live a long and happy life, unchallenged as the Most Awesome Programmer in the world!
+
+Who'd have thought this game would have a happy ending, eh? :-)"""
+                )
+                forest.defeated = True
                 game.over = True
                 raise SystemExit
 
@@ -259,20 +280,15 @@ class Hall(Location):
             self.play_light()
 
     def play_dark(self):
-        output("It's very dark in here.")
+        output("It's very dark here.")
         output()
         output_objects()
         output()
-
-        namespace = setup_namespace()
-        try:
-            code.interact(local=namespace, banner="")
-        except SystemExit:
-            pass
+        interact()
 
     def play_light(self):
         output(
-            "It's nice and light in here now. There's are stairs going up and a tunnel going down."
+            "It's nice and light here now. There are stairs going up and a tunnel going down."
         )
         output()
         output_objects()
@@ -280,18 +296,14 @@ class Hall(Location):
 
         if dagger in self.objects:
             speak(
-                f"""{Text.ITALICIZE}\
-"Is this a dagger which I see before me,
+                f"""\
+{Text.ITALICIZE}Is this a dagger which I see before me,
 The handle toward my hand? Come, let me clutch thee.
-I have thee not, and yet I see thee still."{Text.RESET}"""
+I have thee not, and yet I see thee still.{Text.RESET}"""
             )
             output()
 
-        namespace = setup_namespace()
-        try:
-            code.interact(local=namespace, banner="")
-        except SystemExit:
-            pass
+        interact()
 
 
 class Dungeon(Location):
@@ -314,24 +326,14 @@ class Dungeon(Location):
         output()
         output_objects()
         output()
-
-        namespace = setup_namespace()
-        try:
-            code.interact(local=namespace, banner="")
-        except SystemExit:
-            pass
+        interact()
 
     def play_no_witches(self):
         output("The witches are gone.", 1)
         output()
         output_objects()
         output()
-
-        namespace = setup_namespace()
-        try:
-            code.interact(local=namespace, banner="")
-        except SystemExit:
-            pass
+        interact()
 
 
 class Bedroom(Location):
@@ -343,15 +345,26 @@ class Bedroom(Location):
 
     def play(self):
         output("Location: You are in the king's bedroom.")
+        if computer.destroyed:
+            self.play_computer_destroyed()
+        else:
+            self.play_computer_working()
+
+    def play_computer_working(self):
+        output(
+            "King Dunguido Macrossum is asleep on the bed. His computer is on, it looks like he was playing a game."
+        )
         output()
         output_objects()
         output()
+        interact()
 
-        namespace = setup_namespace()
-        try:
-            code.interact(local=namespace, banner="")
-        except SystemExit:
-            pass
+    def play_computer_destroyed(self):
+        output("The king has gone.")
+        output()
+        output_objects()
+        output()
+        interact()
 
 
 class Battlements(Location):
@@ -363,41 +376,48 @@ class Battlements(Location):
     def play(self):
         output("Location: You are on the castle battlements.")
         if player.crowned:
-            output("TODO an army of trees is attacking! You won't be king for long.")
+            output("An army of trees is attacking! You won't be in charge for long.")
         output()
         output_objects()
         output()
-
-        namespace = setup_namespace()
-        try:
-            code.interact(local=namespace, banner="")
-        except SystemExit:
-            pass
+        interact()
 
 
-class Usable(ABC):
+class Item(ABC):
+    def __init__(self, name, look):
+        super().__init__()
+        self.name = name
+        self.look = look
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return make_repr(self.look)
+
+
+class Usable(Item):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     @abstractmethod
     def use(self):
         pass
 
 
-class Takeable(ABC):
-    pass
+class Takeable(Item):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 class Newspaper(Usable, Takeable):
     """You can use newspapers to learn more about current affairs."""
 
-    def __repr__(self):
-        return (
-            get_wrapper().fill(
-                "Today's newspaper. The story on the front page looks interesting."
-            )
-            + "\n"
+    def __init__(self):
+        super().__init__(
+            name="newspaper",
+            look="Today's newspaper. The story on the front page looks interesting.",
         )
-
-    def __str__(self):
-        return "newspaper"
 
     def use(self):
         # There are no preconditions, the newspaper can be used at
@@ -415,14 +435,14 @@ Led by Macbeth, his greatest captain, King Dunguido's army dealt a decisive blow
 
 A sergeant in the King's army said:
 
-{Text.ITALICIZE}"For brave Macbeth (well he deserves that name),
+{Text.ITALICIZE}For brave Macbeth (well he deserves that name),
 Disdaining Fortune, with his brandished steel,
 Which smoked with bloody execution,
 Like Valor's minion, carved out his passage
 Till he faced the slave;
 Which ne'er shook hands, nor bade farewell to him,
 Till he unseamed him from the nave to th' chops,
-And fixed his head upon our battlements."{Text.RESET}
+And fixed his head upon our battlements.{Text.RESET}
 
 Macbeth now travels to the King's castle to celebrate the victory.
 """
@@ -433,11 +453,8 @@ Macbeth now travels to the King's castle to celebrate the victory.
 class Torch(Usable, Takeable):
     """Torches can be used to provide light in the darkness."""
 
-    def __repr__(self):
-        return get_wrapper().fill("A flaming torch.") + "\n"
-
-    def __str__(self):
-        return "torch"
+    def __init__(self):
+        super().__init__(name="torch", look="A flaming torch.")
 
     def use(self):
         if player.location is hall:
@@ -458,11 +475,8 @@ class Torch(Usable, Takeable):
 class Door(Usable):
     """You could use the front door to enter the castle."""
 
-    def __repr__(self):
-        return get_wrapper().fill("The front door of the castle.") + "\n"
-
-    def __str__(self):
-        return "door"
+    def __init__(self):
+        super().__init__(name="door", look="The front door of the castle.")
 
     def use(self):
         location = player.location
@@ -480,23 +494,21 @@ class Door(Usable):
 class Stairs(Usable):
     """You could use the stairs to visit the king's bedroom."""
 
-    def __repr__(self):
-        return (
-            get_wrapper().fill(
-                "A spiral staircase between the hall and the king's bedroom."
-            )
-            + "\n"
+    def __init__(self):
+        super().__init__(
+            name="stairs",
+            look="A spiral staircase between the hall and the king's bedroom.",
         )
-
-    def __str__(self):
-        return "stairs"
 
     def use(self):
         location = player.location
         assert location in {hall, bedroom}
+        output()
         if location is hall:
+            speak("You climb up the stairs...")
             player.location = bedroom
         else:
+            speak("You climb back down the stairs...")
             player.location = hall
         raise SystemExit
 
@@ -504,19 +516,21 @@ class Stairs(Usable):
 class Tunnel(Usable):
     """You could use the tunnel to find out what's below the castle."""
 
-    def __repr__(self):
-        return get_wrapper().fill("A dark tunnel.") + "\n"
-
-    def __str__(self):
-        return "tunnel"
+    def __init__(self):
+        super().__init__(
+            name="tunnel",
+            look="A dark and mysterious tunnel between the hall and the dungeons.",
+        )
 
     def use(self):
         location = player.location
         assert location in {hall, dungeon}
-        # TODO output
+        output()
         if location is hall:
+            speak("You walk down the tunnel into the darkness...")
             player.location = dungeon
         else:
+            speak("You walk back up the tunnel towards the light...")
             player.location = hall
         raise SystemExit
 
@@ -524,11 +538,8 @@ class Tunnel(Usable):
 class Log(Usable, Takeable):
     """You could use the log to stoke a fire."""
 
-    def __repr__(self):
-        return get_wrapper().fill("A wooden log, nice and dry.") + "\n"
-
-    def __str__(self):
-        return "log"
+    def __init__(self):
+        super().__init__(name="log", look="A wooden log, nice and dry.")
 
     def use(self):
         location = player.location
@@ -538,64 +549,58 @@ class Log(Usable, Takeable):
             output()
             speak(
                 f"""\
-{Text.ITALICIZE}"Fillet of a fenny snake
+{Text.ITALICIZE}Fillet of a fenny snake
 In the cauldron boil and bake.
 Eye of newt and toe of frog,
 Wool of bat and tongue of dog,
 Adder's fork and blindworm's sting,
 Lizard's leg and howlet's wing,
 For a charm of powerful trouble,
-Like a hell-broth boil and bubble."{Text.RESET}
+Like a hell-broth boil and bubble.{Text.RESET}
 
-Looking at you, the witches speak:
+Through the mystical and pungent haze above their cauldron, the witches look at you and say:
 
-{Text.ITALICIZE}"All hail, Macbeth, that shalt be king hereafter!"{Text.RESET}
+{Text.ITALICIZE}All hail, Macbeth, that shalt be king hereafter!{Text.RESET}
 
-Then into thin air, the witches vanish...
+Then into thin air, the witches vanish!
 """
             )
             dungeon.witches = False
             hall.objects.add(dagger)
             raise SystemExit
         else:
-            output("TODO not very useful here.")
+            output("There's no fire here.")
             output()
 
 
 class Window(Usable):
     """You could use the window to get out onto the battlements."""
 
-    def __repr__(self):
-        return (
-            get_wrapper().fill("The bedroom window. It looks out onto the battlements.")
-            + "\n"
+    def __init__(self):
+        super().__init__(
+            name="window", look="The bedroom window. It looks out onto the battlements."
         )
-
-    def __str__(self):
-        return "window"
 
     def use(self):
         location = player.location
         assert location in {bedroom, battlements}
-        # TODO output
+        output()
         if location is bedroom:
+            speak("You climb out of the window onto the castle walls...")
             player.location = battlements
         else:
+            speak("You climb through the window back into the king's bedroom...")
             player.location = bedroom
         raise SystemExit
 
 
 class Dagger(Usable, Takeable):
-    """TODO help."""
+    """You could use this dagger to become more powerful!"""
 
-    def __repr__(self):
-        return (
-            get_wrapper().fill("A dagger. Very pointy. Much more dangerous than fruit.")
-            + "\n"
+    def __init__(self):
+        super().__init__(
+            name="dagger", look="A dagger. Very pointy. Much more dangerous than fruit."
         )
-
-    def __str__(self):
-        return "dagger"
 
     def use(self):
         if player.location is bedroom:
@@ -604,37 +609,47 @@ class Dagger(Usable, Takeable):
             player.objects.remove(dagger)
             bedroom.objects.add(crown)
             output()
-            speak("TODO you used the dagger")
+            speak(
+                f"""\
+You raise the dagger above your head and...
+                  
+{Text.BOLD}[CRUNCH]{Text.RESET}
+
+You have destroyed the king's computer! The king awakes and sees the time has come to pass his knowledge and power to another. He takes off his crown and leaves the castle, never to be seen again.
+"""
+            )
             raise SystemExit
         else:
-            output("TODO can't use that here")
+            output("You can't use the dagger here.")
             output()
 
 
 # Computer is a special game-within-a-game, behaves like an
 # object and a playable location.
 class Computer(Usable, Location):
-    """TODO help."""
+    """Computers are useful for all kinds of things. But mostly for playing games."""
 
     def __init__(self):
-        super().__init__()
+        super().__init__(name="computer", look=None)
         self.destroyed = False
 
+    # Override repr here, as depends on state.
     def __repr__(self):
         if self.destroyed:
             s = "A broken computer."
         else:
-            s = "An old computer. Looks like it's still working though."
-        return get_wrapper().fill(s) + "\n"
-
-    def __str__(self):
-        return "computer"
+            s = "An old computer. It looks like it's still working though."
+        return make_repr(s)
 
     def use(self):
         if self.destroyed:
-            output("TODO can't use computer, it's destroyed")
+            output("You can't use the computer any more, it's broken.")
+            output()
         else:
-            output("TODO use the computer.", 2)
+            output()
+            speak(
+                "You sit down at the computer. It looks like the king was playing a game..."
+            )
             player.location = self
             raise SystemExit
 
@@ -655,42 +670,81 @@ class Computer(Usable, Location):
 
 
 class Crown(Usable, Takeable):
-    """TODO help."""
+    """The crown feels like it's brimming with magical powers. Who knows what would happen if you used it!"""
 
-    def __repr__(self):
-        return (
-            get_wrapper().fill(
-                'The king\'s crown. It has the letters "BDFL" engraved in it. Not sure what that means.'
-            )
-            + "\n"
+    def __init__(self):
+        super().__init__(
+            name="crown",
+            look='The king\'s crown. It has the letters "BDFL" engraved in it. What does that mean?',
         )
-
-    def __str__(self):
-        return "crown"
 
     def use(self):
         if player.location is battlements:
-            assert not self.used
-            player.crowned = True
-            player.objects.remove(crown)
+            assert not player.crowned
             output()
-            speak("TODO you used the crown - here come the trees!")
+            speak(
+                f"""\
+You place the crown upon your head.
+It begins to glow immediately.
+You feel knowledge and power rushing into your veins.
+Fireworks appear and a great fanfare sounds!
+
+CONGRATULATIONS!
+
+You have become the ruler of Scotland and the Most Awesome Programmer in the world!
+All hail King Macbeth!
+
+But wait, a messenger arrives...
+
+{Text.ITALICIZE}As I did stand my watch upon the hill,
+I looked toward Birnam, and anon methought
+The Wood began to move.{Text.RESET}
+
+An army of trees is approaching!
+I fear your rule will not last long...
+"""
+            )
+            player.objects.remove(crown)
+            player.crowned = True
+            raise SystemExit
         else:
-            output("TODO can't use that here")
+            output("The crown feels very powerful, I wouldn't use it indoors.")
             output()
 
 
 class Telescope(Usable):
-    """TODO help."""
+    """You could use the telescope to see what's beyond the battlements."""
 
-    def __repr__(self):
-        return get_wrapper().fill("A telescope.") + "\n"
-
-    def __str__(self):
-        return "telescope"
+    def __init__(self):
+        super().__init__(name="telescope", look="An old-fashioned telescope")
 
     def use(self):
-        pass
+        output()
+        if player.crowned:
+            speak(
+                f"""\
+You can see an army of trees approaching!
+                  
+{Text.ITALICIZE}...and now a wood
+Comes toward Dunsinane. Arm, arm, and out!
+If this which he avouches does appear,
+There is nor flying hence nor tarrying here.{Text.RESET}
+"""
+            )
+        else:
+            speak(
+                f"""\
+You can see some trees in the distance. 
+
+{Text.ITALICIZE}Be lion-mettled, proud, and take no care
+Who chafes, who frets, or where conspirers are.
+Macbeth shall never vanquished be until
+Great Birnam Wood to high Dunsinane Hill
+Shall come against him.{Text.RESET}
+
+Who said that?
+"""
+            )
 
 
 class Action:
@@ -735,8 +789,8 @@ To take an object and carry it with you to the next location, type {Text.BOLD}ta
               
 At any point in the game you can {Text.BOLD}sing(){Text.RESET} if you feel like it.
 
-"{Text.ITALICIZE}But screw your courage to the sticking place
-And we'll not fail!{Text.RESET}"
+{Text.ITALICIZE}But screw your courage to the sticking place
+And we'll not fail!{Text.RESET}
 """,
         )
         output()
