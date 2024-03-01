@@ -910,4 +910,3 @@ if __name__ == "__main__":
     hide(loading_node)
     show(play_button_node)
     init()
-    game.play()
