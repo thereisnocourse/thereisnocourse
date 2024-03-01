@@ -94,6 +94,7 @@ def make_repr(s):
 class Player:
     def __init__(self):
         self.location = outside
+        # self.location = computer
         self.objects = set()
         self.crowned = False
 
@@ -613,11 +614,56 @@ class Computer(Location, Usable):
         screen_node.classList.remove("scottish")
         screen_node.classList.add("old_computer")
 
-        self.interact()
+        play_pebbles()
 
         screen_node.classList.add("scottish")
         screen_node.classList.remove("old_computer")
         player.location = bedroom
+
+
+def input_positive_integer():
+    x = None
+    while x is None:
+        x_input = input("> ")
+        try:
+            x_int = int(x_input)
+        except Exception:
+            output("Please enter a valid number.")
+            continue
+        if x_int < 0:
+            output("Must be positive number.")
+            continue
+        x = x_int
+    return x
+
+
+def input_choice(*choices):
+    x = None
+    while x is None:
+        x_input = input("> ")
+        if x_input not in choices:
+            output("Invalid choice. Please enter: " + ", ".join(choices))
+            continue
+        x = x_input
+    return x
+
+
+def play_pebbles():
+    output("DUNGUIDO @ MP73:/> ./pebbles.a68")
+    output()
+    output("Algol68C Release 1.3039")
+    output("Unused space 25936")
+    output()
+    output("Z370 version 303.7")
+    output("Program=1388 Data=248")
+    output("")
+    output("Enter the number of white pebbles:")
+    w = input_positive_integer()
+    output("Enter the number of black pebbles:")
+    b = input_positive_integer()
+    output("Will the last pebble be white or black?")
+    guess = input_choice("white", "black")
+    output("Let's play...")
 
 
 class Crown(Inspectable, Usable, Takeable):
