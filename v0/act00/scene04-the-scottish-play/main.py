@@ -23,6 +23,33 @@ success_node = get_element_by_id("success")
 terminal = get_terminal()
 
 
+class Inspectable(ABC):
+    def __init__(self, name, description):
+        super().__init__()
+        self.name = name
+        self.description = get_wrapper().fill(description)
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return make_repr(self.description)
+
+
+class Usable(ABC):
+    def __init__(self, *args, **kwargs):
+        super().__init__()
+
+    @abstractmethod
+    def use(self):
+        pass
+
+
+class Takeable(ABC):
+    def __init__(self, *args, **kwargs):
+        super().__init__()
+
+
 class Game:
     def __init__(self):
         self.over = False
@@ -33,13 +60,13 @@ class Game:
         screen_node.style.visibility = "visible"
 
         output()
-        speak(f"{Text.BOLD}   || The Scottish play")
-        speak(f"===||====={Text.BG_RED}=====>>>{Text.RESET}")
-        speak(f"{Text.BOLD}   ||{Text.RESET}")
+        speak(f"""\
+{Text.BOLD}   || The Scottish play
+===||====={Text.BG_RED}=====>>>{Text.RESET}
+{Text.BOLD}   ||{Text.RESET}\
+""")
         output()
-        speak(f"{Text.ITALICIZE}So foul and fair a day I have not seen.{Text.RESET}")
-        output()
-        speak(f"Type {Text.BOLD}help(){Text.RESET} for the in-game tutorial.")
+        output(f"Type {Text.BOLD}help(){Text.RESET} for the in-game tutorial.")
         output("---", 1)
         output()
 
@@ -60,43 +87,6 @@ def output_game_over():
         show(replay_node)
 
 
-def output_objects():
-    available = player.location.objects
-    holding = player.objects
-    available_str = ", ".join([str(o) for o in available])
-    holding_str = ", ".join([str(o) for o in holding])
-    output(f"Objects available: [{Text.BOLD}{available_str}{Text.RESET}]")
-    output(f"You are holding: [{Text.BOLD}{holding_str}{Text.RESET}]")
-
-
-def setup_namespace():
-    namespace = dict()
-
-    # Add objects.
-    for o in player.objects:
-        namespace[str(o)] = o
-    for o in player.location.objects:
-        namespace[str(o)] = o
-
-    # Add action functions.
-    namespace["help"] = help
-    namespace["take"] = take
-    namespace["use"] = use
-    namespace["sing"] = sing
-
-    return namespace
-
-
-def interact():
-    namespace = setup_namespace()
-    try:
-        code.interact(local=namespace, banner="")
-    except SystemExit:
-        # This exception can be raised to end interaction and
-        # return control to the main game loop.
-        pass
-
-
 def make_repr(s):
     return get_wrapper().fill(s) + "\n"
 
@@ -113,21 +103,16 @@ class Player:
 
         if o in taken:
             output(f"You've already taken the {o}.")
-        elif o not in available:
-            output(f"The {o} is not available.")
-        elif not isinstance(o, Takeable):
+        elif o not in available or not isinstance(o, Takeable):
             output(f"The {o} cannot be taken.")
         else:
             available.remove(o)
             taken.add(o)
             output(f"You have taken the {o}.")
-            # output()
-            # output_objects()
         output()
 
     def sing(self):
         if self.location is outside:
-            output()
             speak(
                 f"""\
 {Text.ITALICIZE}Do de do do do do
@@ -135,8 +120,9 @@ Do de do do do do de
 I'm siiiiingin' in the rain, just siiiiiingin' in the rain⏸
 What a gloooooorious feeeeeeeling I'm haaaaaappy again⏸
 I'm laaaaaughing at clouds, so daaaaaark up above⏸
-The sun's in my heart and I'm ready for...
-⏩{Text.RESET}{Text.BOLD}[FLASH!]{Text.RESET}"""
+The sun's in my heart and I'm ready for⏩
+
+{Text.RESET}{Text.BOLD}[FLASH!]{Text.RESET}"""
             )
             output("", 1)
             output(
@@ -147,15 +133,15 @@ The sun's in my heart and I'm ready for...
             raise SystemExit
 
         elif self.location is hall:
-            output()
             speak(
                 f"""\
 {Text.ITALICIZE}Once, I had an empire in a golden age,
 I was held up so high, I used to be great,
 They used to cheer when they saw my face,
 Now, I fear I have fallen from grace,
-And I feel like my castle's crumbling down...
-⏩{Text.RESET}{Text.BOLD}[CRASH!]{Text.RESET}"""
+And I feel like my castle's crumbling down⏩
+
+{Text.RESET}{Text.BOLD}[CRASH!]{Text.RESET}"""
             )
             output("", 1)
             output(
@@ -166,7 +152,6 @@ And I feel like my castle's crumbling down...
             raise SystemExit
 
         elif self.location is dungeon:
-            output()
             speak(
                 f"""\
 {Text.ITALICIZE}Ding-dong the witch is dead,
@@ -174,16 +159,16 @@ Which old witch — the wicked witch!
 Ding-dong the wicked witch is dead.
 Wake up you sleepyhead,
 Rub your eyes, get out of bed,
-Wake up the wicked witch is...
-⏩{Text.RESET}{Text.BOLD}[KAZAM!]{Text.RESET}"""
+Wake up the wicked witch is⏩
+
+{Text.RESET}{Text.BOLD}[KAZAM!]{Text.RESET}"""
             )
             output("", 1)
-            output("You have been turned into a toad.", 1)
+            output("You've been turned into a toad.", 1)
             game.over = True
             raise SystemExit
 
         elif self.location is bedroom:
-            output()
             speak(
                 f"""\
 {Text.ITALICIZE}Het is een nacht
@@ -192,8 +177,9 @@ Het is een nacht
 Die wordt bezongen in het mooiste lied
 Het is een nacht
 Waarvan ik dacht dat ik hem nooit beleven zou
-Maar vannacht beleef ik hem met jouooooooooOOOOoo...
-⏩{Text.RESET}{Text.BOLD}[CRUNCH!]{Text.RESET}"""
+Maar vannacht beleef ik hem met jouooooooooOOOOoo⏩
+
+{Text.RESET}{Text.BOLD}[CRUNCH!]{Text.RESET}"""
             )
             output("", 1)
             output(
@@ -205,7 +191,6 @@ Maar vannacht beleef ik hem met jouooooooooOOOOoo...
 
         else:
             assert self.location is battlements
-            output()
             speak(
                 f"""\
 {Text.ITALICIZE}I'm a lumberjack and I'm okay,
@@ -239,61 +224,103 @@ class Forest:
 forest = Forest()
 
 
-class Location:
-    def __init__(self):
+class Location(Inspectable):
+    def __init__(self, name, description):
+        super().__init__(name=name, description=description)
         self.objects = set()
+
+    def output_objects(self):
+        available = self.objects
+        holding = player.objects
+        available_str = ", ".join([str(o) for o in available])
+        holding_str = ", ".join([str(o) for o in holding])
+        output(f"Objects available: [{Text.BOLD}{available_str}{Text.RESET}]")
+        output(f"You are holding: [{Text.BOLD}{holding_str}{Text.RESET}]")
+
+    def output_location(self):
+        output(
+            f"Location: {Text.BOLD}{self.name}{Text.RESET}",
+        )
+
+    def output_header(self):
+        self.output_location()
+        self.output_objects()
+        output()
+        output(self.description)
+        output()
+
+    def setup_namespace(self):
+        namespace = dict()
+
+        # Add objects.
+        for o in player.objects:
+            namespace[str(o)] = o
+        for o in self.objects:
+            namespace[str(o)] = o
+
+        # Add action functions.
+        namespace["help"] = help
+        namespace["take"] = take
+        namespace["use"] = use
+        namespace["sing"] = sing
+
+        # Add current location.
+        namespace[self.name] = self
+
+        return namespace
+
+    def interact(self):
+        namespace = self.setup_namespace()
+        try:
+            code.interact(local=namespace, banner="")
+        except SystemExit:
+            # This exception can be raised to end interaction and
+            # return control to the main game loop.
+            pass
 
 
 class Outside(Location):
     def __init__(self):
-        super().__init__()
+        super().__init__(
+            name="outside",
+            description="You are standing outside the king's castle. The weather is awful - thunder, lightning and rain.",
+        )
         self.objects.add(door)
         self.objects.add(torch)
         self.objects.add(newspaper)
+        self.visited = False
 
     def play(self):
-        output(
-            "Location: You are standing outside the king's castle. The weather is awful - thunder, lightning and rain.",
-        )
-        output()
-        output_objects()
-        output()
-
-        namespace = setup_namespace()
-        try:
-            code.interact(local=namespace, banner="")
-        except SystemExit:
-            pass
+        self.output_header()
+        if not self.visited:
+            # Only show this the first time, otherwise gets tedious.
+            speak(
+                f"{Text.ITALICIZE}So foul and fair a day I have not seen.{Text.RESET}"
+            )
+            output()
+            self.visited = True
+        self.interact()
 
 
 class Hall(Location):
     def __init__(self):
-        super().__init__()
+        super().__init__(
+            name="hall", description="You are in the main hall. It's very dark here."
+        )
         self.objects.add(door)
         self.dark = True
 
     def play(self):
-        output("Location: You are in the main hall.")
+        self.output_header()
         if self.dark:
             self.play_dark()
         else:
             self.play_light()
 
     def play_dark(self):
-        output("It's very dark here.")
-        output()
-        output_objects()
-        output()
-        interact()
+        self.interact()
 
     def play_light(self):
-        output(
-            "It's nice and light here now. There are stairs going up and a tunnel going down."
-        )
-        output()
-        output_objects()
-        output()
-
         if dagger in self.objects:
             speak(
                 f"""\
@@ -303,126 +330,63 @@ I have thee not, and yet I see thee still.{Text.RESET}"""
             )
             output()
 
-        interact()
+        self.interact()
 
 
 class Dungeon(Location):
     def __init__(self):
-        super().__init__()
+        super().__init__(
+            name="dungeon",
+            description="You are in the dungeon. There are three witches. They don't look very happy. The fire under their cauldron is going out.",
+        )
         self.objects.add(tunnel)
         self.witches = True
 
     def play(self):
-        output("Location: You are in the dungeon.")
-        if self.witches:
-            self.play_witches()
-        else:
-            self.play_no_witches()
-
-    def play_witches(self):
-        output(
-            "There are three witches. They don't look very happy. The fire under their cauldron is going out."
-        )
-        output()
-        output_objects()
-        output()
-        interact()
-
-    def play_no_witches(self):
-        output("The witches are gone.", 1)
-        output()
-        output_objects()
-        output()
-        interact()
+        self.output_header()
+        self.interact()
 
 
 class Bedroom(Location):
     def __init__(self):
-        super().__init__()
+        super().__init__(
+            name="bedroom",
+            description="You are in the king's bedroom. King Dunguido Macrossum is asleep on the bed. His computer is on, it looks like he was playing a game.",
+        )
         self.objects.add(stairs)
         self.objects.add(window)
         self.objects.add(computer)
 
     def play(self):
-        output("Location: You are in the king's bedroom.")
-        if computer.destroyed:
-            self.play_computer_destroyed()
-        else:
-            self.play_computer_working()
-
-    def play_computer_working(self):
-        output(
-            "King Dunguido Macrossum is asleep on the bed. His computer is on, it looks like he was playing a game."
-        )
-        output()
-        output_objects()
-        output()
-        interact()
-
-    def play_computer_destroyed(self):
-        output("The king has gone.")
-        output()
-        output_objects()
-        output()
-        interact()
+        self.output_header()
+        self.interact()
 
 
 class Battlements(Location):
     def __init__(self):
-        super().__init__()
+        super().__init__(
+            name="battlements", description="You are on the castle battlements."
+        )
         self.objects.add(window)
         self.objects.add(telescope)
 
     def play(self):
-        output("Location: You are on the castle battlements.")
-        if player.crowned:
-            output("An army of trees is attacking! You won't be in charge for long.")
-        output()
-        output_objects()
-        output()
-        interact()
+        self.output_header()
+        self.interact()
 
 
-class Item(ABC):
-    def __init__(self, name, look):
-        super().__init__()
-        self.name = name
-        self.look = look
-
-    def __str__(self):
-        return self.name
-
-    def __repr__(self):
-        return make_repr(self.look)
-
-
-class Usable(Item):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    @abstractmethod
-    def use(self):
-        pass
-
-
-class Takeable(Item):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-
-class Newspaper(Usable, Takeable):
+class Newspaper(Inspectable, Usable, Takeable):
     """You can use newspapers to learn more about current affairs."""
 
     def __init__(self):
         super().__init__(
             name="newspaper",
-            look="Today's newspaper. The story on the front page looks interesting.",
+            description="Today's newspaper. The story on the front page looks interesting.",
         )
 
     def use(self):
         # There are no preconditions, the newspaper can be used at
         # any time in the game.
-        output()
         speak(
             f"""\
 14 August 1040
@@ -450,18 +414,18 @@ Macbeth now travels to the King's castle to celebrate the victory.
         output()
 
 
-class Torch(Usable, Takeable):
+class Torch(Inspectable, Usable, Takeable):
     """Torches can be used to provide light in the darkness."""
 
     def __init__(self):
-        super().__init__(name="torch", look="A flaming torch.")
+        super().__init__(name="torch", description="A flaming torch.")
 
     def use(self):
         if player.location is hall:
             assert hall.dark
-            output()
             speak("Good idea! You use the torch to find some candles and light them...")
             hall.dark = False
+            hall.description = "It's nice and light here now. There are stairs going up and a tunnel going down."
             player.objects.remove(self)
             hall.objects.add(stairs)
             hall.objects.add(tunnel)
@@ -472,38 +436,36 @@ class Torch(Usable, Takeable):
             output()
 
 
-class Door(Usable):
+class Door(Inspectable, Usable):
     """You could use the front door to enter the castle."""
 
     def __init__(self):
-        super().__init__(name="door", look="The front door of the castle.")
+        super().__init__(name="door", description="The front door of the castle.")
 
     def use(self):
         location = player.location
         assert location in {outside, hall}
-        output()
         if location is outside:
-            speak("You open the door and step into the castle...")
+            speak("You step into the castle...")
             player.location = hall
         else:
-            speak("You open the door and go back outside into the rain...")
+            speak("You go back outside into the rain...")
             player.location = outside
         raise SystemExit
 
 
-class Stairs(Usable):
+class Stairs(Inspectable, Usable):
     """You could use the stairs to visit the king's bedroom."""
 
     def __init__(self):
         super().__init__(
             name="stairs",
-            look="A spiral staircase between the hall and the king's bedroom.",
+            description="A spiral staircase between the hall and the king's bedroom.",
         )
 
     def use(self):
         location = player.location
         assert location in {hall, bedroom}
-        output()
         if location is hall:
             speak("You climb up the stairs...")
             player.location = bedroom
@@ -513,40 +475,38 @@ class Stairs(Usable):
         raise SystemExit
 
 
-class Tunnel(Usable):
+class Tunnel(Inspectable, Usable):
     """You could use the tunnel to find out what's below the castle."""
 
     def __init__(self):
         super().__init__(
             name="tunnel",
-            look="A dark and mysterious tunnel between the hall and the dungeons.",
+            description="A dark, mysterious and slightly smelly tunnel between the hall and the dungeons.",
         )
 
     def use(self):
         location = player.location
         assert location in {hall, dungeon}
-        output()
         if location is hall:
-            speak("You walk down the tunnel into the darkness...")
+            speak("You walk down into the darkness...")
             player.location = dungeon
         else:
-            speak("You walk back up the tunnel towards the light...")
+            speak("You walk back up towards the light...")
             player.location = hall
         raise SystemExit
 
 
-class Log(Usable, Takeable):
+class Log(Inspectable, Usable, Takeable):
     """You could use the log to stoke a fire."""
 
     def __init__(self):
-        super().__init__(name="log", look="A wooden log, nice and dry.")
+        super().__init__(name="log", description="A wooden log, nice and dry.")
 
     def use(self):
         location = player.location
         if location is dungeon:
             assert dungeon.witches
             player.objects.remove(self)
-            output()
             speak(
                 f"""\
 {Text.ITALICIZE}Fillet of a fenny snake
@@ -566,6 +526,7 @@ Then into thin air, the witches vanish!
 """
             )
             dungeon.witches = False
+            dungeon.description = "The witches are gone."
             hall.objects.add(dagger)
             raise SystemExit
         else:
@@ -573,42 +534,44 @@ Then into thin air, the witches vanish!
             output()
 
 
-class Window(Usable):
+class Window(Inspectable, Usable):
     """You could use the window to get out onto the battlements."""
 
     def __init__(self):
         super().__init__(
-            name="window", look="The bedroom window. It looks out onto the battlements."
+            name="window",
+            description="The bedroom window. It looks out onto the battlements.",
         )
 
     def use(self):
         location = player.location
         assert location in {bedroom, battlements}
-        output()
         if location is bedroom:
-            speak("You climb out of the window onto the castle walls...")
+            speak("You climb out onto the castle battlements...")
             player.location = battlements
         else:
-            speak("You climb through the window back into the king's bedroom...")
+            speak("You climb back into the king's bedroom...")
             player.location = bedroom
         raise SystemExit
 
 
-class Dagger(Usable, Takeable):
+class Dagger(Inspectable, Usable, Takeable):
     """You could use this dagger to become more powerful!"""
 
     def __init__(self):
         super().__init__(
-            name="dagger", look="A dagger. Very pointy. Much more dangerous than fruit."
+            name="dagger",
+            description="A dagger. Very pointy. Much more dangerous than fruit.",
         )
 
     def use(self):
         if player.location is bedroom:
             assert not computer.destroyed
             computer.destroyed = True
+            computer.description = "A broken computer."
             player.objects.remove(dagger)
             bedroom.objects.add(crown)
-            output()
+            bedroom.description = "The king has gone."
             speak(
                 f"""\
 You raise the dagger above your head and...
@@ -626,30 +589,22 @@ You have destroyed the king's computer! The king awakes and sees the time has co
 
 # Computer is a special game-within-a-game, behaves like an
 # object and a playable location.
-class Computer(Usable, Location):
+class Computer(Location, Usable):
     """Computers are useful for all kinds of things. But mostly for playing games."""
 
     def __init__(self):
-        super().__init__(name="computer", look=None)
+        super().__init__(
+            name="computer",
+            description="An old computer. It looks like it's still working though.",
+        )
         self.destroyed = False
-
-    # Override repr here, as depends on state.
-    def __repr__(self):
-        if self.destroyed:
-            s = "A broken computer."
-        else:
-            s = "An old computer. It looks like it's still working though."
-        return make_repr(s)
 
     def use(self):
         if self.destroyed:
             output("You can't use the computer any more, it's broken.")
             output()
         else:
-            output()
-            speak(
-                "You sit down at the computer. It looks like the king was playing a game..."
-            )
+            speak("You sit down at the computer. It looks ancient...")
             player.location = self
             raise SystemExit
 
@@ -658,30 +613,25 @@ class Computer(Usable, Location):
         screen_node.classList.remove("scottish")
         screen_node.classList.add("old_computer")
 
-        namespace = setup_namespace()
-        try:
-            code.interact(local=namespace, banner="")
-        except SystemExit:
-            pass
+        self.interact()
 
         screen_node.classList.add("scottish")
         screen_node.classList.remove("old_computer")
         player.location = bedroom
 
 
-class Crown(Usable, Takeable):
+class Crown(Inspectable, Usable, Takeable):
     """The crown feels like it's brimming with magical powers. Who knows what would happen if you used it!"""
 
     def __init__(self):
         super().__init__(
             name="crown",
-            look="The king's crown. It's engraved with a picture of a snake and the letters \"BDFL\". What does that mean?",
+            description="The king's crown. It's engraved with a picture of a snake and the letters \"BDFL\", whatever that means.",
         )
 
     def use(self):
         if player.location is battlements:
             assert not player.crowned
-            output()
             speak(
                 f"""\
 You place the crown upon your head.
@@ -694,7 +644,7 @@ CONGRATULATIONS!
 You have become the ruler of Scotland and the Most Awesome Programmer in the world!
 All hail King Macbeth!
 
-But wait, a messenger arrives...
+But wait, a messenger arrives:
 
 {Text.ITALICIZE}As I did stand my watch upon the hill,
 I looked toward Birnam, and anon methought
@@ -706,20 +656,22 @@ I fear your rule will not last long...
             )
             player.objects.remove(crown)
             player.crowned = True
+            battlements.description = "An army of trees is attacking!"
             raise SystemExit
         else:
-            output("The crown feels very powerful, I wouldn't use it indoors.")
+            output(
+                "The crown feels very powerful, best to use it where everyone can see you."
+            )
             output()
 
 
-class Telescope(Usable):
+class Telescope(Inspectable, Usable):
     """You could use the telescope to see what's beyond the battlements."""
 
     def __init__(self):
-        super().__init__(name="telescope", look="An old-fashioned telescope")
+        super().__init__(name="telescope", description="An old-fashioned telescope.")
 
     def use(self):
-        output()
         if player.crowned:
             speak(
                 f"""\
@@ -745,6 +697,7 @@ Shall come against him.{Text.RESET}
 Who said that?
 """
             )
+        output()
 
 
 class Action:
@@ -824,7 +777,8 @@ class Use(Action):
             if isinstance(o, Usable):
                 o.use()
             else:
-                output(f"Object {o} cannot be used.")
+                output(f"The {o} cannot be used.")
+                output()
 
 
 class Sing(Action):
