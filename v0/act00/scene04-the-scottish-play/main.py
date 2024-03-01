@@ -675,7 +675,7 @@ class Crown(Usable, Takeable):
     def __init__(self):
         super().__init__(
             name="crown",
-            look='The king\'s crown. It has the letters "BDFL" engraved in it. What does that mean?',
+            look="The king's crown. It's engraved with a picture of a snake and the letters \"BDFL\". What does that mean?",
         )
 
     def use(self):
