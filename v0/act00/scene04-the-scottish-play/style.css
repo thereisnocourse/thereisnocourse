@@ -1,3 +1,6 @@
+@import url(https://fonts.googleapis.com/css?family=VT323);
+
+
 #screen {
     visibility: hidden;
 }
@@ -14,6 +17,8 @@
 .old_computer .xterm-viewport {
     background-color: black !important;
     color: #33FF00 !important;
+    font-family: 'VT323', monospace !important;
+    font-size: 19px !important;
 }
 
 #success {

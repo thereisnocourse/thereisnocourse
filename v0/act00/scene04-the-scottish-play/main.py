@@ -722,7 +722,7 @@ class Help(Action):
         output()
         speak(
             f"""\
-In each location you will find some objects. These objects can be used to help you on your quest for ultimate power and glory.
+In each location you will find some objects. These objects can be used to help you on your quest for ultimate power and knowledge.
 
 To look at an object, type the name of the object and press return. For example, to look at the {Text.BOLD}newspaper{Text.RESET}:⏩
               

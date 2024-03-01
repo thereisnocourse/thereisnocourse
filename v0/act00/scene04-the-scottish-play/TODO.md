@@ -3,4 +3,6 @@
 * [x] Make the location an object that can be inspected; adjust location output accordingly.
 * [x] Move "fair and foul" quote.
 * [x] "walls" -> "battlements"
+* [x] Terminal font.
 * [ ] Game in game.
+* [ ] Sound.
