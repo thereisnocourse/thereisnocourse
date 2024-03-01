@@ -3,3 +3,4 @@
 * [ ] Make the location an object that can be inspected; adjust location output accordingly.
 * [ ] Game in game.
 * [ ] Move "fair and foul" quote.
+* [ ] "walls" -> "battlements"
