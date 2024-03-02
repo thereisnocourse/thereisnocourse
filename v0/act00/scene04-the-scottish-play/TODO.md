@@ -4,5 +4,5 @@
 * [x] Move "fair and foul" quote.
 * [x] "walls" -> "battlements"
 * [x] Terminal font.
-* [ ] Game in game.
+* [x] Game in game.
 * [ ] Sound.

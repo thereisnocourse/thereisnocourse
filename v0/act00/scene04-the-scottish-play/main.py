@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+import random
+from collections import Counter
 import code
 from util import (
     when,
@@ -6,6 +8,7 @@ from util import (
     show,
     hide,
     output,
+    write,
     get_terminal,
     speak,
     get_wrapper,
@@ -93,8 +96,8 @@ def make_repr(s):
 
 class Player:
     def __init__(self):
-        self.location = outside
-        # self.location = computer
+        # self.location = outside
+        self.location = computer
         self.objects = set()
         self.crowned = False
 
@@ -630,8 +633,8 @@ def input_positive_integer():
         except Exception:
             output("Please enter a valid number.")
             continue
-        if x_int < 0:
-            output("Must be positive number.")
+        if x_int < 1:
+            output("Please enter a positive number.")
             continue
         x = x_int
     return x
@@ -642,7 +645,7 @@ def input_choice(*choices):
     while x is None:
         x_input = input("> ")
         if x_input not in choices:
-            output("Invalid choice. Please enter: " + ", ".join(choices))
+            output("Please enter one of: " + ", ".join(choices))
             continue
         x = x_input
     return x
@@ -657,13 +660,35 @@ def play_pebbles():
     output("Z370 version 303.7")
     output("Program=1388 Data=248")
     output("")
-    output("Enter the number of white pebbles:")
-    w = input_positive_integer()
-    output("Enter the number of black pebbles:")
-    b = input_positive_integer()
-    output("Will the last pebble be white or black?")
-    guess = input_choice("white", "black")
-    output("Let's play...")
+    play = "y"
+    while play == "y":
+        urn = Counter()
+        output("Number of white pebbles:")
+        urn["w"] = input_positive_integer()
+        output("Number of black pebbles:")
+        urn["b"] = input_positive_integer()
+        output("Will the last pebble be white or black?")
+        guess = input_choice("white", "black")
+        while (urn["w"] + urn["b"]) > 1:
+            x, y = random.sample("wb", k=2, counts=[urn["w"], urn["b"]])
+            urn[x] -= 1
+            urn[y] -= 1
+            if x == y:
+                urn["b"] += 1
+            else:
+                urn["w"] += 1
+            output(f"white: {urn['w']}; black: {urn['b']}")
+        if urn["w"] == 1:
+            last_pebble = "white"
+        else:
+            assert urn["b"] == 1
+            last_pebble = "black"
+        if guess == last_pebble:
+            output(f"Last pebble was {last_pebble}. You win!")
+        else:
+            output(f"Last pebble was {last_pebble}. You lose.")
+        output("Play again? [y/n]")
+        play = input_choice("y", "n")
 
 
 class Crown(Inspectable, Usable, Takeable):
