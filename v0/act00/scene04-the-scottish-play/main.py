@@ -96,8 +96,7 @@ def make_repr(s):
 
 class Player:
     def __init__(self):
-        # self.location = outside
-        self.location = computer
+        self.location = outside
         self.objects = set()
         self.crowned = False
 
