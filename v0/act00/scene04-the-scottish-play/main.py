@@ -8,7 +8,6 @@ from util import (
     show,
     hide,
     output,
-    write,
     get_terminal,
     speak,
     get_wrapper,
@@ -24,6 +23,14 @@ screen_node = get_element_by_id("screen")
 replay_node = get_element_by_id("replay")
 success_node = get_element_by_id("success")
 terminal = get_terminal()
+audio_thunder_node = get_element_by_id("audio_thunder")
+audio_door_node = get_element_by_id("audio_door")
+audio_tunnel_node = get_element_by_id("audio_tunnel")
+audio_stairs_node = get_element_by_id("audio_stairs")
+audio_window_node = get_element_by_id("audio_window")
+audio_bubbles_node = get_element_by_id("audio_bubbles")
+audio_cheers_node = get_element_by_id("audio_cheers")
+audio_battle_node = get_element_by_id("audio_battle")
 
 
 class Inspectable(ABC):
@@ -62,6 +69,7 @@ class Game:
         hide(replay_node)
         screen_node.style.visibility = "visible"
 
+        audio_thunder_node.play()
         output()
         speak(f"""\
 {Text.BOLD}   || The Scottish play
@@ -194,6 +202,7 @@ Maar vannacht beleef ik hem met jouooooooooOOOOoo⏩
 
         else:
             assert self.location is battlements
+            audio_battle_node.pause()
             speak(
                 f"""\
 {Text.ITALICIZE}I'm a lumberjack and I'm okay,
@@ -205,6 +214,7 @@ And have buttered scones for tea.{Text.RESET}\
 """
             )
             if player.crowned:
+                audio_cheers_node.play()
                 output()
                 speak(
                     """\
@@ -446,6 +456,8 @@ class Door(Inspectable, Usable):
         super().__init__(name="door", description="The front door of the castle.")
 
     def use(self):
+        audio_thunder_node.pause()
+        audio_door_node.play()
         location = player.location
         assert location in {outside, hall}
         if location is outside:
@@ -467,6 +479,7 @@ class Stairs(Inspectable, Usable):
         )
 
     def use(self):
+        audio_stairs_node.play()
         location = player.location
         assert location in {hall, bedroom}
         if location is hall:
@@ -488,6 +501,7 @@ class Tunnel(Inspectable, Usable):
         )
 
     def use(self):
+        audio_tunnel_node.play()
         location = player.location
         assert location in {hall, dungeon}
         if location is hall:
@@ -509,6 +523,7 @@ class Log(Inspectable, Usable, Takeable):
         location = player.location
         if location is dungeon:
             assert dungeon.witches
+            audio_bubbles_node.play()
             player.objects.remove(self)
             speak(
                 f"""\
@@ -547,6 +562,7 @@ class Window(Inspectable, Usable):
         )
 
     def use(self):
+        audio_window_node.play()
         location = player.location
         assert location in {bedroom, battlements}
         if location is bedroom:
@@ -707,12 +723,8 @@ class Crown(Inspectable, Usable, Takeable):
 You place the crown upon your head.
 It begins to glow immediately.
 You feel knowledge and power rushing into your veins.
-Fireworks appear and a great fanfare sounds!
 
-CONGRATULATIONS!
-
-You have become the ruler of Scotland and the Most Awesome Programmer in the world!
-All hail King Macbeth!
+All hail! You have become the ruler of Scotland and the Most Awesome Programmer in the world!
 
 But wait, a messenger arrives:
 
@@ -726,6 +738,7 @@ I fear your rule will not last long...
             )
             player.objects.remove(crown)
             player.crowned = True
+            audio_battle_node.play()
             battlements.description = "An army of trees is attacking!"
             raise SystemExit
         else:
@@ -745,8 +758,6 @@ class Telescope(Inspectable, Usable):
         if player.crowned:
             speak(
                 f"""\
-You can see an army of trees approaching!
-                  
 {Text.ITALICIZE}...and now a wood
 Comes toward Dunsinane. Arm, arm, and out!
 If this which he avouches does appear,

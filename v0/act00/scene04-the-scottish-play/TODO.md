@@ -5,4 +5,4 @@
 * [x] "walls" -> "battlements"
 * [x] Terminal font.
 * [x] Game in game.
-* [ ] Sound.
+* [x] Sound.
