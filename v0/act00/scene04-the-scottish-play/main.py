@@ -24,13 +24,19 @@ replay_node = get_element_by_id("replay")
 success_node = get_element_by_id("success")
 terminal = get_terminal()
 audio_thunder_node = get_element_by_id("audio_thunder")
+audio_rain_node = get_element_by_id("audio_rain")
 audio_door_node = get_element_by_id("audio_door")
+audio_hall_node = get_element_by_id("audio_hall")
+audio_fire_node = get_element_by_id("audio_fire")
 audio_tunnel_node = get_element_by_id("audio_tunnel")
 audio_stairs_node = get_element_by_id("audio_stairs")
 audio_window_node = get_element_by_id("audio_window")
 audio_bubbles_node = get_element_by_id("audio_bubbles")
 audio_cheers_node = get_element_by_id("audio_cheers")
+audio_whistling_node = get_element_by_id("audio_whistling")
+audio_wind_node = get_element_by_id("audio_wind")
 audio_battle_node = get_element_by_id("audio_battle")
+audio_crash_node = get_element_by_id("audio_crash")
 
 
 class Inspectable(ABC):
@@ -65,11 +71,12 @@ class Game:
         self.over = False
 
     def play(self):
+        audio_thunder_node.play()
+
         hide(prologue_node)
         hide(replay_node)
         screen_node.style.visibility = "visible"
 
-        audio_thunder_node.play()
         output()
         speak(f"""\
 {Text.BOLD}   || The Scottish play
@@ -92,9 +99,12 @@ class Game:
 def output_game_over():
     output()
     output(f"{Text.BOLD}GAME OVER{Text.RESET}")
+    output()
     if forest.defeated:
+        speak("Who'd have thought this story would have a happy ending, eh? :-)")
         show(success_node)
     else:
+        speak("Would you like to try again?")
         show(replay_node)
 
 
@@ -202,7 +212,6 @@ Maar vannacht beleef ik hem met jouooooooooOOOOoo⏩
 
         else:
             assert self.location is battlements
-            audio_battle_node.pause()
             speak(
                 f"""\
 {Text.ITALICIZE}I'm a lumberjack and I'm okay,
@@ -214,16 +223,18 @@ And have buttered scones for tea.{Text.RESET}\
 """
             )
             if player.crowned:
+                battlements.audio_stop()
                 audio_cheers_node.play()
                 output()
                 speak(
                     """\
 The army of trees has throw down their weapons and surrendered! HOORAY!                      
 
-Congratulations! You have nothing more to fear. You shall live a long and happy life, unchallenged as the Most Awesome Programmer in the world!
-
-Who'd have thought this game would have a happy ending, eh? :-)"""
+Congratulations! You have nothing more to fear. You shall live a long and happy life, unchallenged as the Most Awesome Programmer in the world!\
+"""
                 )
+                audio_cheers_node.pause()
+                audio_cheers_node.currentTime = 0
                 forest.defeated = True
                 game.over = True
                 raise SystemExit
@@ -304,6 +315,7 @@ class Outside(Location):
         self.visited = False
 
     def play(self):
+        self.audio_play()
         self.output_header()
         if not self.visited:
             # Only show this the first time, otherwise gets tedious.
@@ -313,6 +325,15 @@ class Outside(Location):
             output()
             self.visited = True
         self.interact()
+        self.audio_stop()
+
+    def audio_play(self):
+        self.audio_stop()
+        audio_rain_node.play()
+
+    def audio_stop(self):
+        audio_rain_node.pause()
+        audio_rain_node.currentTime = 0
 
 
 class Hall(Location):
@@ -324,11 +345,13 @@ class Hall(Location):
         self.dark = True
 
     def play(self):
+        self.audio_play()
         self.output_header()
         if self.dark:
             self.play_dark()
         else:
             self.play_light()
+        self.audio_stop()
 
     def play_dark(self):
         self.interact()
@@ -345,6 +368,14 @@ I have thee not, and yet I see thee still.{Text.RESET}"""
 
         self.interact()
 
+    def audio_play(self):
+        self.audio_stop()
+        audio_hall_node.play()
+
+    def audio_stop(self):
+        audio_hall_node.pause()
+        audio_hall_node.currentTime = 0
+
 
 class Dungeon(Location):
     def __init__(self):
@@ -356,8 +387,18 @@ class Dungeon(Location):
         self.witches = True
 
     def play(self):
+        self.audio_play()
         self.output_header()
         self.interact()
+        self.audio_stop()
+
+    def audio_play(self):
+        self.audio_stop()
+        audio_fire_node.play()
+
+    def audio_stop(self):
+        audio_fire_node.pause()
+        audio_fire_node.currentTime = 0
 
 
 class Bedroom(Location):
@@ -371,8 +412,18 @@ class Bedroom(Location):
         self.objects.add(computer)
 
     def play(self):
+        self.audio_play()
         self.output_header()
         self.interact()
+        self.audio_stop()
+
+    def audio_play(self):
+        self.audio_stop()
+        audio_whistling_node.play()
+
+    def audio_stop(self):
+        audio_whistling_node.pause()
+        audio_whistling_node.currentTime = 0
 
 
 class Battlements(Location):
@@ -384,8 +435,22 @@ class Battlements(Location):
         self.objects.add(telescope)
 
     def play(self):
+        self.audio_play()
         self.output_header()
         self.interact()
+        self.audio_stop()
+
+    def audio_play(self):
+        self.audio_stop()
+        audio_wind_node.play()
+        if player.crowned:
+            audio_battle_node.play()
+
+    def audio_stop(self):
+        audio_wind_node.pause()
+        audio_wind_node.currentTime = 0
+        audio_battle_node.pause()
+        audio_battle_node.currentTime = 0
 
 
 class Newspaper(Inspectable, Usable, Takeable):
@@ -456,8 +521,7 @@ class Door(Inspectable, Usable):
         super().__init__(name="door", description="The front door of the castle.")
 
     def use(self):
-        audio_thunder_node.pause()
-        audio_door_node.play()
+        self.audio_play()
         location = player.location
         assert location in {outside, hall}
         if location is outside:
@@ -467,6 +531,14 @@ class Door(Inspectable, Usable):
             speak("You go back outside into the rain...")
             player.location = outside
         raise SystemExit
+
+    def audio_play(self):
+        self.audio_stop()
+        audio_door_node.play()
+
+    def audio_stop(self):
+        audio_door_node.pause()
+        audio_door_node.currentTime = 0
 
 
 class Stairs(Inspectable, Usable):
@@ -479,7 +551,7 @@ class Stairs(Inspectable, Usable):
         )
 
     def use(self):
-        audio_stairs_node.play()
+        self.audio_play()
         location = player.location
         assert location in {hall, bedroom}
         if location is hall:
@@ -489,6 +561,14 @@ class Stairs(Inspectable, Usable):
             speak("You climb back down the stairs...")
             player.location = hall
         raise SystemExit
+
+    def audio_play(self):
+        self.audio_stop()
+        audio_stairs_node.play()
+
+    def audio_stop(self):
+        audio_stairs_node.pause()
+        audio_stairs_node.currentTime = 0
 
 
 class Tunnel(Inspectable, Usable):
@@ -501,7 +581,7 @@ class Tunnel(Inspectable, Usable):
         )
 
     def use(self):
-        audio_tunnel_node.play()
+        self.audio_play()
         location = player.location
         assert location in {hall, dungeon}
         if location is hall:
@@ -511,6 +591,14 @@ class Tunnel(Inspectable, Usable):
             speak("You walk back up towards the light...")
             player.location = hall
         raise SystemExit
+
+    def audio_play(self):
+        self.audio_stop()
+        audio_tunnel_node.play()
+
+    def audio_stop(self):
+        audio_tunnel_node.pause()
+        audio_tunnel_node.currentTime = 0
 
 
 class Log(Inspectable, Usable, Takeable):
@@ -523,7 +611,7 @@ class Log(Inspectable, Usable, Takeable):
         location = player.location
         if location is dungeon:
             assert dungeon.witches
-            audio_bubbles_node.play()
+            self.audio_play()
             player.objects.remove(self)
             speak(
                 f"""\
@@ -545,11 +633,20 @@ Then into thin air, the witches vanish!
             )
             dungeon.witches = False
             dungeon.description = "The witches are gone."
+            self.audio_stop()
             hall.objects.add(dagger)
             raise SystemExit
         else:
             output("There's no fire here.")
             output()
+
+    def audio_play(self):
+        self.audio_stop()
+        audio_bubbles_node.play()
+
+    def audio_stop(self):
+        audio_bubbles_node.pause()
+        audio_bubbles_node.currentTime = 0
 
 
 class Window(Inspectable, Usable):
@@ -562,7 +659,7 @@ class Window(Inspectable, Usable):
         )
 
     def use(self):
-        audio_window_node.play()
+        self.audio_play()
         location = player.location
         assert location in {bedroom, battlements}
         if location is bedroom:
@@ -572,6 +669,14 @@ class Window(Inspectable, Usable):
             speak("You climb back into the king's bedroom...")
             player.location = bedroom
         raise SystemExit
+
+    def audio_play(self):
+        self.audio_stop()
+        audio_window_node.play()
+
+    def audio_stop(self):
+        audio_window_node.pause()
+        audio_window_node.currentTime = 0
 
 
 class Dagger(Inspectable, Usable, Takeable):
@@ -591,19 +696,28 @@ class Dagger(Inspectable, Usable, Takeable):
             player.objects.remove(dagger)
             bedroom.objects.add(crown)
             bedroom.description = "The king has gone."
+            self.audio_play()
             speak(
                 f"""\
-You raise the dagger above your head and...
+You raise the dagger and...
                   
 {Text.BOLD}[CRUNCH]{Text.RESET}
 
-You have destroyed the king's computer! The king awakes and sees the time has come to pass his knowledge and power to another. He takes off his crown and leaves the castle, never to be seen again.
+You have destroyed the king's computer! The king awakes and decides the time has come to pass his knowledge and power to another. He takes off his crown and leaves the castle, never to be seen again.
 """
             )
             raise SystemExit
         else:
             output("You can't use the dagger here.")
             output()
+
+    def audio_play(self):
+        self.audio_stop()
+        audio_crash_node.play()
+
+    def audio_stop(self):
+        audio_crash_node.pause()
+        audio_crash_node.currentTime = 0
 
 
 # Computer is a special game-within-a-game, behaves like an
@@ -738,7 +852,6 @@ I fear your rule will not last long...
             )
             player.objects.remove(crown)
             player.crowned = True
-            audio_battle_node.play()
             battlements.description = "An army of trees is attacking!"
             raise SystemExit
         else:
@@ -758,6 +871,8 @@ class Telescope(Inspectable, Usable):
         if player.crowned:
             speak(
                 f"""\
+You don't need the telescope to see the trees are attacking! 
+
 {Text.ITALICIZE}...and now a wood
 Comes toward Dunsinane. Arm, arm, and out!
 If this which he avouches does appear,
