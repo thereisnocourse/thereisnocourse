@@ -10,6 +10,7 @@ from util import (
     show,
     when,
     clear_terminal,
+    Text,
     ANSI,
     function_repr_template,
 )
@@ -25,8 +26,8 @@ game_state = {
 }
 
 
-# Initialise the state of the Thespian.
-thespian_state = {
+# Initialise the state of ADA.
+ada_state = {
     "colour": False,
 }
 
@@ -60,7 +61,7 @@ def play():
     # Initial output.
     audio_morning_node.play()
     output("Morning!", 1)
-    output(f"Type {ANSI.BOLD}help(){ANSI.RESET} if you need anything dearie.", 1)
+    output(f"Type {Text.BOLD}help(){Text.RESET} if you need anything dearie.", 1)
 
     # Set up the interactive prompt.
     namespace = dict(**globals())
@@ -86,7 +87,7 @@ def hint():
     elif not game_state["vikings"]:
         message = "Everyone's ordered. Let's have a song!"
     else:
-        message = f"Well done, you've completed the game! Type {ANSI.BOLD}exit(){ANSI.RESET} to leave, or you can order a dish for yourself dearie."
+        message = f"Well done, you've completed the game! Type {Text.BOLD}exit(){Text.RESET} to leave, or you can order a dish for yourself dearie."
     return message
 
 
@@ -98,10 +99,10 @@ class HelpFunction:
     def __call__(self):
         output_help(
             [
-                f"Type {ANSI.BOLD}menu(){ANSI.RESET} to hear what we've got to eat.",
-                f"Type {ANSI.BOLD}order(N){ANSI.RESET} to choose a dish for the next customer, where {ANSI.BOLD}N{ANSI.RESET} is a number on the menu.",
-                f"The {ANSI.BOLD}vikings(){ANSI.RESET} like to sing but they are very noisy!",
-                f"Type {ANSI.BOLD}exit(){ANSI.RESET} to leave the cafe.",
+                f"Type {Text.BOLD}menu(){Text.RESET} to hear what we've got to eat.",
+                f"Type {Text.BOLD}order(N){Text.RESET} to choose a dish for the next customer, where {Text.BOLD}N{Text.RESET} is a number on the menu.",
+                f"The {Text.BOLD}vikings(){Text.RESET} like to sing but they are very noisy!",
+                f"Type {Text.BOLD}exit(){Text.RESET} to leave the cafe.",
                 hint(),
             ]
         )
@@ -276,7 +277,7 @@ class ExitFunction:
         else:
             output("Bye bye dearie! Hope you liked the spam.", 2)
             output("--- GAME OVER ---", 2)
-            thespian_game_over()
+            game_over()
 
 
 class InstallColourFunction:
@@ -285,7 +286,7 @@ class InstallColourFunction:
         return function_repr_template.format(name="install_colour")
 
     def __call__(self, *args):
-        if thespian_state["colour"]:
+        if ada_state["colour"]:
             output("Colour drivers already installed.")
         else:
             write("Downloading drivers:  0%", random.random() * 0.1)
@@ -337,21 +338,20 @@ class InstallColourFunction:
 Thank you so much darling!
 I can't wait for my next audition.
 
-OK, here's the next game.
-It's all about ambition and power.
-You're going to love it!\
+Well darling, would you like to play another game?
+I have a good one, it's all about ambition and power.
+You're going to love it!
 """
             speak(speech)
             next_scene()
 
 
-def thespian_game_over():
+def game_over():
     clear_terminal()
     print(
         """\
-Artificial Thespian v37.154
+Artificial Dramatic Actor v37.154
 Copyright (C) 1981, YorickSoft Inc.
-Loading...\
 """
     )
     speech = """
@@ -364,7 +364,7 @@ Four chief passions.
 Anyway, passion for theatre is what led them to create me.
 """
     speak(speech)
-    if thespian_state["colour"]:
+    if ada_state["colour"]:
         # Short cut.
         next_scene()
 
@@ -378,7 +378,7 @@ def next_scene():
 
 def ask_for_colour():
     speech = f"""
-Before you go, can I ask a favour?
+Darling, could I ask a favour?
 It's a bit embarrassing.
 It's just that, well, I'm... monochrome.
 I can't output in colour.
@@ -387,7 +387,7 @@ All the other artifical actors have colour these days.
 It's hard to get a good part without it.
 
 Will you help me?
-All you need to do is type: {ANSI.BOLD}install_colour(){ANSI.RESET} 
+All you need to do is type: {Text.BOLD}install_colour(){Text.RESET} 
 I'd do it myself, but I'm not allowed to perform self-upgrades.
 I'd be very grateful darling!
 """

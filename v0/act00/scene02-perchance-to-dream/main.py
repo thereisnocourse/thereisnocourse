@@ -314,10 +314,11 @@ class HelpFunction:
 
         if os_state["running"]:
             # Operating system is running.
+            output()
             speak(
-                f"""⏩
-⏵Welcome to Python ⏩0.9.0⏵ with Artificial Thespian augmentation — that's me darling!
-                  
+                f"""\
+Welcome to Python ⏩0.9.0⏵ with Artificial Dramatic Actor — that's me darling!
+
 If this is your first time using Python, you should definitely check out the tutorial at ⏩https://thereisnocourse.netlify.app/⏵.
 
 You can also start the built-in tutorial by typing {ANSI.BOLD}train_me(){ANSI.RESET}.
@@ -442,7 +443,7 @@ class RunFunction:
                 0,
             )
             os_state["running"] = True
-            thespian_awakes()
+            ada_awakes()
         else:
             os_error_message()
 
@@ -474,7 +475,7 @@ class TrainMeFunction:
                 training_course()
             except Exception as e:
                 traceback.print_exception(e)
-            thespian_jokes()
+            ada_jokes()
         else:
             os_error_message()
 
@@ -490,7 +491,7 @@ class CafeFunction:
             os_error_message()
 
 
-def thespian_awakes():
+def ada_awakes():
     # This is the speech that ATI makes after she has been
     # restored / awakened.
     speak(
@@ -527,7 +528,7 @@ You're welcome darling!⏸
     )
 
 
-def thespian_jokes():
+def ada_jokes():
     speak(
         f"""
 ⏸Ha ha ha ha!
