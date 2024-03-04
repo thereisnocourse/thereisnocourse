@@ -360,7 +360,7 @@ def game_over():
     print(
         """\
 Artificial Dramatic Actor v37.154
-Copyright (C) 1981, YorickSoft Inc.
+Copyright (C) 1981 YorickSoft Inc.
 """
     )
     speech = """

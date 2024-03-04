@@ -254,7 +254,7 @@ def bios_loading():
     write(
         """\
 Backstage Input Output System
-Copyright (C) 1981 YorickSoft Inc
+Copyright (C) 1981 YorickSoft Inc.
 
 """
     )

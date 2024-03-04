@@ -22,7 +22,7 @@ def main():
 
     write("""\
 Artificial Dramatic Actor v37.154
-Copyright (C) 1981, YorickSoft Inc.
+Copyright (C) 1981 YorickSoft Inc.
 
 """)
 
