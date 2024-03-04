@@ -835,8 +835,8 @@ class Crown(Inspectable, Usable, Takeable):
             speak(
                 f"""\
 You place the crown upon your head.
-It begins to glow immediately.
-You feel knowledge and power rushing into your veins.
+It begins to glow with unstoppable magical force.
+You feel great knowledge and ultimate power coursing through you.
 
 All hail! You have become the ruler of Scotland and the Most Awesome Programmer in the world!
 

@@ -4,4 +4,4 @@
 * [x] Clear terminal after game over.
 * [x] Fill text based on terminal.cols.
 * [x] Reformat help, less filled.
-* [ ] Add spacing to outputs.
+* [x] Add spacing to outputs.

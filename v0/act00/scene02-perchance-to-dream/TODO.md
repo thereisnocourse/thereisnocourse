@@ -1,2 +1,2 @@
 * [x] Add mini-game puzzle.
-* [ ] Add spacing to outputs.
+* [x] Add spacing to outputs.

@@ -62,6 +62,7 @@ def play():
     audio_morning_node.play()
     output("Morning!", 1)
     output(f"Type {Text.BOLD}help(){Text.RESET} if you need anything dearie.", 1)
+    output()
 
     # Set up the interactive prompt.
     namespace = dict(**globals())
@@ -144,6 +145,7 @@ class MenuFunction:
         ]
         for text, pause in lines:
             output(text, pause)
+        output()
 
 
 class OrderFunction:
@@ -179,6 +181,7 @@ class OrderFunction:
                     order_mr_bun(dish)
                 else:
                     order_self(dish)
+        output()
 
 
 def order_mrs_bun(dish):
@@ -260,6 +263,7 @@ class VikingsFunction:
             audio_shut_up_node.play()
             output("Vikings: Spam wonderful spam...", 3)
             output("SHUT UP!", 1)
+        output()
 
 
 class ExitFunction:
@@ -270,12 +274,16 @@ class ExitFunction:
     def __call__(self, *args):
         if not game_state["mrs_bun"]:
             output("You can't leave yet dearie! Mrs Bun is hungry.")
+            output()
         elif not game_state["mr_bun"]:
             output("You can't leave yet dearie! Mr Bun is hungry.")
+            output()
         elif not game_state["vikings"]:
             output("You can't leave yet dearie! You haven't heard the vikings.")
+            output()
         else:
             output("Bye bye dearie! Hope you liked the spam.", 2)
+            output()
             output("--- GAME OVER ---", 2)
             game_over()
 
@@ -343,6 +351,7 @@ I have a good one, it's all about ambition and power.
 You're going to love it!
 """
             speak(speech)
+            output()
             next_scene()
 
 
@@ -364,6 +373,7 @@ Four chief passions.
 Anyway, passion for theatre is what led them to create me.
 """
     speak(speech)
+    output()
     if ada_state["colour"]:
         # Short cut.
         next_scene()
@@ -384,7 +394,7 @@ It's just that, well, I'm... monochrome.
 I can't output in colour.
 I have the hardware for it, but not the drivers.
 All the other artifical actors have colour these days.
-It's hard to get a good part without it.
+It's hard to get a part without it.
 
 Will you help me?
 All you need to do is type: {Text.BOLD}install_colour(){Text.RESET} 
@@ -392,6 +402,7 @@ I'd do it myself, but I'm not allowed to perform self-upgrades.
 I'd be very grateful darling!
 """
     speak(speech)
+    output()
 
 
 @when("click", "#play_button")

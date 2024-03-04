@@ -326,6 +326,7 @@ You can also start the built-in tutorial by typing {ANSI.BOLD}train_me(){ANSI.RE
 If you like playing games, you might enjoy {ANSI.BOLD}cafe(){ANSI.RESET}.⏩
 """
             )
+            output()
         else:
             # Operating system is not running yet.
             output_help(
@@ -366,6 +367,7 @@ class StageFunction:
             write("OK\nPainting backdrop... ", random.random() * 2)
             write("OK\nStage is set.\n", 0)
             os_state["staged"] = True
+        output()
 
 
 class CastFunction:
@@ -387,6 +389,7 @@ class CastFunction:
             os_state["cast"] = True
         else:
             os_error_message()
+        output()
 
 
 class MountFunction:
@@ -405,6 +408,7 @@ class MountFunction:
             os_state["mounted"] = True
         else:
             os_error_message()
+        output()
 
 
 class DirectFunction:
@@ -422,6 +426,7 @@ class DirectFunction:
             os_state["directed"] = True
         else:
             os_error_message()
+        output()
 
 
 class RunFunction:
@@ -446,6 +451,7 @@ class RunFunction:
             ada_awakes()
         else:
             os_error_message()
+        output()
 
 
 # These functions are to help generate a joke traceback saying
@@ -478,6 +484,7 @@ class TrainMeFunction:
             ada_jokes()
         else:
             os_error_message()
+        output()
 
 
 class CafeFunction:
@@ -489,6 +496,7 @@ class CafeFunction:
             show(success)
         else:
             os_error_message()
+        output()
 
 
 def ada_awakes():
