@@ -88,7 +88,7 @@ def hint():
     elif not game_state["vikings"]:
         message = "Everyone's ordered. Let's have a song!"
     else:
-        message = f"Well done, you've completed the game! Type {Text.BOLD}exit(){Text.RESET} to leave, or you can order a dish for yourself dearie."
+        message = f"Well done, you've completed the game! Type {Text.BOLD}exit(){Text.RESET} to leave, or you can order a dish for yourself dearie, on the house."
     return message
 
 
@@ -360,7 +360,7 @@ def game_over():
     print(
         """\
 Artificial Dramatic Actor v37.154
-Copyright (C) 1981 YorickSoft Inc.
+Copyright (C) 1981 YorickSoft Inc.\
 """
     )
     speech = """
