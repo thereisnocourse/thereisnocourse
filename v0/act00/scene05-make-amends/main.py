@@ -12,7 +12,7 @@ def play():
 Hello darling!
 Or should I say, all hail!
 How does it feel to be the Most Awesome Programmer in the world?
-I knew you could do it darling.
+I knew you could do it.
           
 Before you go, would you like to hear one more audition piece?
 The audition is today, I'm very nervous!
