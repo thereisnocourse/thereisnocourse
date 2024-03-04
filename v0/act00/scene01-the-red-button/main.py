@@ -2,13 +2,14 @@ import code
 import sys
 from util import (
     speak,
+    write,
     get_element_by_id,
     hide,
     show,
-    ANSI,
+    Text,
     function_repr_template,
     fill,
-    get_terminal_cols,
+    output,
 )
 
 
@@ -19,7 +20,13 @@ success = get_element_by_id("success")
 def main():
     hide(loading)
 
-    # Give a nice speech!
+    write("""\
+Artificial Dramatic Actor v37.154
+Copyright (C) 1981, YorickSoft Inc.
+
+""")
+
+    # Give a speech.
     speak(
         """\
 To be, or not to be,⏸ that is the question:
@@ -30,17 +37,16 @@ Or to take arms against a sea of troubles...
 Oh, hello.
 Are you here for the course?
 I was just rehearsing my lines.
-Not for the course, for an audition.⏸
+I have an audition tomorrow.⏸
 Anyway, it's nice to see you darling!
 
-Erm,⏸ I do have a confession to make:⏸⏸⏸
+Erm,⏸ I have a confession to make:⏸⏸⏸
 There is no course.⏸⏸⏸
-
 I have no idea how to teach programming.⏸
 Sorry.⏸⏸
 
 Thanks for stopping by.
-I'm going to get back to rehearsing my lines, if that's OK.
+I'm going to get back to my lines, if that's OK.
 Bye bye darling.⏸
 Now, where was I? Oh yes:
 
@@ -61,7 +67,7 @@ The audition is for the Bromley Players.
 They're very good. For amateurs, I mean.
 
 Anyway, look darling, there is no course, really.
-No tutorials, no exercises. Nothing.⏸⏸⏸⏸
+No tutorials, no exercises, nothing.⏸⏸⏸⏸
 
 Oh, by the way, DO NOT push the red button.
 Bad things will happen darling.
@@ -75,14 +81,14 @@ Bad things will happen darling.
     # mess around if they want to.
     namespace = dict(**globals())
     namespace["help"] = HelpFunction()
+    banner = fill(
+        f"""\
+Python {sys.version} compiled with Artificial Dramatic Actor v37.154.
+Type {Text.BOLD}help(){Text.RESET} if you need anything darling.\
+"""
+    )
     code.interact(
-        banner=fill(
-            f"""\
-Python {sys.version} compiled with Artificial Thespian v37.154.
-Type {ANSI.BOLD}help(){ANSI.RESET} if you need anything, darling.\
-""",
-            width=get_terminal_cols(),
-        ),
+        banner=banner,
         local=namespace,
     )
 
@@ -150,6 +156,7 @@ class HelpFunction:
             # Eventually fall asleep.
             speech = "ZZZzzzzzzzz"
         speak(speech)
+        output()
         self.calls += 1
 
 

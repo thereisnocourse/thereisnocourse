@@ -10,7 +10,7 @@ from util import (
     output,
     get_terminal,
     speak,
-    get_wrapper,
+    fill,
     function_repr_template,
     Text,
 )
@@ -43,7 +43,7 @@ class Inspectable(ABC):
     def __init__(self, name, description):
         super().__init__()
         self.name = name
-        self.description = get_wrapper().fill(description)
+        self.description = fill(description)
 
     def __str__(self):
         return self.name
@@ -109,7 +109,7 @@ def output_game_over():
 
 
 def make_repr(s):
-    return get_wrapper().fill(s) + "\n"
+    return fill(s) + "\n"
 
 
 class Player:
@@ -904,7 +904,7 @@ class Help(Action):
     """Type help() for the in-game tutorial. Type help(X) to get a hint about how to use object X. But then you already knew that :)"""
 
     def __repr__(self):
-        return get_wrapper().fill(function_repr_template.format(name="help")) + "\n"
+        return fill(function_repr_template.format(name="help")) + "\n"
 
     def __call__(self, *args):
         if len(args) == 0:
@@ -949,7 +949,7 @@ class Take(Action):
     """Type take(X) to pick up object X and carry it with you to the next location."""
 
     def __repr__(self):
-        return get_wrapper().fill(function_repr_template.format(name="take")) + "\n"
+        return fill(function_repr_template.format(name="take")) + "\n"
 
     def __call__(self, *args):
         if len(args) == 0:
@@ -963,7 +963,7 @@ class Use(Action):
     """Type use(X) to try and use object X."""
 
     def __repr__(self):
-        return get_wrapper().fill(function_repr_template.format(name="use")) + "\n"
+        return fill(function_repr_template.format(name="use")) + "\n"
 
     def __call__(self, *args):
         if len(args) == 0:
@@ -981,7 +981,7 @@ class Sing(Action):
     """Type sing() any time you feel like singing!"""
 
     def __repr__(self):
-        return get_wrapper().fill(function_repr_template.format(name="sing")) + "\n"
+        return fill(function_repr_template.format(name="sing")) + "\n"
 
     def __call__(self, *args):
         player.sing()

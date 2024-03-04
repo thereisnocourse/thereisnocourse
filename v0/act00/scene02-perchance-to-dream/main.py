@@ -251,11 +251,11 @@ Type {ANSI.BOLD}help(){ANSI.RESET} for more information.\
 
 
 def bios_loading():
-    print(
+    write(
         """\
 Backstage Input Output System
 Copyright (C) 1981, YorickSoft Inc.
-Loading...
+
 """
     )
 

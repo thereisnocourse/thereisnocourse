@@ -212,7 +212,7 @@ speech_pauses = {
     " ": 0.06,
     ",": 0.5,
     ";": 0.6,
-    ":": 0.4,
+    ":": 0.7,
     "—": 0.5,
     ".": 1,
     "?": 1,
@@ -243,9 +243,14 @@ def get_wrapper():
     return _wrapper
 
 
-def output(s="", pause=0, end="\n"):
+def fill(s):
     s = get_wrapper().fill(s)
     s = s.translate(unicode_to_ansi)
+    return s
+
+
+def output(s="", pause=0, end="\n"):
+    s = fill(s)
     s += end
     write(s, pause=pause)
 
@@ -263,10 +268,8 @@ def speak(message):
     fast_forward = False
     ansi = False
     control_symbols = {"⏵", "⏸", "⏩"}
-    wrapper = get_wrapper()
     for line in message.splitlines():
-        line = wrapper.fill(line)
-        line = line.translate(unicode_to_ansi)
+        line = fill(line)
         for c in line:
             # Determine the length of the pause for the current character.
             pause = 0
