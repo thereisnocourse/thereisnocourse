@@ -1,3 +1,38 @@
 #success {
     display: none;
 }
+
+#screen {
+    overflow: hidden;
+}
+
+#credits {
+    position: absolute;
+    top: 100%;
+    text-align: left;
+    animation: 30s credits linear;
+    color: white;
+    z-index: 10;
+    font-size: 15px;
+    line-height: 17px;
+    font-family: courier-new, courier, monospace;
+    padding: 3px;
+}
+
+#credits p {
+    margin-top: 2em;
+}
+
+#terminal {
+    visibility: hidden;
+}
+
+@keyframes credits {
+    0% {
+        bottom: 100%;
+    }
+
+    100% {
+        top: -100%;
+    }
+}
