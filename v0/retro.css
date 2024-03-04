@@ -116,3 +116,10 @@ input {
 #title>h1 {
 	margin-block-end: 0em;
 }
+
+h1,
+h2,
+h3,
+h4 {
+	font-weight: normal;
+}
