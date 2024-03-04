@@ -73,6 +73,7 @@ Oh, by the way, DO NOT push the red button.
 Bad things will happen darling.
 """
     )
+    output()
 
     # Show the button to the next scene.
     show(success)
