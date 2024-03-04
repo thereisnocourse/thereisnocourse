@@ -419,8 +419,8 @@ class DirectFunction:
         if os_state["directed"]:
             output("Actors are ready.")
         elif os_state["mounted"]:
-            write("Attempting blocking... ", random.random() * 2)
-            write("OK\nMarking out... ", random.random() * 3)
+            write("Blocking... ", random.random() * 2)
+            write("OK\nTaping out... ", random.random() * 3)
             write("OK\nPerforming dry run... ", random.random() * 2)
             write("OK\nActors are ready.\n", 0)
             os_state["directed"] = True
@@ -438,7 +438,7 @@ class RunFunction:
             output("Operating system is running.")
         elif os_state["directed"]:
             write("Scheduling performance... ", random.random() * 2)
-            write("OK\nPreparing emergency prompt... ", random.random() * 3)
+            write("OK\nPreparing backup prompt... ", random.random() * 3)
             write("OK\nRaising fire curtain... ", random.random() * 3)
             write("OK\nIssuing start cues... ", random.random() * 4)
             write("OK\n", 2)
