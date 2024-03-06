@@ -255,8 +255,8 @@ class VikingsFunction:
         if game_state["mr_bun"]:
             audio_vikings_node.play()
             game_state["vikings"] = True
-            output("Lovely spam, wonderful spam...", 21)
-            output("...Spam spam spam spam!", 8)
+            output("Lovely spam, wonderful spam...", 20)
+            output("...Spam spam spam spam!", 9)
             output()
             output(hint())
         else:
