@@ -696,14 +696,14 @@ class Dagger(Inspectable, Usable, Takeable):
             player.objects.remove(dagger)
             bedroom.objects.add(crown)
             bedroom.description = "The king has gone."
+            speak("You raise the dagger and...")
+            output()
             self.audio_play()
             speak(
                 f"""\
-You raise the dagger and...
-                  
 {Text.BOLD}[CRUNCH]{Text.RESET}
 
-You have destroyed the king's computer! The king awakes and decides the time has come to pass his knowledge and power to another. He takes off his crown and leaves the castle, never to be seen again.
+You have destroyed the king's computer! The king awakes and decides the time has come to pass his knowledge and power to another. He takes off his crown, leaves the castle, and walks into the highlands to live as a simple shepherd.
 """
             )
             raise SystemExit
