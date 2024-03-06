@@ -23,8 +23,8 @@ def main():
     write("""\
 Artificial Dramatic Actor v37.154
 Copyright (C) 1981 YorickSoft Inc.
-
 """)
+    output("", 2)
 
     # Give a speech.
     speak(
