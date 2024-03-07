@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DPEP30SQXB"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-DPEP30SQXB');
+    </script>
+    <title>Character actor - There is no course, Act X, Scene X</title>
+
+    <!-- Recommended meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <!-- Icon -->
+    <link rel="icon" href="../../favicon_io/favicon.ico" />
+
+    <!-- PyScript CSS -->
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="../../dev.css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- This script tag bootstraps PyScript -->
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+
+</head>
+
+<body>
+
+    <div>
+
+        <div id="title">
+            <p><a href="/">There is no course</a> - Act X, Scene X</p>
+            <h1>Character actor</h1>
+        </div>
+
+        <div id="screen">
+            <div id="terminal">
+                <pre id="loading">
+Loading...
+                </pre>
+            </div>
+            <div id="game">
+                <canvas id="canvas" width="640" height="400">
+
+                </canvas>
+            </div>
+        </div>
+
+        <div id="moves_container">
+            <p>Moves: <span id="moves"></span></p>
+            <p>Player: <span id="position"></span></p>
+        </div>
+
+        <div id="success">
+            <p>
+                Success!
+            </p>
+            <p>🐍🐍🐍🐍🐍🐍</p>
+        </div>
+
+    </div>
+
+    <script type="py" src="terminal.py" config="pyscript.json" target="terminal" terminal worker></script>
+    <script type="py" src="main.py" config="pyscript.json"></script>
+
+</body>
+
+</html>

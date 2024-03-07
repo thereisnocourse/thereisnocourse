@@ -1,0 +1,38 @@
+body {
+	font-family: sans-serif;
+	margin: 0;
+	overflow-y: scroll;
+	padding: 2ch;
+}
+
+#screen {
+	position: relative;
+	background-color: rgb(25, 26, 25);
+	max-width: 740px;
+	height: 408px;
+	border: 5px solid rgb(70, 70, 70);
+	border-radius: 7px;
+	padding: 3px;
+}
+
+#screen #loading {
+	font-size: 15px;
+	line-height: 17px;
+	font-family: courier-new, courier, monospace;
+	padding: 3px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	text-align: left;
+	color: #F5F2E7;
+	white-space: pre;
+	margin: 0;
+	margin-block: 0;
+	width: 100%;
+	border-width: 0;
+}
+
+.xterm-rows>div {
+	padding: 0;
+}

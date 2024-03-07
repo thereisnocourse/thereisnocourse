@@ -1,0 +1,27 @@
+#success {
+    margin-top: 1em;
+    display: none;
+}
+
+#screen {
+    width: 640px;
+    height: 500px;
+}
+
+
+#terminal {
+    height: 100px;
+}
+
+#game {
+    background-color: white;
+    height: 400px;
+}
+
+#canvas {
+    background-color: lightpink;
+}
+
+#moves_container {
+    font-family: monospace;
+}
