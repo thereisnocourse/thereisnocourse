@@ -75,6 +75,14 @@ body {
     /* font-family: "Sono", monospace !important; */
 }
 
+#screen .xterm-cursor-outline {
+    outline: 1px solid black !important;
+}
+
+#screen .xterm-cursor-blink {
+    outline: 1px solid black !important;
+}
+
 #title h1 {
     text-align: center;
 }
