@@ -1,4 +1,5 @@
 from collections import deque
+import random
 from util import (
     get_element_by_id,
     hide,
@@ -14,42 +15,448 @@ success_node = get_element_by_id("success")
 canvas_node = get_element_by_id("canvas")
 moves_node = get_element_by_id("moves")
 position_node = get_element_by_id("position")
+speed_node = get_element_by_id("speed")
 canvas_width = canvas_node.width
 canvas_height = canvas_node.height
 ctx = canvas_node.getContext("2d")
+speed = 4
 cell_size = 40
-player_x = None
-player_y = None
-moves_queue = deque()
+cols = canvas_width // cell_size
+rows = canvas_height // cell_size
 default_player_character = "🕵️"
-player_character = default_player_character
+people_emojis = [
+    "👶",
+    "🧒",
+    "👦",
+    "👧",
+    "🧑",
+    "👱",
+    "👨",
+    "🧔",
+    "🧔‍♂️",
+    "🧔‍♀️",
+    "👨‍🦰",
+    "👨‍🦱",
+    "👨‍🦳",
+    "👨‍🦲",
+    "👩",
+    "👩‍🦰",
+    "🧑‍🦰",
+    "👩‍🦱",
+    "🧑",
+    "🧑‍🦱",
+    "👩‍🦳",
+    "🧑‍🦳",
+    "👩‍🦲",
+    "🧑‍🦲",
+    "👱‍♀️",
+    "👱‍♂️",
+    "🧓",
+    "👴",
+    "👵",
+    "👳",
+    "👳‍♂️",
+    "👳‍♀️",
+    "👲",
+    "🧕",
+    "👼",
+]
+role_emojis = [
+    "🧑‍⚕️",
+    "👨‍⚕️",
+    "👩‍⚕️",
+    "🧑‍🎓",
+    "👨‍🎓",
+    "👩‍🎓",
+    "🧑‍🏫",
+    "👨‍🏫",
+    "👩‍🏫",
+    "🧑‍⚖️",
+    "👨‍⚖️",
+    "👩‍⚖️",
+    "🧑‍🌾",
+    "👨‍🌾",
+    "👩‍🌾",
+    "🧑‍🍳",
+    "👨‍🍳",
+    "👩‍🍳",
+    "🧑‍🔧",
+    "👨‍🔧",
+    "👩‍🔧",
+    "🧑‍🏭",
+    "👨‍🏭",
+    "👩‍🏭",
+    "🧑‍💼",
+    "👨‍💼",
+    "👩‍💼",
+    "🧑‍🔬",
+    "👨‍🔬",
+    "👩‍🔬",
+    "🧑‍💻",
+    "👨‍💻",
+    "👩‍💻",
+    "🧑‍🎤",
+    "👨‍🎤",
+    "👩‍🎤",
+    "🧑‍🎨",
+    "👨‍🎨",
+    "👩‍🎨",
+    "🧑‍✈️",
+    "👨‍✈️",
+    "🧑‍🚀",
+    "👨‍🚀",
+    "👩‍🚀",
+    "🧑‍🚒",
+    "👨‍🚒",
+    "👩‍🚒",
+    "👮",
+    "👮‍♂️",
+    "👮‍♀️",
+    "🕵️",
+    "🕵️‍♂️",
+    "🕵️‍♀️",
+    "💂",
+    "💂‍♂️",
+    "💂‍♀️",
+    "🥷",
+    "👷",
+    "👷‍♂️",
+    "👷‍♀️",
+    "🫅",
+    "🤴",
+    "👸",
+    "🤵",
+    "🤵‍♂️",
+    "🤵‍♀️",
+    "👰",
+    "👰‍♂️",
+    "👰‍♀️",
+    "🎅",
+    "🤶",
+    "🧑‍🎄",
+    "🦸",
+    "🦸‍♂️",
+    "🦸‍♀️",
+    "🦹",
+    "🦹‍♂️",
+    "🦹‍♀️",
+    "🧙",
+    "🧙‍♂️",
+    "🧙‍♀️",
+    "🧚",
+    "🧚‍♂️",
+    "🧚‍♀️",
+    "🧛",
+    "🧛‍♂️",
+    "🧛‍♀️",
+    "🧜",
+    "🧜‍♂️",
+    "🧜‍♀️",
+    "🧝",
+    "🧝‍♀️",
+    "🧞",
+    "🧞‍♂️",
+    "🧞‍♀️",
+    "🧟",
+    "🧟‍♂️",
+    "🧟‍♀️",
+    "🧌",
+]
+mammal_emojis = [
+    "🐵",
+    "🐒",
+    "🦍",
+    "🦧",
+    "🐶",
+    "🐕",
+    "🦮",
+    "🐩",
+    "🐺",
+    "🦊",
+    "🦝",
+    "🐱",
+    "🐈",
+    "🦁",
+    "🐯",
+    "🐅",
+    "🐆",
+    "🐴",
+    "🫎",
+    "🫏",
+    "🐎",
+    "🦄",
+    "🦓",
+    "🦌",
+    "🦬",
+    "🐮",
+    "🐂",
+    "🐃",
+    "🐄",
+    "🐷",
+    "🐖",
+    "🐗",
+    "🐽",
+    "🐏",
+    "🐑",
+    "🐐",
+    "🐪",
+    "🐫",
+    "🦙",
+    "🦒",
+    "🐘",
+    "🦣",
+    "🦏",
+    "🦛",
+    "🐭",
+    "🐁",
+    "🐀",
+    "🐹",
+    "🐰",
+    "🐇",
+    "🐿️",
+    "🦫",
+    "🦔",
+    "🦇",
+    "🐻",
+    "🐻‍❄️",
+    "🐨",
+    "🐼",
+    "🦥",
+    "🦦",
+    "🦨",
+    "🦘",
+    "🦡",
+]
+bird_emojis = [
+    "🦃",
+    "🐔",
+    "🐓",
+    "🐣",
+    "🐤",
+    "🐥",
+    "🐦",
+    "🐧",
+    "🕊️",
+    "🦅",
+    "🦆",
+    "🦢",
+    "🦉",
+    "🦤",
+    "🦩",
+    "🦚",
+    "🦜",
+    "🐦‍⬛",
+    "🪿",
+]
+reptile_emojis = ["🐸", "🐊", "🐢", "🦎", "🐍", "🐲", "🐉", "🦕", "🦖"]
+marine_emojis = [
+    "🐳",
+    "🐋",
+    "🐬",
+    "🦭",
+    "🐟",
+    "🐠",
+    "🐡",
+    "🦈",
+    "🐙",
+    "🐚",
+    "🪸",
+    "🪼",
+    "🦀",
+    "🦞",
+    "🦐",
+    "🦑",
+    "🦪",
+]
+bug_emojis = [
+    "🐌",
+    "🦋",
+    "🐛",
+    "🐜",
+    "🐝",
+    "🪲",
+    "🐞",
+    "🦗",
+    "🪳",
+    "🕷️",
+    "🦂",
+    "🦟",
+    "🪰",
+    "🪱",
+    "🦠",
+]
+disguises = (
+    people_emojis
+    + role_emojis
+    + mammal_emojis
+    + bird_emojis
+    + reptile_emojis
+    + marine_emojis
+    + bug_emojis
+)
+player = None
+
+room_test = """\
+..........  ........
+.BCDEFGHIJKLMNOPQRS.
+.VWXYZabcdefghijklm.
+.pqrstuvwxyz1234567.
+ 0!"£$%^&*()_+-=[]; 
+ :@~,...>?`¬|XXXXXX 
+.ZZZZ...ZZZZZZZZZZZ.
+.aaaaaaaaaaaaaaaaaa.
+.bbbbbbbbbbbbbbbbbb.
+.......  ...........\
+"""
+
+room_steps = """\
+....................
+   ..............   
+..  ............  ..
+...  ..........  ...
+....  ........  ....
+.....  ......  .....
+......  ....  ......
+.......  ..  .......
+........    ........
+....................\
+"""
+# room = room_steps
+room = room_test
+room = [list(line) for line in room.split("\n")]
+assert len(room) == rows, len(room)
+for i in range(rows):
+    assert len(room[i]) == cols, repr(room[i])
+
+
+def set_speed(new_speed):
+    global speed
+    speed = new_speed
 
 
 def add_moves(moves):
-    moves_queue.extend(list(moves.lower()))
-    render()
+    player.add_moves(moves)
 
 
 def change_character(*args):
-    global player_character
     if len(args) == 0:
-        player_character = default_player_character
-        # TODO randomly pick a disguise
-        render()
+        player.change()
     elif len(args) == 1:
         character = args[0]
-        if isinstance(character, str) and len(character) == 1:
-            player_character = character
-            render()
+        player.change(character)
+
+
+def print_character(character):
+    if not isinstance(character, str):
+        raise TypeError
+    if len(character) != 1:
+        raise ValueError
+    room[player.row][player.col] = character
+
+
+def col_to_x(col):
+    return (col * cell_size) + (cell_size / 2)
+
+
+def row_to_y(row):
+    return (row * cell_size) + (cell_size / 2) + 3
+
+
+class Player:
+    def __init__(self, col, row):
+        self.col = col
+        self.row = row
+        self.character = default_player_character
+        self.moves = deque()
+
+    def add_moves(self, moves):
+        self.moves.extend(list(moves.lower()))
+
+    def move(self):
+        try:
+            move = self.moves.popleft()
+        except IndexError:
+            pass
+        else:
+            # N.B., row coords are counted from the top.
+            if move == "d":
+                new_row = self.row + 1
+                new_col = self.col
+            elif move == "u":
+                new_row = self.row - 1
+                new_col = self.col
+            elif move == "r":
+                new_row = self.row
+                new_col = self.col + 1
+            elif move == "l":
+                new_row = self.row
+                new_col = self.col - 1
+
+            # Out of bounds checks.
+            if new_row < 0:
+                return
+            if new_row > rows - 1:
+                return
+            if new_col < 0:
+                return
+            if new_col > cols - 1:
+                return
+
+            # Stop checks.
+            new_char = room[new_row][new_col]
+            if new_char == ".":
+                return
+
+            self.row = new_row
+            self.col = new_col
+
+    def change(self, character=None):
+        if character is None:
+            self.character = random.choice(disguises)
+        else:
+            if not isinstance(character, str):
+                raise TypeError
+            self.character = character
+
+    @property
+    def x(self):
+        return col_to_x(self.col)
+
+    @property
+    def y(self):
+        return row_to_y(self.row)
+
+    def render(self):
+        ctx.fillText(self.character, self.x, self.y)
+
+
+player = Player(col=0, row=1)
 
 
 def render():
+    # Clear the canvas ready for redrawing.
     ctx.clearRect(0, 0, canvas_width, canvas_height)
-    moves_node.innerHTML = "".join(moves_queue)
-    position_node.innerHTML = f"{player_character} [{player_x}, {player_y}]"
 
+    # Render the room.
+    render_room()
+
+    # Render the grid.
+    render_grid()
+
+    # Render the player.
+    player.render()
+
+    # Render the debug panel below the screen.
+    moves_node.innerHTML = "".join(player.moves)
+    position_node.innerHTML = (
+        f'"{player.character}" at row {player.col}, col {player.row}'
+    )
+    speed_node.innerHTML = f"{speed} FPS"
+
+
+def render_grid():
     ctx.lineWidth = 1
-    ctx.strokeStyle = "#666"
+    ctx.strokeStyle = "#555"
     for i in range(cols + 1):
         x = i * cell_size
         if x == 0:
@@ -71,54 +478,51 @@ def render():
         ctx.lineTo(canvas_width, y)
         ctx.stroke()
 
-    x = (player_x * cell_size) + (cell_size / 2)
-    y = (player_y * cell_size) + (cell_size / 2) + 3
-    ctx.textRendering = "optimizeLegibility"
-    ctx.font = "28px 'Special Elite'"
-    ctx.textAlign = "center"
-    ctx.textBaseline = "middle"
-    ctx.fillText(player_character, x, y)
 
-
-def exec_move():
-    global player_x, player_y, cols, rows
-    try:
-        move = moves_queue.popleft()
-    except IndexError:
-        pass
-    else:
-        # N.B., Y coords are from the top.
-        if move == "d" and player_y < rows - 1:
-            player_y += 1
-        elif move == "u" and player_y > 0:
-            player_y -= 1
-        elif move == "r" and player_x < cols - 1:
-            player_x += 1
-        elif move == "l" and player_x > 0:
-            player_x -= 1
-        render()
+def render_room():
+    for row in range(rows):
+        for col in range(cols):
+            if player.row == row and player.col == col:
+                pass
+            else:
+                character = room[row][col]
+                if character == ".":
+                    x = col * cell_size
+                    y = row * cell_size
+                    ctx.fillStyle = "#ccc"
+                    ctx.fillRect(x, y, cell_size, cell_size)
+                else:
+                    x = col_to_x(col)
+                    y = row_to_y(row)
+                    ctx.fillStyle = "black"
+                    ctx.fillText(character, x, y)
 
 
 async def main():
     hide(loading_node)
-    global cols, rows, player_x, player_y
 
-    cols = canvas_width // cell_size
-    rows = canvas_height // cell_size
-
-    player_x = cols // 2
-    player_y = rows // 2
-    render()
-
+    # Initialise communication with the terminal.
     terminal_script_node = document.querySelector("script[terminal]")
     terminal_worker = terminal_script_node.xworker
     terminal_worker.sync.add_moves = add_moves
     terminal_worker.sync.change_character = change_character
+    terminal_worker.sync.print_character = print_character
+    terminal_worker.sync.set_speed = set_speed
 
+    # Set some invariant text rendering settings.
+    ctx.textRendering = "optimizeLegibility"
+    ctx.font = "28px 'Special Elite'"
+    ctx.textAlign = "center"
+    ctx.textBaseline = "middle"
+
+    # Start the game loop.
     while True:
-        await asyncio.sleep(0.5)
-        exec_move()
+        await asyncio.sleep(1 / speed)
+        player.move()
+        render()
 
 
 if __name__ == "__main__":
+    # Run the main function asynchronously to avoid blocking the
+    # browser loop.
     js.setTimeout(create_proxy(main), 0)
