@@ -49,15 +49,15 @@ def render():
     position_node.innerHTML = f"{player_character} [{player_x}, {player_y}]"
 
     ctx.lineWidth = 1
-    ctx.strokeStyle = "black"
+    ctx.strokeStyle = "#bbb"
     for i in range(cols):
-        x = i * cell_size
+        x = (i * cell_size) + 0.5
         ctx.beginPath()
         ctx.moveTo(x, 0)
         ctx.lineTo(x, canvas_height)
         ctx.stroke()
     for j in range(rows):
-        y = j * cell_size
+        y = (j * cell_size) + 0.5
         ctx.beginPath()
         ctx.moveTo(0, y)
         ctx.lineTo(canvas_width, y)

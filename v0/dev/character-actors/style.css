@@ -3,11 +3,6 @@
     display: none;
 }
 
-#screen {
-    width: 640px;
-    height: 500px;
-}
-
 
 #terminal {
     height: 100px;
@@ -19,9 +14,5 @@
 }
 
 #canvas {
-    background-color: lightpink;
-}
-
-#moves_container {
-    font-family: monospace;
+    background-color: white;
 }
