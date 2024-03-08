@@ -49,15 +49,23 @@ def render():
     position_node.innerHTML = f"{player_character} [{player_x}, {player_y}]"
 
     ctx.lineWidth = 1
-    ctx.strokeStyle = "#bbb"
-    for i in range(cols):
-        x = (i * cell_size) + 0.5
+    ctx.strokeStyle = "#666"
+    for i in range(cols + 1):
+        x = i * cell_size
+        if x == 0:
+            x += 0.5
+        else:
+            x -= 0.5
         ctx.beginPath()
         ctx.moveTo(x, 0)
         ctx.lineTo(x, canvas_height)
         ctx.stroke()
-    for j in range(rows):
-        y = (j * cell_size) + 0.5
+    for j in range(rows + 1):
+        y = j * cell_size
+        if y == 0:
+            y += 0.5
+        else:
+            y -= 0.5
         ctx.beginPath()
         ctx.moveTo(0, y)
         ctx.lineTo(canvas_width, y)
@@ -65,7 +73,8 @@ def render():
 
     x = (player_x * cell_size) + (cell_size / 2)
     y = (player_y * cell_size) + (cell_size / 2) + 3
-    ctx.font = "30px monospace"
+    ctx.textRendering = "optimizeLegibility"
+    ctx.font = "28px 'Special Elite'"
     ctx.textAlign = "center"
     ctx.textBaseline = "middle"
     ctx.fillText(player_character, x, y)
