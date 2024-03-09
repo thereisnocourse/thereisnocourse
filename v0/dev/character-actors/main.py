@@ -291,26 +291,7 @@ disguises = (
     + marine_emojis
     + bug_emojis
 )
-player = None
-
-room_test = """\
-..........
-.BCDEFGHIJ
-.VWXYZabcd
-.pqrstuvwx
- 0!"£$%^&*
- :@~,...>?
-.ZZZZ...ZZ
-.aaaaaaaaa
-.bbbbbbbbb
-.......  .\
-"""
-
-room = room_test
-room = [list(line) for line in room.split("\n")]
-assert len(room) == rows, len(room)
-for i in range(rows):
-    assert len(room[i]) == cols, repr(room[i])
+block_chars = ["⬜", "🟥", "🟦", "🟩", "🟨", "🟧", "🟪", "🟫", "⬛", "🔲"]
 
 
 def set_speed(new_speed):
@@ -388,7 +369,7 @@ class Player:
 
             # Stop checks.
             new_char = room[new_row][new_col]
-            if new_char == ".":
+            if new_char in block_chars:
                 return
 
             self.row = new_row
@@ -412,9 +393,6 @@ class Player:
 
     def render(self):
         ctx.fillText(self.character, self.x, self.y)
-
-
-player = Player(col=0, row=1)
 
 
 def render():
@@ -488,6 +466,9 @@ async def main():
     global canvas_height
     global ctx
     global cell_size
+    global rooms
+    global room
+    global player
 
     hide(loading_node)
 
@@ -514,9 +495,18 @@ async def main():
 
     # Set some invariant text rendering settings.
     ctx.textRendering = "optimizeLegibility"
-    ctx.font = "28px 'Special Elite'"
+    ctx.font = f"{cell_size*0.7}px 'Special Elite'"
     ctx.textAlign = "center"
     ctx.textBaseline = "middle"
+
+    # Read room data.
+    with open("rooms.csv") as f:
+        room_data = [line.split(",") for line in f.readlines()]
+    rooms = [[[line[:10] for line in room_data[:10]]]]
+    room = rooms[0][0]
+
+    # Create player.
+    player = Player(col=5, row=5)
 
     # Start the game loop.
     while True:
