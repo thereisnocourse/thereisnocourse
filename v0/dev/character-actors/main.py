@@ -10,19 +10,16 @@ from pyodide.ffi import create_proxy
 import asyncio
 
 
+screen_node = get_element_by_id("screen")
+canvas_container_node = get_element_by_id("canvas_container")
 loading_node = get_element_by_id("loading")
 success_node = get_element_by_id("success")
-canvas_node = get_element_by_id("canvas")
 moves_node = get_element_by_id("moves")
 position_node = get_element_by_id("position")
 speed_node = get_element_by_id("speed")
-canvas_width = canvas_node.width
-canvas_height = canvas_node.height
-ctx = canvas_node.getContext("2d")
 speed = 4
-cell_size = 40
-cols = canvas_width // cell_size
-rows = canvas_height // cell_size
+rows = 10
+cols = 10
 default_player_character = "🕵️"
 people_emojis = [
     "👶",
@@ -297,31 +294,18 @@ disguises = (
 player = None
 
 room_test = """\
-..........  ........
-.BCDEFGHIJKLMNOPQRS.
-.VWXYZabcdefghijklm.
-.pqrstuvwxyz1234567.
- 0!"£$%^&*()_+-=[]; 
- :@~,...>?`¬|XXXXXX 
-.ZZZZ...ZZZZZZZZZZZ.
-.aaaaaaaaaaaaaaaaaa.
-.bbbbbbbbbbbbbbbbbb.
-.......  ...........\
+..........
+.BCDEFGHIJ
+.VWXYZabcd
+.pqrstuvwx
+ 0!"£$%^&*
+ :@~,...>?
+.ZZZZ...ZZ
+.aaaaaaaaa
+.bbbbbbbbb
+.......  .\
 """
 
-room_steps = """\
-....................
-   ..............   
-..  ............  ..
-...  ..........  ...
-....  ........  ....
-.....  ......  .....
-......  ....  ......
-.......  ..  .......
-........    ........
-....................\
-"""
-# room = room_steps
 room = room_test
 room = [list(line) for line in room.split("\n")]
 assert len(room) == rows, len(room)
@@ -499,6 +483,12 @@ def render_room():
 
 
 async def main():
+    global canvas_node
+    global canvas_width
+    global canvas_height
+    global ctx
+    global cell_size
+
     hide(loading_node)
 
     # Initialise communication with the terminal.
@@ -508,6 +498,19 @@ async def main():
     terminal_worker.sync.change_character = change_character
     terminal_worker.sync.print_character = print_character
     terminal_worker.sync.set_speed = set_speed
+
+    # Set up canvas.
+    canvas_width = min(canvas_container_node.offsetWidth, 500)
+    # Round to nearest multiple of 10.
+    canvas_width = canvas_width - (canvas_width % 10)
+    canvas_height = canvas_width
+    canvas_node = document.createElement("canvas")
+    canvas_node.id = "canvas"
+    canvas_node.width = canvas_width
+    canvas_node.height = canvas_height
+    canvas_container_node.appendChild(canvas_node)
+    ctx = canvas_node.getContext("2d")
+    cell_size = canvas_width // 10
 
     # Set some invariant text rendering settings.
     ctx.textRendering = "optimizeLegibility"

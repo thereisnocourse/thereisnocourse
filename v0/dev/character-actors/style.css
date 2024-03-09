@@ -8,11 +8,12 @@
     height: 100px;
 }
 
-#game {
-    background-color: white;
-    height: 400px;
+
+#canvas_container {
+    margin: 0 auto;
+    text-align: center;
 }
 
 #canvas {
-    background-color: white;
+    margin: 0 auto;
 }
