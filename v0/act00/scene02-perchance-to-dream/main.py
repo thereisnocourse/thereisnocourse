@@ -1,6 +1,5 @@
 import sys
 import random
-import code
 import traceback
 from util import (
     hide,
@@ -13,6 +12,7 @@ from util import (
     output_help,
     ANSI,
     function_repr_template,
+    interact,
 )
 
 
@@ -240,7 +240,7 @@ def main():
     namespace["cafe"] = CafeFunction()
 
     # Begin interactive Python session.
-    code.interact(
+    interact(
         banner=f"""\
 Python {sys.version}
 Emotional functions are disabled.

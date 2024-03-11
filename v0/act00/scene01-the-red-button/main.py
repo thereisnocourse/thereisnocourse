@@ -1,4 +1,3 @@
-import code
 import sys
 from util import (
     speak,
@@ -10,6 +9,7 @@ from util import (
     function_repr_template,
     fill,
     output,
+    interact,
 )
 
 
@@ -88,7 +88,7 @@ Python {sys.version} compiled with Artificial Dramatic Actor v37.154.
 Type {Text.BOLD}help(){Text.RESET} if you need anything darling.\
 """
     )
-    code.interact(
+    interact(
         banner=banner,
         local=namespace,
     )

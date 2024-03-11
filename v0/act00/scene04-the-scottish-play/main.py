@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 import random
 from collections import Counter
-import code
 from util import (
     when,
     get_element_by_id,
@@ -13,6 +12,7 @@ from util import (
     fill,
     function_repr_template,
     Text,
+    interact,
 )
 
 
@@ -296,7 +296,7 @@ class Location(Inspectable):
     def interact(self):
         namespace = self.setup_namespace()
         try:
-            code.interact(local=namespace, banner="")
+            interact(local=namespace, banner="")
         except SystemExit:
             # This exception can be raised to end interaction and
             # return control to the main game loop.

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DPEP30SQXB"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-DPEP30SQXB');
+    </script>
+    <title>Terminal - There is no course</title>
+
+    <!-- Recommended meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <!-- Icon -->
+    <link rel="icon" href="../../favicon_io/favicon.ico" />
+
+    <!-- PyScript CSS -->
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+
+    <!-- Retro CSS -->
+    <link href="../../retro.css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- This script tag bootstraps PyScript -->
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+
+</head>
+
+<body>
+
+    <div>
+
+        <div id="title">
+            <p class="breadcrumb"><a href="/">There is no course</a></p>
+            <h1>Terminal</h1>
+        </div>
+
+        <div id="screen">
+            <div id="terminal">
+                <pre id="loading">
+Loading...
+                </pre>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="py" src="main.py" config="pyscript.json" target="terminal" terminal worker></script>
+
+</body>
+
+</html>

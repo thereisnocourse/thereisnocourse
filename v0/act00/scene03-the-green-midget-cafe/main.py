@@ -1,4 +1,3 @@
-import code
 import random
 from util import (
     hide,
@@ -13,6 +12,7 @@ from util import (
     Text,
     ANSI,
     function_repr_template,
+    interact,
 )
 
 
@@ -72,7 +72,7 @@ def play():
     namespace["vikings"] = VikingsFunction()
     namespace["exit"] = ExitFunction()
     namespace["install_colour"] = InstallColourFunction()
-    code.interact(
+    interact(
         banner="",
         local=namespace,
     )

@@ -1,5 +1,6 @@
 import time
 import sys
+from code import InteractiveConsole
 from collections import namedtuple
 from textwrap import TextWrapper
 import js
@@ -334,3 +335,49 @@ Just like my dear Papa.\
 
 
 function_repr_template = f"Hello, I am a function! Type {ANSI.BOLD}{{name}}(){ANSI.RESET} if you want me to do something."
+
+
+class CustomisedInteractiveConsole(InteractiveConsole):
+    def interact(self, banner=None, exitmsg=None):
+        try:
+            sys.ps1
+        except AttributeError:
+            sys.ps1 = ">>> "
+        try:
+            sys.ps2
+        except AttributeError:
+            sys.ps2 = "... "
+        if banner:
+            self.write("%s\n" % str(banner))
+        more = 0
+        while 1:
+            try:
+                if more:
+                    prompt = sys.ps2
+                else:
+                    prompt = sys.ps1
+                try:
+                    line = self.raw_input(prompt)
+                except EOFError:
+                    # Don't exit interactive loop if enter empty lines.
+                    pass
+                else:
+                    more = self.push(line)
+            except KeyboardInterrupt:
+                self.write("\nKeyboardInterrupt\n")
+                self.resetbuffer()
+                more = 0
+        if exitmsg:
+            self.write("%s\n" % exitmsg)
+
+
+def interact(banner=None, readfunc=None, local=None, exitmsg=None):
+    console = CustomisedInteractiveConsole(local)
+    if readfunc is not None:
+        console.raw_input = readfunc
+    else:
+        try:
+            import readline
+        except ImportError:
+            pass
+    console.interact(banner, exitmsg)

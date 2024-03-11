@@ -1,5 +1,5 @@
-import code
 from pyscript import sync
+from util import interact
 
 
 def main():
@@ -8,7 +8,7 @@ def main():
     namespace["change"] = sync.change_character
     namespace["speed"] = sync.set_speed
     namespace["print"] = sync.print_character
-    code.interact(banner="", local=namespace)
+    interact(local=namespace)
 
 
 if __name__ == "__main__":
