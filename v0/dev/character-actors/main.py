@@ -1,297 +1,42 @@
 from collections import deque
 import random
+import csv
 from util import (
     get_element_by_id,
     hide,
+    show,
 )
 from pyscript import document
 import js
 from pyodide.ffi import create_proxy
 import asyncio
+import emoji
 
 
-screen_node = get_element_by_id("screen")
+terminal_node = get_element_by_id("terminal")
 canvas_container_node = get_element_by_id("canvas_container")
 loading_node = get_element_by_id("loading")
 success_node = get_element_by_id("success")
+clue_node = get_element_by_id("clue")
+clue_container_node = get_element_by_id("clue_container")
 moves_node = get_element_by_id("moves")
 position_node = get_element_by_id("position")
 speed_node = get_element_by_id("speed")
 speed = 4
-rows = 10
-cols = 10
+rows_per_room = 10
+cols_per_room = 10
 default_player_character = "🕵️"
-people_emojis = [
-    "👶",
-    "🧒",
-    "👦",
-    "👧",
-    "🧑",
-    "👱",
-    "👨",
-    "🧔",
-    "🧔‍♂️",
-    "🧔‍♀️",
-    "👨‍🦰",
-    "👨‍🦱",
-    "👨‍🦳",
-    "👨‍🦲",
-    "👩",
-    "👩‍🦰",
-    "🧑‍🦰",
-    "👩‍🦱",
-    "🧑",
-    "🧑‍🦱",
-    "👩‍🦳",
-    "🧑‍🦳",
-    "👩‍🦲",
-    "🧑‍🦲",
-    "👱‍♀️",
-    "👱‍♂️",
-    "🧓",
-    "👴",
-    "👵",
-    "👳",
-    "👳‍♂️",
-    "👳‍♀️",
-    "👲",
-    "🧕",
-    "👼",
-]
-role_emojis = [
-    "🧑‍⚕️",
-    "👨‍⚕️",
-    "👩‍⚕️",
-    "🧑‍🎓",
-    "👨‍🎓",
-    "👩‍🎓",
-    "🧑‍🏫",
-    "👨‍🏫",
-    "👩‍🏫",
-    "🧑‍⚖️",
-    "👨‍⚖️",
-    "👩‍⚖️",
-    "🧑‍🌾",
-    "👨‍🌾",
-    "👩‍🌾",
-    "🧑‍🍳",
-    "👨‍🍳",
-    "👩‍🍳",
-    "🧑‍🔧",
-    "👨‍🔧",
-    "👩‍🔧",
-    "🧑‍🏭",
-    "👨‍🏭",
-    "👩‍🏭",
-    "🧑‍💼",
-    "👨‍💼",
-    "👩‍💼",
-    "🧑‍🔬",
-    "👨‍🔬",
-    "👩‍🔬",
-    "🧑‍💻",
-    "👨‍💻",
-    "👩‍💻",
-    "🧑‍🎤",
-    "👨‍🎤",
-    "👩‍🎤",
-    "🧑‍🎨",
-    "👨‍🎨",
-    "👩‍🎨",
-    "🧑‍✈️",
-    "👨‍✈️",
-    "🧑‍🚀",
-    "👨‍🚀",
-    "👩‍🚀",
-    "🧑‍🚒",
-    "👨‍🚒",
-    "👩‍🚒",
-    "👮",
-    "👮‍♂️",
-    "👮‍♀️",
-    "🕵️",
-    "🕵️‍♂️",
-    "🕵️‍♀️",
-    "💂",
-    "💂‍♂️",
-    "💂‍♀️",
-    "🥷",
-    "👷",
-    "👷‍♂️",
-    "👷‍♀️",
-    "🫅",
-    "🤴",
-    "👸",
-    "🤵",
-    "🤵‍♂️",
-    "🤵‍♀️",
-    "👰",
-    "👰‍♂️",
-    "👰‍♀️",
-    "🎅",
-    "🤶",
-    "🧑‍🎄",
-    "🦸",
-    "🦸‍♂️",
-    "🦸‍♀️",
-    "🦹",
-    "🦹‍♂️",
-    "🦹‍♀️",
-    "🧙",
-    "🧙‍♂️",
-    "🧙‍♀️",
-    "🧚",
-    "🧚‍♂️",
-    "🧚‍♀️",
-    "🧛",
-    "🧛‍♂️",
-    "🧛‍♀️",
-    "🧜",
-    "🧜‍♂️",
-    "🧜‍♀️",
-    "🧝",
-    "🧝‍♀️",
-    "🧞",
-    "🧞‍♂️",
-    "🧞‍♀️",
-    "🧟",
-    "🧟‍♂️",
-    "🧟‍♀️",
-    "🧌",
-]
-mammal_emojis = [
-    "🐵",
-    "🐒",
-    "🦍",
-    "🦧",
-    "🐶",
-    "🐕",
-    "🦮",
-    "🐩",
-    "🐺",
-    "🦊",
-    "🦝",
-    "🐱",
-    "🐈",
-    "🦁",
-    "🐯",
-    "🐅",
-    "🐆",
-    "🐴",
-    "🫎",
-    "🫏",
-    "🐎",
-    "🦄",
-    "🦓",
-    "🦌",
-    "🦬",
-    "🐮",
-    "🐂",
-    "🐃",
-    "🐄",
-    "🐷",
-    "🐖",
-    "🐗",
-    "🐽",
-    "🐏",
-    "🐑",
-    "🐐",
-    "🐪",
-    "🐫",
-    "🦙",
-    "🦒",
-    "🐘",
-    "🦣",
-    "🦏",
-    "🦛",
-    "🐭",
-    "🐁",
-    "🐀",
-    "🐹",
-    "🐰",
-    "🐇",
-    "🐿️",
-    "🦫",
-    "🦔",
-    "🦇",
-    "🐻",
-    "🐻‍❄️",
-    "🐨",
-    "🐼",
-    "🦥",
-    "🦦",
-    "🦨",
-    "🦘",
-    "🦡",
-]
-bird_emojis = [
-    "🦃",
-    "🐔",
-    "🐓",
-    "🐣",
-    "🐤",
-    "🐥",
-    "🐦",
-    "🐧",
-    "🕊️",
-    "🦅",
-    "🦆",
-    "🦢",
-    "🦉",
-    "🦤",
-    "🦩",
-    "🦚",
-    "🦜",
-    "🐦‍⬛",
-    "🪿",
-]
-reptile_emojis = ["🐸", "🐊", "🐢", "🦎", "🐍", "🐲", "🐉", "🦕", "🦖"]
-marine_emojis = [
-    "🐳",
-    "🐋",
-    "🐬",
-    "🦭",
-    "🐟",
-    "🐠",
-    "🐡",
-    "🦈",
-    "🐙",
-    "🐚",
-    "🪸",
-    "🪼",
-    "🦀",
-    "🦞",
-    "🦐",
-    "🦑",
-    "🦪",
-]
-bug_emojis = [
-    "🐌",
-    "🦋",
-    "🐛",
-    "🐜",
-    "🐝",
-    "🪲",
-    "🐞",
-    "🦗",
-    "🪳",
-    "🕷️",
-    "🦂",
-    "🦟",
-    "🪰",
-    "🪱",
-    "🦠",
-]
-disguises = (
-    people_emojis
-    + role_emojis
-    + mammal_emojis
-    + bird_emojis
-    + reptile_emojis
-    + marine_emojis
-    + bug_emojis
+disguises = emoji.smileys + emoji.people + emoji.nature
+transformations = (
+    (1, 1, "a"),
+    (7, 18, "u"),
+    (5, 24, "n"),
+    (18, 21, "i"),
+    (15, 14, "c"),
+    (11, 8, "o"),
+    (24, 5, "d"),
+    (22, 18, "e"),
 )
-block_chars = ["⬜", "🟥", "🟦", "🟩", "🟨", "🟧", "🟪", "🟫", "⬛", "🔲"]
 
 
 def set_speed(new_speed):
@@ -316,23 +61,35 @@ def print_character(character):
         raise TypeError
     if len(character) != 1:
         raise ValueError
-    room[player.row][player.col] = character
+    world[player.row][player.col] = character
+    player.printed = character
+
+    # Check to see if all replacements have been solved.
+    solved = True
+    for row, col, character in transformations:
+        printed = world[row][col]
+        solved = solved and (character == printed)
+    if solved:
+        world[28][29] = ""
+    else:
+        world[28][29] = "🔒"
 
 
 def col_to_x(col):
-    return (col * cell_size) + (cell_size / 2)
+    return ((col % cols_per_room) * cell_size) + (cell_size / 2)
 
 
 def row_to_y(row):
-    return (row * cell_size) + (cell_size / 2) + 3
+    return ((row % rows_per_room) * cell_size) + (cell_size / 2) + 3
 
 
 class Player:
-    def __init__(self, col, row):
-        self.col = col
+    def __init__(self, row, col):
         self.row = row
+        self.col = col
         self.character = default_player_character
         self.moves = deque()
+        self.printed = None
 
     def add_moves(self, moves):
         self.moves.extend(list(moves.lower()))
@@ -357,19 +114,19 @@ class Player:
                 new_row = self.row
                 new_col = self.col - 1
 
-            # Out of bounds checks.
-            if new_row < 0:
-                return
-            if new_row > rows - 1:
-                return
-            if new_col < 0:
-                return
-            if new_col > cols - 1:
-                return
+            # # Out of bounds checks.
+            # if new_row < 0:
+            #     return
+            # if new_row > rows - 1:
+            #     return
+            # if new_col < 0:
+            #     return
+            # if new_col > cols - 1:
+            #     return
 
             # Stop checks.
-            new_char = room[new_row][new_col]
-            if new_char in block_chars:
+            new_char = world[new_row][new_col]
+            if new_char in (emoji.blocks + ["🔒"]):
                 return
 
             self.row = new_row
@@ -392,7 +149,13 @@ class Player:
         return row_to_y(self.row)
 
     def render(self):
-        ctx.fillText(self.character, self.x, self.y)
+        if self.printed:
+            # Transiently show the printed character.
+            character = self.printed
+            self.printed = None
+        else:
+            character = self.character
+        ctx.fillText(character, self.x, self.y)
 
 
 def render():
@@ -409,17 +172,18 @@ def render():
     player.render()
 
     # Render the debug panel below the screen.
-    moves_node.innerHTML = "".join(player.moves)
+    moves_str = "".join(player.moves)
+    moves_node.innerHTML = f'"{moves_str}"'
     position_node.innerHTML = (
-        f'"{player.character}" at row {player.col}, col {player.row}'
+        f'"{player.character}" at row {player.row}, col {player.col}'
     )
     speed_node.innerHTML = f"{speed} FPS"
 
 
 def render_grid():
     ctx.lineWidth = 1
-    ctx.strokeStyle = "#555"
-    for i in range(cols + 1):
+    ctx.strokeStyle = "#bbb"
+    for i in range(cols_per_room + 1):
         x = i * cell_size
         if x == 0:
             x += 0.5
@@ -429,7 +193,7 @@ def render_grid():
         ctx.moveTo(x, 0)
         ctx.lineTo(x, canvas_height)
         ctx.stroke()
-    for j in range(rows + 1):
+    for j in range(rows_per_room + 1):
         y = j * cell_size
         if y == 0:
             y += 0.5
@@ -442,22 +206,55 @@ def render_grid():
 
 
 def render_room():
-    for row in range(rows):
-        for col in range(cols):
+    # Figure out which room the player is in and render that.
+    row_offset = (player.row // rows_per_room) * rows_per_room
+    col_offset = (player.col // cols_per_room) * cols_per_room
+    for row in range(row_offset, row_offset + rows_per_room):
+        for col in range(col_offset, col_offset + cols_per_room):
             if player.row == row and player.col == col:
                 pass
             else:
-                character = room[row][col]
-                if character == ".":
-                    x = col * cell_size
-                    y = row * cell_size
-                    ctx.fillStyle = "#ccc"
-                    ctx.fillRect(x, y, cell_size, cell_size)
-                else:
-                    x = col_to_x(col)
-                    y = row_to_y(row)
-                    ctx.fillStyle = "black"
-                    ctx.fillText(character, x, y)
+                character = world[row][col]
+                x = col_to_x(col)
+                y = row_to_y(row)
+                ctx.fillStyle = "black"
+                ctx.fillText(character, x, y)
+    # Put the clue.
+    i = player.row // rows_per_room
+    j = player.col // cols_per_room
+    clue = clues[i][j]
+    if i == 0 and j == 0:
+        trans = transformations[:1]
+    elif i == 0 and j == 1:
+        trans = transformations[:2]
+    elif i == 0 and j == 2:
+        trans = transformations[:3]
+    elif i == 1 and j == 2:
+        trans = transformations[:4]
+    elif i == 1 and j == 1:
+        trans = transformations[:5]
+    elif i == 1 and j == 0:
+        trans = transformations[:6]
+    elif i == 2 and j == 0:
+        trans = transformations[:7]
+    elif i == 2 and j == 1:
+        trans = transformations[:8]
+    else:
+        trans = transformations
+    if clue:
+        show(clue_container_node)
+        original_clue = clue
+        # Apply replacements.
+        for row, col, character in trans:
+            printed = world[row][col]
+            clue = clue.replace(character, printed)
+        content = f'"{clue}"'
+        if clue == original_clue:
+            content += " ✅"
+        clue_node.innerHTML = content
+    else:
+        hide(clue_container_node)
+        clue_node.innerHTML = ""
 
 
 async def main():
@@ -466,11 +263,12 @@ async def main():
     global canvas_height
     global ctx
     global cell_size
-    global rooms
-    global room
+    global world
+    global clues
     global player
 
     hide(loading_node)
+    terminal_node.style.visibility = "visible"
 
     # Initialise communication with the terminal.
     terminal_script_node = document.querySelector("script[terminal]")
@@ -481,7 +279,7 @@ async def main():
     terminal_worker.sync.set_speed = set_speed
 
     # Set up canvas.
-    canvas_width = min(canvas_container_node.offsetWidth, 500)
+    canvas_width = min(canvas_container_node.offsetWidth, 450)
     # Round to nearest multiple of 10.
     canvas_width = canvas_width - (canvas_width % 10)
     canvas_height = canvas_width
@@ -491,7 +289,7 @@ async def main():
     canvas_node.height = canvas_height
     canvas_container_node.appendChild(canvas_node)
     ctx = canvas_node.getContext("2d")
-    cell_size = canvas_width // 10
+    cell_size = canvas_width // rows_per_room
 
     # Set some invariant text rendering settings.
     ctx.textRendering = "optimizeLegibility"
@@ -499,14 +297,16 @@ async def main():
     ctx.textAlign = "center"
     ctx.textBaseline = "middle"
 
-    # Read room data.
-    with open("rooms.csv") as f:
-        room_data = [line.split(",") for line in f.readlines()]
-    rooms = [[[line[:10] for line in room_data[:10]]]]
-    room = rooms[0][0]
+    # Read world data.
+    with open("world.csv", newline="") as f:
+        world = list(csv.reader(f))
+
+    # Read clues.
+    with open("clues.csv", newline="") as f:
+        clues = list(csv.reader(f))
 
     # Create player.
-    player = Player(col=5, row=5)
+    player = Player(row=5, col=5)
 
     # Start the game loop.
     while True:

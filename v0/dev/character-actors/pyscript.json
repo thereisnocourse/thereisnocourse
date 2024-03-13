@@ -1,7 +1,9 @@
 {
     "interpreter": "0.25.0",
     "files": {
-        "../../util.py": "./util.py",
-        "rooms.csv": "rooms.csv"
+        "../../util.py": "util.py",
+        "emoji.py": "emoji.py",
+        "world.csv": "world.csv",
+        "clues.csv": "clues.csv"
     }
 }
