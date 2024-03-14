@@ -36,40 +36,84 @@
 
 <body>
 
-    <div id="container">
+    <div id="page">
 
-        <div id="title">
-            <p class="breadcrumb"><a href="/">There is no course</a> / Act X / Scene X</p>
-            <h1>Character actors</h1>
-        </div>
+        <div id="content">
 
-        <div id="screen">
-            <pre id="loading">
-Loading...
-            </pre>
-                        
-            <div id="terminal">
+            <div id="title">
+                <p class="breadcrumb"><a href="/">There is no course</a> / Act X / Scene X</p>
+                <h1>Character actors</h1>
             </div>
-        </div>
 
-        <div id="canvas_container">
-        </div>
+            <div id="screen">
+                <pre id="loading">
+Loading...
+                </pre>
 
-        <div id="clue_container">
-            <p>clue = <span id="clue">""</span></p>
-            <p>moves = <span id="moves">""</span></p>
-        </div>
+                <div id="terminal">
+                </div>
+            </div>
 
-        <div id="debug">
-            <hr/>
-            <p>Player <span id="position"></span>. Speed <span id="speed"></span>.</p>
-        </div>
+            <div id="canvas_container">
+            </div>
 
-        <div id="success">
-            <p>
-                Success!
-            </p>
-            <p>🐍🐍🐍🐍🐍🐍</p>
+            <div id="info">
+                <p>clue = <span id="clue">""</span></p>
+                <p>moves = <span id="moves">""</span></p>
+                <hr />
+                <h2>Game controls</h2>
+                <p>
+                <dl>
+                    <dt><strong>move(X)</strong></dt>
+                    <dd>Move one or more spaces, where <strong>X</strong> is a string of characters indicating the
+                        direction to move; "l" means left, "r" means right, "u" means up, "d" means down. E.g.,
+                        <strong>move("ull")</strong> means move one square up then two squares left. Use the
+                        <strong>*</strong> operator to repeat moves, e.g., <strong>move("r" * 5)</strong> means
+                        move right five times.
+                    </dd>
+                </dl>
+                </p>
+                <p>
+                <dl>
+                    <dt><strong>print(X)</strong></dt>
+                    <dd>Print into the grid square you are currently occupying, where
+                        <strong>X</strong> is a string containing a single character. E.g.,
+                        <strong>print("a")</strong> means print the character "a" into the current
+                        grid square.
+                    </dd>
+                </dl>
+                <p>
+                <dl>
+                    <dt><strong>change()</strong></dt>
+                    <dd>Randomly change into a different character disguise to evade the agents.</dd>
+                </dl>
+                </p>
+                <p>
+                <dl>
+                    <dt><strong>escape()</strong></dt>
+                    <dd>Escape after being captured by an agent.</dd>
+                </dl>
+                </p>
+                <p>
+                <dl>
+                    <dt><strong>speed(N)</strong></dt>
+                    <dd>Change the game speed, where <strong>N</strong> is the number of moves per second.</dd>
+                </dl>
+                </p>
+            </div>
+
+            <div id="debug">
+                <hr />
+                <p>Player <span id="position"></span>. Speed <span id="speed"></span>.</p>
+            </div>
+
+            <div id="success">
+                <p>
+                    Success!
+                </p>
+                <p>🐍🐍🐍🐍🐍🐍</p>
+            </div>
+
         </div>
 
     </div>

@@ -78,6 +78,14 @@ def get_terminal_cols():
     return _terminal_cols
 
 
+def set_terminal_cols(n):
+    global _terminal_cols, _wrapper
+    _terminal_cols = None
+    _wrapper = None
+    terminal = get_terminal()
+    terminal.resize(int(n), terminal.rows)
+
+
 def pad(text, n):
     if len(text) < n:
         text += " " * (n - len(text))
@@ -237,7 +245,7 @@ def get_wrapper():
     global _wrapper
     if _wrapper is None:
         _wrapper = TextWrapper(
-            width=min(get_terminal_cols(), 70),
+            width=get_terminal_cols(),
             replace_whitespace=True,
             drop_whitespace=True,
         )

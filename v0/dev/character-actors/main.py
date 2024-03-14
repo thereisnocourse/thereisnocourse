@@ -18,7 +18,7 @@ canvas_container_node = get_element_by_id("canvas_container")
 loading_node = get_element_by_id("loading")
 success_node = get_element_by_id("success")
 clue_node = get_element_by_id("clue")
-clue_container_node = get_element_by_id("clue_container")
+info_node = get_element_by_id("info")
 moves_node = get_element_by_id("moves")
 position_node = get_element_by_id("position")
 speed_node = get_element_by_id("speed")
@@ -242,7 +242,7 @@ def render_room():
     else:
         trans = transformations
     if clue:
-        show(clue_container_node)
+        show(info_node)
         original_clue = clue
         # Apply replacements.
         for row, col, character in trans:
@@ -253,7 +253,7 @@ def render_room():
             content += " ✅"
         clue_node.innerHTML = content
     else:
-        hide(clue_container_node)
+        hide(info_node)
         clue_node.innerHTML = ""
 
 
