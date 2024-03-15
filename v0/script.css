@@ -1,6 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Sono:wght@200..800&display=swap');
 
+html {
+    -moz-text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+}
+
 body {
     font-family: "Special Elite", 'Courier New', Courier, monospace;
     font-size: 15px;
