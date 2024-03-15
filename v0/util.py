@@ -5,6 +5,7 @@ from collections import namedtuple
 from textwrap import TextWrapper
 import js
 from pyscript import document, window, when
+import asyncio
 
 
 version_info = namedtuple(
@@ -217,7 +218,7 @@ unicode_to_ansi = str.maketrans(
 
 speech_pauses = {
     "para": 2,  # pause between paragraphs
-    "char": 0.06,  # default pause between characters
+    "char": 0.05,  # default pause between characters
     " ": 0.06,
     ",": 0.5,
     ";": 0.6,
@@ -318,6 +319,45 @@ def speak(message):
         sys.stdout.flush()
 
 
+async def html_speak(parent_id, message):
+    parent = get_element_by_id(parent_id)
+    char_pause = speech_pauses["char"]
+    para_pause = speech_pauses["para"]
+    fast_forward = False
+    control_symbols = {"⏵", "⏸", "⏩"}
+    for line in message.splitlines():
+        div = document.createElement("div")
+        parent.append(div)
+        line = fill(line)
+        for c in line:
+            # Determine the length of the pause for the current character.
+            pause = 0
+            if c == "⏩":
+                # Fast forward, suspend all pauses.
+                fast_forward = True
+            elif c == "⏵":
+                # Back to normal play mode.
+                fast_forward = False
+            elif fast_forward:
+                # Leave no pause.
+                pass
+            else:
+                pause = speech_pauses.get(c, char_pause)
+
+            # Print the current character.
+            if c not in control_symbols:
+                div.innerHTML += c
+            div.scrollIntoView()
+
+            # Pause to simulate speech.
+            if pause > 0:
+                await asyncio.sleep(pause)
+
+        if not line and not fast_forward:
+            # Empty line, interpret as gap between paragraphs.
+            await asyncio.sleep(para_pause)
+
+
 lumberjack_song = """\
 I'm a lumberjack, and I'm okay
 I sleep all night and I work all day
@@ -367,10 +407,9 @@ class CustomisedInteractiveConsole(InteractiveConsole):
                 try:
                     line = self.raw_input(prompt)
                 except EOFError:
-                    # Don't exit interactive loop if enter empty lines.
-                    pass
-                else:
-                    more = self.push(line)
+                    # Needed to avoid exiting console, and also terminating code blocks.
+                    line = "\n"
+                more = self.push(line)
             except KeyboardInterrupt:
                 self.write("\nKeyboardInterrupt\n")
                 self.resetbuffer()

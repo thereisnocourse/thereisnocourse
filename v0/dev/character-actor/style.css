@@ -3,6 +3,14 @@
     display: none;
 }
 
+#outro {
+    display: none;
+    height: 68px;
+    overflow: auto;
+    padding: 3px 0;
+    line-height: 17px;
+}
+
 #canvas_container {
     margin: 1em auto;
     text-align: center;

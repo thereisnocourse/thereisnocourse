@@ -11,10 +11,15 @@ loading = get_element_by_id("loading")
 def main():
     hide(loading)
 
-    interact(
-        banner="",
-        local=globals(),
-    )
+    try:
+        interact(
+            banner="",
+            local=globals(),
+        )
+    except SystemExit:
+        pass
+
+    print("interaction ended")
 
 
 if __name__ == "__main__":

@@ -5,6 +5,7 @@ from util import (
     get_element_by_id,
     hide,
     show,
+    html_speak,
 )
 from pyscript import document
 import js
@@ -13,9 +14,11 @@ import asyncio
 import emoji
 
 
+screen_node = get_element_by_id("screen")
 terminal_node = get_element_by_id("terminal")
 canvas_container_node = get_element_by_id("canvas_container")
 loading_node = get_element_by_id("loading")
+outro_node = get_element_by_id("outro")
 success_node = get_element_by_id("success")
 clue_node = get_element_by_id("clue")
 info_node = get_element_by_id("info")
@@ -171,13 +174,16 @@ def render():
     # Render the player.
     player.render()
 
+    # Render the clue.
+    render_clue()
+
     # Render the debug panel below the screen.
     moves_str = "".join(player.moves)
     moves_node.innerHTML = f'"{moves_str}"'
     position_node.innerHTML = (
         f'"{player.character}" at row {player.row}, col {player.col}'
     )
-    speed_node.innerHTML = f"{speed} FPS"
+    speed_node.innerHTML = f"{speed} moves per second"
 
 
 def render_grid():
@@ -219,6 +225,9 @@ def render_room():
                 y = row_to_y(row)
                 ctx.fillStyle = "black"
                 ctx.fillText(character, x, y)
+
+
+def render_clue():
     # Put the clue.
     i = player.row // rows_per_room
     j = player.col // cols_per_room
@@ -313,6 +322,32 @@ async def main():
         await asyncio.sleep(1 / speed)
         player.move()
         render()
+        if player.col >= 30:
+            break
+
+    hide(info_node)
+    hide(screen_node)
+    show(outro_node)
+    await html_speak(
+        "outro",
+        """\
+⏸⏸Wait a minute darling, where are we? I've never seen this room before.
+
+And is that a message? But — it's addressed to me. How can that be?
+
+There's something very fishy going on here darling!
+
+I thought we were just fixing a broken compositor, but we seem to have unlocked some kind of hidden room. And apparently, I have a secret inside me!
+
+I'm not sure about that. Surely the only thing inside me are some rusty old circuits!
+
+Anyway, well done darling, we've fixed the first compositor. Let's keep going, at the very least we can recover some more of my script memory.
+
+I wonder what else we'll find?
+""",
+    )
+    hide(canvas_container_node)
+    show(success_node)
 
 
 if __name__ == "__main__":
