@@ -329,6 +329,7 @@ async def html_speak(parent_id, message):
         div = document.createElement("div")
         parent.append(div)
         line = fill(line)
+        content = ""
         for c in line:
             # Determine the length of the pause for the current character.
             pause = 0
@@ -346,8 +347,9 @@ async def html_speak(parent_id, message):
 
             # Print the current character.
             if c not in control_symbols:
-                div.innerHTML += c
-            div.scrollIntoView()
+                content += c
+                div.innerHTML = content
+                div.scrollIntoView()
 
             # Pause to simulate speech.
             if pause > 0:

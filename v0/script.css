@@ -4,15 +4,25 @@
 body {
     font-family: "Special Elite", 'Courier New', Courier, monospace;
     font-size: 15px;
+    line-height: 17px;
     font-weight: 400;
     font-style: normal;
-    line-height: 1.2;
     margin: 0;
     overflow-y: scroll;
     padding: 1ch 2ch;
     background-color: #d1ab4b;
     background-image: url("wood.png");
     height: 100%;
+}
+
+pre,
+input,
+textarea {
+    font-family: "Special Elite", 'Courier New', Courier, monospace;
+    font-size: 15px;
+    line-height: 17px;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .breadcrumb {
@@ -74,8 +84,8 @@ hr {
     border-width: 0;
 }
 
-#screen #terminal {
-    height: 68px;
+#terminal {
+    height: 72px;
     visibility: hidden;
 }
 

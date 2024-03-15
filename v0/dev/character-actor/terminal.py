@@ -17,7 +17,7 @@ clue_node = get_element_by_id("clue")
 
 
 class Help:
-    """Type help() for the in-game tutorial."""
+    """Type help() for your mission briefing."""
 
     def __repr__(self):
         return fill(function_repr_template.format(name="help")) + "\n"
@@ -112,9 +112,7 @@ def main():
     # cols = get_terminal_cols()
     # set_terminal_cols(cols * 1.15)
 
-    speak(
-        f"""Here we are inside the broken compositor. Type {Text.BOLD}help(){Text.RESET} for your mission briefing."""
-    )
+    speak(f"""Type {Text.BOLD}help(){Text.RESET} for your mission briefing.""")
     output()
 
     namespace = globals().copy()
