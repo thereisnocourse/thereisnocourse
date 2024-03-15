@@ -7,6 +7,10 @@ html {
     text-size-adjust: none;
 }
 
+html * {
+    max-height: 1000000px;
+}
+
 body {
     font-family: "Special Elite", 'Courier New', Courier, monospace;
     font-size: 15px;
