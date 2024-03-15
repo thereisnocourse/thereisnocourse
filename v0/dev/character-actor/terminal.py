@@ -17,7 +17,7 @@ clue_node = get_element_by_id("clue")
 
 
 class Help:
-    """Type help() for your mission briefing."""
+    """You are inside the first broken compositor. Type help() for your mission briefing."""
 
     def __repr__(self):
         return fill(function_repr_template.format(name="help")) + "\n"
@@ -33,11 +33,12 @@ class Help:
     def _tutorial(self):
         speak(
             """\
+Hello darling. We are inside the first broken compositor in my FOLIO subsystem.
+
 The compositor is made up of different rooms. Each room contains a 10x10 grid of cells. One of the cells in each room has been corrupted by a fruit emoji. You need to find the broken cell and fix it.
 """
         )
 
-        clue_node.scrollIntoView(False)
         speak(
             f"""
 Below the screen is a line from a script which has been corrupted. Use this as a {Text.BOLD}clue{Text.RESET} to figure out which character has been replaced by the fruit emoji.
@@ -122,8 +123,6 @@ def main():
     namespace["print"] = sync.print_character
     namespace["help"] = Help()
     interact(local=namespace)
-
-    print("interaction ended")
 
 
 if __name__ == "__main__":
