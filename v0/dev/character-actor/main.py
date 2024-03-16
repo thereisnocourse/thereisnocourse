@@ -25,7 +25,7 @@ info_node = get_element_by_id("info")
 moves_node = get_element_by_id("moves")
 position_node = get_element_by_id("position")
 speed_node = get_element_by_id("speed")
-speed = 4
+speed = 3
 rows_per_room = 10
 cols_per_room = 10
 default_player_character = "🕵️"
@@ -455,9 +455,9 @@ async def main():
     player = Player(row=5, col=5)
 
     # Create agents.
-    agent_foo = Agent(row=1, col=21, character="🕴🏼", recognition=20)
-    agent_plane = Agent(row=11, col=21, character="🛩️", recognition=20)
-    agent_bar = Agent(row=11, col=1, character="🕴🏼", recognition=20)
+    agent_foo = Agent(row=1, col=21, character="🕴🏼", recognition=25)
+    agent_plane = Agent(row=11, col=21, character="🛩️", recognition=25)
+    agent_bar = Agent(row=11, col=1, character="🕴🏼", recognition=25)
 
     # Start the game loop.
     moves = 0
