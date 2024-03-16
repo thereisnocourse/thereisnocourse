@@ -300,6 +300,7 @@ def render():
     # Render the agents.
     agent_foo.render()
     agent_bar.render()
+    agent_plane.render()
 
     # Render the player.
     player.render()
@@ -455,8 +456,8 @@ async def main():
 
     # Create agents.
     agent_foo = Agent(row=1, col=21, character="🕴🏼", recognition=20)
-    agent_plane = Agent(row=11, col=21, character="🛩️", recognition=15)
-    agent_bar = Agent(row=11, col=1, character="🕴🏼", recognition=15)
+    agent_plane = Agent(row=11, col=21, character="🛩️", recognition=20)
+    agent_bar = Agent(row=11, col=1, character="🕴🏼", recognition=20)
 
     # Start the game loop.
     moves = 0
