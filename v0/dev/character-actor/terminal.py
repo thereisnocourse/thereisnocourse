@@ -1,13 +1,10 @@
-from pyscript import sync, document
+from pyscript import sync
 from util import (
     interact,
     speak,
     output,
     Text,
     get_element_by_id,
-    get_terminal,
-    get_terminal_cols,
-    set_terminal_cols,
     fill,
     function_repr_template,
 )
@@ -53,25 +50,25 @@ For example, to move one cell right:⏩
 >>> ⏵⏸move("r")⏸
 """,
         )
-        sync.add_moves("r")
+        sync.move("r")
 
         speak("""
 You can move more than one cell at a time. For example, to move two squares down and two squares left:⏩
 >>> ⏵⏸move("ddll")⏸
 """)
-        sync.add_moves("ddll")
+        sync.move("ddll")
 
         speak(f"""
 To save typing, you can use the {Text.BOLD}*{Text.RESET} operator to repeat moves. For example, to move right three times:⏩
 >>> ⏵⏸move("r" * 3)⏸
 """)
-        sync.add_moves("r" * 3)
+        sync.move("r" * 3)
 
         speak("""
 For example, to move left then up six times:⏩
 >>> ⏵⏸move("lu" * 6)⏸
 """)
-        sync.add_moves("lu" * 6)
+        sync.move("lu" * 6)
 
         speak(
             f"""
@@ -81,7 +78,7 @@ For example, to print "a" in the current cell:⏩
 >>> ⏵⏸print("a")⏸
 """
         )
-        sync.print_character("a")
+        sync.print("a")
 
         speak(
             """
@@ -95,7 +92,7 @@ One more thing. Watch out for {Text.BOLD}agents{Text.RESET} which are moving cha
 To evade the agents, type {Text.BOLD}change(){Text.RESET} to disguise yourself as a random character. For example:⏩
 >>> ⏵⏸change()⏸
 """)
-        sync.change_character()
+        sync.change()
 
         speak(
             f"""
@@ -117,10 +114,11 @@ def main():
     output()
 
     namespace = globals().copy()
-    namespace["move"] = sync.add_moves
-    namespace["change"] = sync.change_character
-    namespace["speed"] = sync.set_speed
-    namespace["print"] = sync.print_character
+    namespace["move"] = sync.move
+    namespace["change"] = sync.change
+    namespace["speed"] = sync.speed
+    namespace["print"] = sync.print
+    namespace["escape"] = sync.escape
     namespace["help"] = Help()
     interact(local=namespace)
 

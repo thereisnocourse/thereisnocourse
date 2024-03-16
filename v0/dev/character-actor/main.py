@@ -1,4 +1,4 @@
-from collections import deque
+from collections import deque, Counter
 import random
 import csv
 from util import (
@@ -40,32 +40,37 @@ transformations = (
     (24, 5, "d"),
     (22, 18, "e"),
 )
+blocks = emoji.blocks + ["🔒"]
 
 
-def set_speed(new_speed):
+def speed_command(new_speed):
     global speed
     speed = new_speed
 
 
-def add_moves(moves):
+def move_command(moves):
     player.add_moves(moves)
 
 
-def change_character(*args):
+def check_char(c):
+    if not isinstance(c, str):
+        raise TypeError("must be a string")
+    if len(c) != 1:
+        raise ValueError("must be a string of length 1")
+
+
+def change_command(*args):
     if len(args) == 0:
         player.change()
     elif len(args) == 1:
         character = args[0]
+        check_char(character)
         player.change(character)
 
 
-def print_character(character):
-    if not isinstance(character, str):
-        raise TypeError
-    if len(character) != 1:
-        raise ValueError
-    world[player.row][player.col] = character
-    player.printed = character
+def print_command(character):
+    check_char(character)
+    player.print(character)
 
     # Check to see if all replacements have been solved.
     solved = True
@@ -74,16 +79,120 @@ def print_character(character):
         solved = solved and (character == printed)
     if solved:
         world[28][29] = ""
-    else:
-        world[28][29] = "🔒"
 
 
-def col_to_x(col):
-    return ((col % cols_per_room) * cell_size) + (cell_size / 2)
+def escape_command():
+    player.captured = False
 
 
-def row_to_y(row):
-    return ((row % rows_per_room) * cell_size) + (cell_size / 2) + 3
+def col_to_text_x(col):
+    return ((col % cols_per_room) * cell_width) + (cell_width / 2)
+
+
+def row_to_text_y(row):
+    return ((row % rows_per_room) * cell_width) + (cell_width / 2) + 3
+
+
+SEARCHING = 0
+CHASING = 1
+
+
+class Agent:
+    def __init__(self, row, col, character, recognition):
+        self.row = row
+        self.col = col
+        self.character = character
+        self.recognition = recognition
+        self.observations = Counter()
+        self.state = SEARCHING
+
+    def move(self):
+        # Make an observation, update state.
+        self.state = SEARCHING
+        if self.room == player.room and not player.captured:
+            self.observations[player.character] += 1
+            if self.observations[player.character] > self.recognition:
+                self.state = CHASING
+
+        # N.B., row coords are counted from the top.
+        move = None
+
+        # Discover what moves are possible.
+        possible = ""
+        if self.row > 0:
+            up_char = world[self.row - 1][self.col]
+            if up_char not in blocks:
+                possible += "u"
+        if self.row < len(world) - 1:
+            down_char = world[self.row + 1][self.col]
+            if down_char not in blocks:
+                possible += "d"
+        if self.col > 0:
+            left_char = world[self.row][self.col - 1]
+            if left_char not in blocks:
+                possible += "l"
+        if self.col < len(world[self.row]) - 1:
+            right_char = world[self.row][self.col + 1]
+            if right_char not in blocks:
+                possible += "r"
+
+        if self.state == SEARCHING:
+            # Move in a random direction.
+            move = random.choice(possible)
+
+        elif self.state == CHASING:
+            # Move towards the player.
+            if player.row < self.row and "u" in possible:
+                move = "u"
+            elif player.row > self.row and "d" in possible:
+                move = "d"
+            elif player.col < self.col and "l" in possible:
+                move = "l"
+            elif player.col > self.col and "r" in possible:
+                move = "r"
+
+        # Make the move.
+        if move == "d":
+            self.row = self.row + 1
+        elif move == "u":
+            self.row = self.row - 1
+        elif move == "r":
+            self.col = self.col + 1
+        elif move == "l":
+            self.col = self.col - 1
+
+        # Make the capture.
+        if self.state == CHASING and self.row == player.row and self.col == player.col:
+            player.captured = True
+            # Clear out any pending moves.
+            player.moves.clear()
+
+    @property
+    def text_x(self):
+        return col_to_text_x(self.col)
+
+    @property
+    def text_y(self):
+        return row_to_text_y(self.row)
+
+    @property
+    def room(self):
+        return (self.row // rows_per_room, self.col // cols_per_room)
+
+    def render(self):
+        if self.room == player.room:
+            if self.state == CHASING:
+                x = (self.col % cols_per_room) * cell_width
+                y = (self.row % rows_per_room) * cell_height
+                ctx.fillStyle = "red"
+                ctx.fillRect(
+                    x,
+                    y,
+                    cell_width,
+                    cell_height,
+                )
+            ctx.fillStyle = "black"
+            ctx.fillText(self.character, self.text_x, self.text_y)
 
 
 class Player:
@@ -93,11 +202,15 @@ class Player:
         self.character = default_player_character
         self.moves = deque()
         self.printed = None
+        self.captured = False
+        self.disguises_used = {self.character}
 
     def add_moves(self, moves):
         self.moves.extend(list(moves.lower()))
 
     def move(self):
+        if self.captured:
+            return
         try:
             move = self.moves.popleft()
         except IndexError:
@@ -129,7 +242,7 @@ class Player:
 
             # Stop checks.
             new_char = world[new_row][new_col]
-            if new_char in (emoji.blocks + ["🔒"]):
+            if new_char in blocks:
                 return
 
             self.row = new_row
@@ -137,19 +250,30 @@ class Player:
 
     def change(self, character=None):
         if character is None:
-            self.character = random.choice(disguises)
+            character = random.choice(disguises)
+            while character in self.disguises_used:
+                character = random.choice(disguises)
         else:
-            if not isinstance(character, str):
-                raise TypeError
-            self.character = character
+            check_char(character)
+        self.character = character
+        self.disguises_used.add(character)
+
+    def print(self, character):
+        if not self.captured:
+            world[self.row][self.col] = character
+            self.printed = character
 
     @property
-    def x(self):
-        return col_to_x(self.col)
+    def text_x(self):
+        return col_to_text_x(self.col)
 
     @property
-    def y(self):
-        return row_to_y(self.row)
+    def text_y(self):
+        return row_to_text_y(self.row)
+
+    @property
+    def room(self):
+        return (self.row // rows_per_room, self.col // cols_per_room)
 
     def render(self):
         if self.printed:
@@ -158,7 +282,9 @@ class Player:
             self.printed = None
         else:
             character = self.character
-        ctx.fillText(character, self.x, self.y)
+        ctx.fillText(character, self.text_x, self.text_y)
+        if self.captured:
+            ctx.fillText("▥", self.text_x, self.text_y)
 
 
 def render():
@@ -170,6 +296,10 @@ def render():
 
     # Render the grid.
     render_grid()
+
+    # Render the agents.
+    agent_foo.render()
+    agent_bar.render()
 
     # Render the player.
     player.render()
@@ -190,7 +320,7 @@ def render_grid():
     ctx.lineWidth = 1
     ctx.strokeStyle = "#bbb"
     for i in range(cols_per_room + 1):
-        x = i * cell_size
+        x = i * cell_width
         if x == 0:
             x += 0.5
         else:
@@ -200,7 +330,7 @@ def render_grid():
         ctx.lineTo(x, canvas_height)
         ctx.stroke()
     for j in range(rows_per_room + 1):
-        y = j * cell_size
+        y = j * cell_width
         if y == 0:
             y += 0.5
         else:
@@ -221,8 +351,8 @@ def render_room():
                 pass
             else:
                 character = world[row][col]
-                x = col_to_x(col)
-                y = row_to_y(row)
+                x = col_to_text_x(col)
+                y = row_to_text_y(row)
                 ctx.fillStyle = "black"
                 ctx.fillText(character, x, y)
 
@@ -271,21 +401,26 @@ async def main():
     global canvas_width
     global canvas_height
     global ctx
-    global cell_size
+    global cell_width
+    global cell_height
     global world
     global clues
     global player
+    global agent_foo
+    global agent_bar
+    global agent_plane
 
     hide(loading_node)
     terminal_node.style.visibility = "visible"
 
-    # Initialise communication with the terminal.
+    # Initialise communication with the terminal worker.
     terminal_script_node = document.querySelector("script[terminal]")
     terminal_worker = terminal_script_node.xworker
-    terminal_worker.sync.add_moves = add_moves
-    terminal_worker.sync.change_character = change_character
-    terminal_worker.sync.print_character = print_character
-    terminal_worker.sync.set_speed = set_speed
+    terminal_worker.sync.move = move_command
+    terminal_worker.sync.change = change_command
+    terminal_worker.sync.print = print_command
+    terminal_worker.sync.speed = speed_command
+    terminal_worker.sync.escape = escape_command
 
     # Set up canvas.
     canvas_width = min(canvas_container_node.offsetWidth, 450)
@@ -298,11 +433,12 @@ async def main():
     canvas_node.height = canvas_height
     canvas_container_node.appendChild(canvas_node)
     ctx = canvas_node.getContext("2d")
-    cell_size = canvas_width // rows_per_room
+    cell_width = canvas_width // cols_per_room
+    cell_height = canvas_height // rows_per_room
 
     # Set some invariant text rendering settings.
     ctx.textRendering = "optimizeLegibility"
-    ctx.font = f"{cell_size*0.7}px 'Special Elite'"
+    ctx.font = f"{cell_width*0.7}px 'Special Elite'"
     ctx.textAlign = "center"
     ctx.textBaseline = "middle"
 
@@ -317,13 +453,26 @@ async def main():
     # Create player.
     player = Player(row=5, col=5)
 
+    # Create agents.
+    agent_foo = Agent(row=1, col=21, character="🕴🏼", recognition=20)
+    agent_plane = Agent(row=11, col=21, character="🛩️", recognition=15)
+    agent_bar = Agent(row=11, col=1, character="🕴🏼", recognition=15)
+
     # Start the game loop.
+    moves = 0
     while True:
         await asyncio.sleep(1 / speed)
-        player.move()
+        # Alternate moves between player and agents.
+        if moves % 2 == 0:
+            player.move()
+        else:
+            agent_foo.move()
+            agent_plane.move()
+            agent_bar.move()
         render()
         if player.col >= 30:
             break
+        moves += 1
 
     hide(info_node)
     hide(screen_node)
