@@ -30,7 +30,30 @@ You (the player) have now stumbled on the website they created to host the train
 
 To be continued.
 
+## Inspiration
 
+* [There Is No Game: Wrong Dimension](https://store.steampowered.com/app/1240210/There_Is_No_Game_Wrong_Dimension/)
+* Monty Python's Flying Circus
+* The Complete Works of William Shakespeare
+* TODO
 
+## Credits
 
+### Act 0
 
+* Wallpaper background image obtained from the [NASA Home Page, 1994-97](https://www.nasa.gov/image-detail/homepage-1994-2/).
+
+#### Scene 3 (The Green Midget Cafe)
+
+* Image obtained from [Wikipedia](https://en.wikipedia.org/wiki/File:MontySpam.jpg).
+* Sound recording obtained from the [Stanford website](https://cs.stanford.edu/people/eroberts/cs181/projects/spam/monty_python.HTML).
+
+#### Scene 4 (The Scottish play)
+
+* Image obtained from [Wikipedia](https://commons.wikimedia.org/wiki/File:Charles_Macready_as_Macbeth.jpg).
+* Sound recordings obtained from [BBC Sound Effects](https://sound-effects.bbcrewind.co.uk/about).
+
+### Act 1
+
+* Wood transparent texture background image obtained from [Transparent Textures](https://www.transparenttextures.com/wood.html).
+* White paper texture background image obtained from [TutorialChip](https://www.tutorialchip.com/freebies/paper-background-collection/attachment/white-paper-texture-background/).
