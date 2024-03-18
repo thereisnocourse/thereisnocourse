@@ -14,7 +14,7 @@ If I had to sum up what this project is in a few words, I would say it is a piec
 
 The starting point for this game was the question, what would it be like to create a game where all user interaction happened via Python code? In other words, the player uses only Python code to control the game. Why would anyone ask this question? I have no idea.
 
-In truth, there was another question at the very beginning, and that was: what are the skills and abilities that make someone a really good programmer, and can those be developed through teaching or training, if so how? But that question has got so lost in the nonsense that followed I think it's best to forget anyone ever asked it.
+In truth, there was another question at the very beginning, and that was: what are the skills and abilities that make someone a really good Python programmer, and can those be developed through teaching or training, if so how? But that question has got so lost in the nonsense that followed I think it's best to forget anyone ever asked it.
 
 ## Game structure
 
