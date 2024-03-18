@@ -29,7 +29,7 @@ speed_node = get_element_by_id("speed")
 speed = 3
 rows_per_room = 10
 cols_per_room = 10
-default_player_character = "🕵️"
+default_player_character = "🕵️‍♀️"  # "🕵️"
 disguises = emoji.smileys + emoji.people + emoji.nature
 transformations = (
     (1, 1, "a"),
@@ -151,6 +151,9 @@ class Agent:
                 move = "l"
             elif player.col > self.col and "r" in possible:
                 move = "r"
+            else:
+                # Cannot move towards player, choose a random move instead.
+                move = random.choice(possible)
 
         # Make the move.
         if move == "d":
@@ -180,12 +183,16 @@ class Agent:
     def room(self):
         return (self.row // rows_per_room, self.col // cols_per_room)
 
+    @property
+    def cell(self):
+        return (self.row, self.col)
+
     def render(self):
         if self.room == player.room:
             if self.state == CHASING:
                 x = (self.col % cols_per_room) * cell_width
                 y = (self.row % rows_per_room) * cell_height
-                ctx.fillStyle = "red"
+                ctx.fillStyle = "rgba(255, 0, 0, .5)"
                 ctx.fillRect(
                     x,
                     y,
@@ -207,7 +214,9 @@ class Player:
         self.disguises_used = {self.character}
 
     def add_moves(self, moves):
-        self.moves.extend(list(moves.lower()))
+        for move in moves.lower():
+            if move in "udlr":
+                self.moves.append(move)
 
     def move(self):
         if self.captured:
@@ -218,17 +227,15 @@ class Player:
             pass
         else:
             # N.B., row coords are counted from the top.
+            new_row = self.row
+            new_col = self.col
             if move == "d":
                 new_row = self.row + 1
-                new_col = self.col
             elif move == "u":
                 new_row = self.row - 1
-                new_col = self.col
             elif move == "r":
-                new_row = self.row
                 new_col = self.col + 1
             elif move == "l":
-                new_row = self.row
                 new_col = self.col - 1
 
             # # Out of bounds checks.
@@ -276,6 +283,10 @@ class Player:
     def room(self):
         return (self.row // rows_per_room, self.col // cols_per_room)
 
+    @property
+    def cell(self):
+        return (self.row, self.col)
+
     def render(self):
         if self.printed:
             # Transiently show the printed character.
@@ -285,7 +296,9 @@ class Player:
             character = self.character
         ctx.fillText(character, self.text_x, self.text_y)
         if self.captured:
-            ctx.fillText("▥", self.text_x, self.text_y)
+            # lock = "▥"
+            lock = "🐟"
+            ctx.fillText(lock, self.text_x, self.text_y)
 
 
 def render():
