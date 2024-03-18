@@ -12,7 +12,7 @@ One more thing. This project is quite different from anything I've done before, 
 
 If I had to sum up what this project is in a few words, I would say it is a piece of lo-fi experimental interactive computational amateur dramatics. Or a silly game. Basically, it's a bit of fun. I'm enjoying making it, and maybe one or two people might enjoy playing it. 
 
-The starting point for this game was the question, what would it be like to create a game where all user interaction happened via Python code? In other words, the player uses Python code and only Python code to control the game. Why would anyone ask this question? I have no idea.
+The starting point for this game was the question, what would it be like to create a game where all user interaction happened via Python code? In other words, the player uses only Python code to control the game. Why would anyone ask this question? I have no idea.
 
 In truth, there was another question at the very beginning, and that was: what are the skills and abilities that make someone a really good programmer, and can those be developed through teaching or training, if so how? But that question has got so lost in the nonsense that followed I think it's best to forget anyone ever asked it.
 
