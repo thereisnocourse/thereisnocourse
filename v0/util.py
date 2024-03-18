@@ -349,7 +349,7 @@ async def html_speak(parent_id, message):
             if c not in control_symbols:
                 content += c
                 div.innerHTML = content
-                div.scrollIntoView()
+                div.scrollIntoView(False)
 
             # Pause to simulate speech.
             if pause > 0:

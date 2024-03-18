@@ -21,6 +21,7 @@ loading_node = get_element_by_id("loading")
 outro_node = get_element_by_id("outro")
 success_node = get_element_by_id("success")
 clue_node = get_element_by_id("clue")
+clue_container_node = get_element_by_id("clue_container")
 info_node = get_element_by_id("info")
 moves_node = get_element_by_id("moves")
 position_node = get_element_by_id("position")
@@ -382,7 +383,7 @@ def render_clue():
     else:
         trans = transformations
     if clue:
-        show(info_node)
+        show(clue_container_node)
         original_clue = clue
         # Apply replacements.
         for row, col, character in trans:
@@ -393,7 +394,7 @@ def render_clue():
             content += " ✅"
         clue_node.innerHTML = content
     else:
-        hide(info_node)
+        hide(clue_container_node)
         clue_node.innerHTML = ""
 
 
@@ -424,7 +425,7 @@ async def main():
     terminal_worker.sync.escape = escape_command
 
     # Set up canvas.
-    canvas_width = min(canvas_container_node.offsetWidth, 450)
+    canvas_width = min(canvas_container_node.offsetWidth, 400)
     # Round to nearest multiple of 10.
     canvas_width = canvas_width - (canvas_width % 10)
     canvas_height = canvas_width
@@ -436,6 +437,9 @@ async def main():
     ctx = canvas_node.getContext("2d")
     cell_width = canvas_width // cols_per_room
     cell_height = canvas_height // rows_per_room
+
+    # Fix visibility.
+    show(info_node)
 
     # Set some invariant text rendering settings.
     ctx.textRendering = "optimizeLegibility"
@@ -463,15 +467,15 @@ async def main():
     moves = 0
     while True:
         await asyncio.sleep(1 / speed)
-        # Alternate moves between player and agents.
+        player.move()
+        # Agents move slower, every other frame.
         if moves % 2 == 0:
-            player.move()
-        else:
             agent_foo.move()
             agent_plane.move()
             agent_bar.move()
         render()
         if player.col >= 30:
+            # Reached the hidden room, exit game loop.
             break
         moves += 1
 
@@ -481,17 +485,21 @@ async def main():
     await html_speak(
         "outro",
         """\
-⏸⏸Wait a minute darling, where are we? I've never seen this room before.
+⏸⏸Wait a minute, where are we? I've never seen this room before.
 
 And is that a message? But — it's addressed to me. How can that be?
 
 There's something very fishy going on here darling!
 
-I thought we were just fixing a broken compositor, but we seem to have unlocked some kind of hidden room. And apparently, I have a secret inside me!
+I thought we were fixing a broken compositor, but we seem to have unlocked a hidden room.
 
-I'm not sure about that. Surely the only thing inside me are some rusty old circuits!
+And apparently, I have a secret inside me!
 
-Anyway, well done darling, we've fixed the first compositor. Let's keep going, at the very least we can recover some more of my script memory.
+I'm not sure about that, the only thing inside me are rusty circuits!
+
+Anyway, well done darling, we've fixed the first compositor.
+
+Let's keep going, at least we can recover some more of my script memory.
 
 I wonder what else we'll find?
 """,
