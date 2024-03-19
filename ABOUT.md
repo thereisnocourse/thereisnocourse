@@ -174,9 +174,9 @@ sources of surreal humour would be great to draw on if possible, e.g.,
 The Goon Show.
 
 Why is this important? Apart from being very funny, it is somehow
-liberating. I have a feeling that freeing yourself from the usual
-logical confines of thought is, ironically, quite essential if you are
-a programmer.
+liberating. I have a strange feeling that freeing yourself from the
+usual logical confines of thought is, ironically, quite essential if
+you are a programmer.
 
 One short note on Monty Python. It is a big source of inspiration, and
 more scenes based on MP sketches would be great. But bear in mind that
