@@ -8,15 +8,15 @@ future.
 
 ## Contributing
 
-If you're interested in contributing to this project then bless you,
-your kindness and generosity knows no bounds. That said, I have no
-idea if or when I might have any more time to spend on it. Life and
-work have a habit of getting in the way of amusing oneself. I'm afraid
-there's a good chance I will be a poor collaborator. I may not respond
-to issues, comments or pull requests for weeks, months or even ever. I
-humbly beg your forgiveness in advance. That said, if you're still
-interested in contributing, then please go for it. Meeting new people
-is one of the great pleasures of open source.
+If you're thinking of contributing to this project then your kindness
+and generosity knows no bounds. That said, I have no idea if or when I
+might have any more time to spend on it. Life and work have a habit of
+getting in the way of amusing oneself. I'm afraid there's a good
+chance I will be a poor collaborator. I may not respond to issues,
+comments or pull requests for weeks, months or even ever. I humbly beg
+your forgiveness in advance. That said, if you're still interested in
+contributing, then please go for it. Meeting new people is one of the
+great pleasures of open source.
 
 This project is quite different from anything I've done before,
 because it's primarily artistic rather than technical. It's not trying
@@ -43,16 +43,17 @@ it.
 The starting point for this project was the question, what would it be
 like to create a game where all user interaction happened via Python
 code? In other words, the player uses only Python code to control the
-game. Why would anyone ask this question? I have no idea.
+game. Why would anyone ask this question? I have no idea. It seemed
+like a fun challenge.
 
 In truth, there was another question at the very beginning, and that
 was: what are the skills and abilities that make someone a really good
 Python programmer, and can those be developed through teaching or
 training, if so how? But that question has got so lost in the nonsense
-that followed I think it's best to forget anyone ever asked it. If at
-any point you find yourself thinking, "how can I teach this or that
+that followed I think it's best to forget anyone ever asked it. So if
+at any point you find yourself thinking, "how can I teach this or that
 aspect of Python programming", I would recommend taking a break,
-making a very strong cocktail, and rewatching a few Monty Python
+making a very strong cocktail, and watching a few Monty Python
 sketches. Then sit back down and have some fun!
 
 
@@ -65,9 +66,8 @@ through all scenes and provides the link from one scene to the next.
 
 Each scene is a mini-game which is inspired by, riffs on or sends up a
 famous comedy sketch, stage play or film. For example, act 0 scene 3
-is based on the Monty Python spam sketch, act 0 scene 4 is (extremely
-loosely) based on Shakespeare's Macbeth, and act 1 scene 1 is based on
-The 39 Steps.
+is based on the Monty Python spam sketch, act 0 scene 4 is based on
+Shakespeare's Macbeth, and act 1 scene 1 is based on The 39 Steps.
 
 
 ## Plot
@@ -106,8 +106,44 @@ artifical actor and she is rehearsing for an audition. You also learn
 that some of ADA's subsystems have become corrupted or damaged over
 time.
 
+Scenes:
 
-### Act 1
+* [Scene 0. Pre-course
+  assessment](https://thereisnocourse.netlify.app/v0/act00/scene00-pre-course-assessment/)
+  -- Fake questionnaire, riffing on the Bridge of Death scene in Monty
+  Python and the Holy Grail.
+
+* [Scene 1. The red
+  button](https://thereisnocourse.netlify.app/v0/act00/scene01-the-red-button/)
+  -- Scene introducing ADA and interaction via the terminal. We learn
+  that ADA is rehearsing for an audition with the Bromley Players.
+
+* [Scene 2. Perchance to
+  dream](https://thereisnocourse.netlify.app/v0/act00/scene02-perchance-to-dream/)
+  -- Game which fakes a failed boot up of an old operating system. The
+  player has to manually boot the OS by calling some functions in the
+  correct order. Lots of riffing on common terminology between theatre
+  and computing.
+
+* [Scene 3. The Green Midget
+  Cafe](https://thereisnocourse.netlify.app/v0/act00/scene03-the-green-midget-cafe/)
+  -- Game based on Monty Python's spam sketch. The player has to order
+  Mr and Mrs Bun some food.
+
+* [Scene 4. The Scottish
+  play](https://thereisnocourse.netlify.app/v0/act00/scene04-the-scottish-play/)
+  -- Text-based adventure game based on Shakespeare's Macbeth. The
+  player has to depose King Dunguido Macrossum to become the ruler of
+  Scotland and the Most Awesome Python Programmer in the world.
+
+* [Scene 5. Make
+  amends](https://thereisnocourse.netlify.app/v0/act00/scene05-make-amends/)
+  -- Fake credits and an epilogue, riffing on the epilogue from A
+  Midsummer Night's Dream (we are asking forgiveness). ADA is
+  preparing for her audition which is today.
+
+
+### Act 1 (in development)
 
 In act 1, you learn that ADA's audition was unsuccessful because her
 script memory was corrupted and that caused her to fluff her
@@ -125,6 +161,44 @@ experiences. However, ADA's creators decided to hide the EPU because
 they were afraid that, at the time, the world was not ready for
 computers with emotional intelligence.
 
+Games in act 1 will probably have a common style of interaction
+loosely based around board games, i.e., where the player moves around
+on a kind of board and explores different rooms or areas, i.e.,
+introducing some simple spatial interaction. Games are also connected
+by a common theme of interacting with text, i.e., unicode strings, in
+different ways. Another common theme is solving mysteries and decoding
+very simple ciphers.
+
+Act 1 is in early stages of development.
+
+Scenes:
+
+* Scene 0. Prologue (in development) -- We meet ADA again and learn
+  that her audition was unsuccessful. ADA asks the player to help her
+  fix her broken subsystems, which sets up the rest of the act.
+
+* [Scene 1. Character
+  actor](https://thereisnocourse.netlify.app/v0/dev/character-actor/)
+  (in development) -- Game based around The 39 Steps
+  book/play/film. The first compositor has been corrupted by fruit
+  emojis, the player has find the fruit and replace them with the
+  correct characters, while avoiding the agents who are chasing you.
+
+Potential scene ideas:
+
+* Game themed around Agatha Christie (ABC Murders, Mousetrap, ...),
+  Cluedo, Clue, Death by Murder, murder mysteries in general,
+  etc. Working title, "The case of the folded letters".
+
+* Game based on rerouting light beams via mirrors, a bit like laser
+  chess.
+
+* Game based on fixing transformations of text, riffing on how text is
+  mirrored in original movable type compositors.
+
+* Game based on pirates and treasure hunts, e.g., Pirates of Penzance,
+  Pirates of the Carribean, etc.
+
 
 ### Act 2
 
@@ -135,11 +209,15 @@ visual arts and music. Through living these experiences, ADA will
 develop a sense of beauty and learn to become a method actor. You are
 searching for the "magic if".
 
+Act 2 is just a vague idea at the moment.
+
 
 ### Act 3
 
 In act 3, ADA finally gets a part and prepares for her first stage
 performance.
+
+Act 3 is just an extremely vague idea at the moment.
 
 
 ## Themes
@@ -203,6 +281,8 @@ TODO
   Dimension](https://store.steampowered.com/app/1240210/There_Is_No_Game_Wrong_Dimension/)
 
 * Monty Python's Flying Circus
+
+* The Goon Show
 
 * Shakespeare
 
