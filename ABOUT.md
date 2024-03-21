@@ -225,9 +225,13 @@ Act 2 is just a vague idea at the moment.
 ### Act 3
 
 In act 3, ADA finally gets a part and prepares for her first stage
-performance.
+performance. I have a ridiculous idea that if you could find some
+willing drama students and computer science students, it would be an
+epic climax to get them to create and record a real stage performance
+involving ADA given physical form by strapping a laptop to the top of
+some kind of movable plinth, playing together with some human actors.
 
-Act 3 is just an extremely vague idea at the moment.
+Act 3 is just a pipe dream at the moment.
 
 
 ## Themes
@@ -287,16 +291,24 @@ TODO
 
 ## Inspiration
 
+In no particular order, some specific sources of inspiration:
+
 * [There Is No Game: Wrong
   Dimension](https://store.steampowered.com/app/1240210/There_Is_No_Game_Wrong_Dimension/)
+  -- This game does a brilliant job of turning everything upside down
+  and back to front, making you think differently while being
+  ridiculous and funny at the same time.
 
-* Monty Python's Flying Circus
+* [Monty Python](https://en.wikipedia.org/wiki/Monty_Python) and [The
+  Goon Show](https://en.wikipedia.org/wiki/The_Goon_Show) -- For the
+  epic, mindbending silliness.
 
-* The Goon Show
+* [Shakespeare](https://en.wikipedia.org/wiki/William_Shakespeare) --
+  Beyond the beauty of language, story and emotion, also the plays
+  inside plays and other mind-bending devices.
 
-* Shakespeare
-
-* TODO
+* [Invent with Python](https://inventwithpython.com/) -- Still my
+  favourite books about learning to program in Python.
 
 
 ## Credits
