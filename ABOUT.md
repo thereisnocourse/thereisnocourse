@@ -1,8 +1,8 @@
 # About this project
 
 This is one of those projects that started out as a bit of fun
-escapism and got a bit out of hand. Here are some of the ideas behind
-it and where it might (or might not) go in the future.
+escapism and got a bit out of hand. Anyway, here are some of the ideas
+behind it and where it might (or might not) go in the future.
 
 
 ## Contributing
@@ -33,11 +33,10 @@ and enjoy where they lead you!
 
 ## Concept
 
-If I had to sum up what this project is in a few words, I would say it
-is an original piece of lo-fi experimental interactive computational
-amateur dramatics. Or a silly game. Basically, it's a bit of fun. I'm
-enjoying making it, and maybe one or two people might enjoy playing
-it.
+I have no idea what this project is trying to be. Possibly it is an
+original piece of lo-fi experimental interactive computational amateur
+dramatics. Or a silly game. Basically, it's a bit of fun. I'm enjoying
+making it, and maybe one or two people might enjoy playing it.
 
 The starting point for this project was the question, what would it be
 like to create a game where all user interaction happened via Python
@@ -49,8 +48,8 @@ In truth, there was another question at the very beginning, and that
 was: what are the skills and abilities that make someone a really good
 Python programmer, and can those be developed through teaching or
 training, if so how? But that question has got so lost in the nonsense
-that followed I think it's best to forget anyone ever asked it. So if
-at any point you find yourself thinking, "how can I teach this or that
+that followed I think it's best to forget anyone ever asked it. If at
+any point you find yourself thinking, "how can I teach this or that
 aspect of Python programming", I would recommend taking a break,
 making a very strong cocktail, and watching a few Monty Python
 sketches. Then sit back down and have some fun!
@@ -65,8 +64,12 @@ through all scenes and provides the link from one scene to the next.
 
 Each scene is a mini-game which is inspired by, riffs on or sends up a
 famous comedy sketch, stage play or film. For example, act 0 scene 3
-is based on the Monty Python spam sketch, act 0 scene 4 is based on
-Shakespeare's Macbeth, and act 1 scene 1 is based on The 39 Steps.
+is based on the [Monty Python spam
+sketch](https://en.wikipedia.org/wiki/Spam_(Monty_Python_sketch)), act
+0 scene 4 is based on [Shakespeare's
+Macbeth](https://en.wikipedia.org/wiki/Macbeth), and act 1 scene 1 is
+based on [The 39
+Steps](https://en.wikipedia.org/wiki/The_39_Steps_(play)).
 
 
 ## Plot
@@ -158,15 +161,15 @@ an emotional processing unit (EPU) which is not only capable of
 generating emotion but also of emotional development through new
 experiences. However, ADA's creators decided to hide the EPU because
 they were afraid that, at the time, the world was not ready for
-computers with emotional intelligence.
+computers with true emotions.
 
 Games in act 1 will probably have a common style of interaction
 loosely based around board games, i.e., where the player moves around
-on a kind of board and explores different rooms or areas, i.e.,
-introducing some simple spatial interaction. Games are also connected
-by a common theme of interacting with text, i.e., unicode strings, in
-different ways. Another common theme is solving mysteries and decoding
-very simple ciphers.
+on a kind of board with squares and explores different rooms or areas,
+i.e., introducing some simple spatial interaction. Games are also
+connected by a common theme of interacting with text, i.e., unicode
+strings, in different ways. Another common theme is solving mysteries
+and decoding very simple ciphers.
 
 Act 1 is in early stages of development.
 
@@ -178,25 +181,33 @@ Scenes:
 
 * [Scene 1. Character
   actor](https://thereisnocourse.netlify.app/v0/dev/character-actor/)
-  (in development) -- Game based around The 39 Steps
-  book/play/film. The first compositor has been corrupted by fruit
-  emojis, the player has find the fruit and replace them with the
-  correct characters, while avoiding the agents who are chasing you.
+  (in development) -- Game loosely based around [The 39
+  Steps](https://en.wikipedia.org/wiki/The_39_Steps_(play)), which was
+  originally a book then adapted into a Hitchcock film and a parody
+  stage play. The first compositor has been corrupted by fruit emojis,
+  the player has find the fruit and replace them with the correct
+  characters, while avoiding the agents who are chasing you.
 
 Potential scene ideas:
 
 * Game themed around Agatha Christie (ABC Murders, Mousetrap, ...),
   Cluedo, Clue, Death by Murder, murder mysteries in general,
-  etc. Working title, "The case of the folded letters".
+  etc. Working title, "The case of the unfolded letters".
 
 * Game based on rerouting light beams via mirrors, a bit like laser
-  chess.
+  chess. The characters "/" and "\" could be mirrors to change the
+  light direction.
 
-* Game based on fixing transformations of text, riffing on how text is
-  mirrored in original movable type compositors.
+* Game based on transformations of text (rotating, mirroring,
+  reversing) riffing on how text is mirrored in original movable type
+  compositors.
 
-* Game based on pirates and treasure hunts, e.g., Pirates of Penzance,
-  Pirates of the Carribean, etc.
+* Maybe a game based on pirates and treasure hunts, drawing on
+  Treasure Island, Pirates of Penzance, Pirates of the Carribean,
+  etc. (At some point we need to find a good excuse to use
+  [arrr](https://arrr.readthedocs.io/en/latest/).) Also could
+  introduce idea of wrapping around, via a world that wraps around
+  from one side to the other.
 
 
 ### Act 2
