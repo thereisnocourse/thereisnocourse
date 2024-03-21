@@ -1,9 +1,8 @@
 # About this project
 
 This is one of those projects that started out as a bit of fun
-escapism and got a bit out of hand. Anyway, I'll try to describe some
-of the ideas behind it and where it might (or might not) go in the
-future.
+escapism and got a bit out of hand. Here are some of the ideas behind
+it and where it might (or might not) go in the future.
 
 
 ## Contributing
@@ -14,7 +13,7 @@ might have any more time to spend on it. Life and work have a habit of
 getting in the way of amusing oneself. I'm afraid there's a good
 chance I will be a poor collaborator. I may not respond to issues,
 comments or pull requests for weeks, months or even ever. I humbly beg
-your forgiveness in advance. That said, if you're still interested in
+your forgiveness in advance. If you're still interested in
 contributing, then please go for it. Meeting new people is one of the
 great pleasures of open source.
 
