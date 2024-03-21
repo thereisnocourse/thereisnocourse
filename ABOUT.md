@@ -5,32 +5,6 @@ escapism and got a bit out of hand. Anyway, here are some of the ideas
 behind it and where it might (or might not) go in the future.
 
 
-## Contributing
-
-If you're thinking of contributing to this project then your kindness
-and generosity knows no bounds. That said, I have no idea if or when I
-might have any more time to spend on it. Life and work have a habit of
-getting in the way of amusing oneself. I'm afraid there's a good
-chance I will be a poor collaborator. I may not respond to issues,
-comments or pull requests for weeks, months or even ever. I humbly beg
-your forgiveness in advance. If you're still interested in
-contributing, then please go for it. Meeting new people is one of the
-great pleasures of open source.
-
-This project is quite different from anything I've done before,
-because it's primarily artistic rather than technical. It's not trying
-to solve a problem, rather it's trying to create an experience. I've
-been really surprised by how long and winding the creative journey can
-be. Ideas lead to ideas which lead to more ideas, and where you end up
-is generally a very long way from where you started. The original idea
-may even seem to be completely lost. But every idea is valuable and
-part of the creative process. And a lot of patience is required,
-because ideas can take time to arrive or unfold. So all ideas are good
-ideas, however bizarre, crazy, silly or unusual. And most ideas are
-stepping stones to other ideas, so be prepared to leave ideas behind
-and enjoy where they lead you!
-
-
 ## Concept
 
 I have no idea what this project is trying to be. Possibly it is an
@@ -345,3 +319,32 @@ In no particular order, some specific sources of inspiration:
 
 * White paper texture background image obtained from
   [TutorialChip](https://www.tutorialchip.com/freebies/paper-background-collection/attachment/white-paper-texture-background/).
+
+
+## Contributing
+
+If you're thinking of contributing to this project then your kindness
+and generosity knows no bounds. That said, I have no idea if or when I
+might have any more time to spend on it. Life and work have a habit of
+getting in the way of amusing oneself. I'm afraid there's a good
+chance I will be a poor collaborator. I may not respond to issues,
+comments or pull requests for weeks, months or even ever. I humbly beg
+your forgiveness in advance. If you're still interested in
+contributing, then please go for it. Meeting new people is one of the
+great pleasures of open source.
+
+This project is quite different from anything I've done before,
+because it's primarily artistic rather than technical. It's not trying
+to solve a problem, rather it's trying to create an experience. I've
+been really surprised by how long and winding the creative journey can
+be. Ideas lead to ideas which lead to more ideas, and where you end up
+is generally a very long way from where you started. The original idea
+may even seem to be completely lost. But every idea is valuable and
+part of the creative process. And a lot of patience is required,
+because ideas can take time to arrive or unfold. So all ideas are good
+ideas, however bizarre, crazy, silly or unusual. And most ideas are
+stepping stones to other ideas, so be prepared to leave ideas behind
+and enjoy where they lead you!
+
+
+TODO specific notes about different ways of contributing
